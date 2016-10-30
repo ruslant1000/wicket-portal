@@ -1,0 +1,29 @@
+1. Как добавить settings.xml для maven в eclipse
+1.1 Тут описано как это сделать http://crunchify.com/missing-maven-settings-xml-file-for-your-eclipse-what-if-you-need-two-settings-xml-file-for-work-personal-workspace/
+1.2 Вкратце
+	Надо создать файл на файловой системе settings.xml (лучше скопировать с установленного maven)
+	В меню "Window -> Preferences -> Maven -> User settings" 
+	в поле "Global settings" указать файл, заранее созданный, settings.xml.
+
+
+2. Как сделадь авто-деплой в томкат.
+2.1 Тут описано как использовать томкат7 и плагин для автодеплоя.
+	https://www.mkyong.com/maven/how-to-deploy-maven-based-war-file-to-tomcat/
+2.2 Вкратце
+	Надо в томате в файле conf/tomcat-users.xml добавить настройки
+		<role rolename="manager-gui"/>
+		<role rolename="manager-script"/>
+		<user username="admin" password="password" roles="manager-gui,manager-script" />
+		
+	Надо в мавен в файле settings.xml добавить
+	<servers> 
+	  <server>
+        <id>Tomcat7Server</id>
+        <username>admin</username>
+        <password>password</password>
+      </server>
+    </servers>
+
+
+		
+	
