@@ -16,8 +16,13 @@
 	</filter>
 	<filter-mapping>
 		<filter-name>PortalApplication</filter-name>
-		<url-pattern>/portal/*</url-pattern>
+		<url-pattern>/*</url-pattern>
 		<dispatcher>REQUEST</dispatcher>
 		<dispatcher>INCLUDE</dispatcher>
 	</filter-mapping>
+	
+	
+	<listener>
+	<listener-class>kz.tem.portal.context.listener.PortalContextListener</listener-class>
+   </listener>
 </web-app>

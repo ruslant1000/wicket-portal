@@ -1,97 +1,158 @@
 package kz.tem.portal.server.plugin.engine;
 
 import java.io.File;
+import java.io.FileInputStream;
+import java.util.HashMap;
+import java.util.Map;
+
+import javax.xml.parsers.DocumentBuilder;
+import javax.xml.parsers.DocumentBuilderFactory;
+
+import kz.tem.portal.server.plugin.Module;
+import kz.tem.portal.server.plugin.ModuleMeta;
+import kz.tem.portal.utils.FileUtils;
+
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.w3c.dom.Document;
+import org.w3c.dom.Element;
 
 
 public class ModuleEngine {
 	
-	private TestBean execute = null;
-	JarClassLoader loader2=null;
-	public ModuleEngine(String modulePath){
+	private static Logger log = LoggerFactory.getLogger(ModuleEngine.class); 
+	
+	public static ModuleEngine instance = null;
+	
+	private Map<String, JarClassLoader> loaders = new HashMap<String, JarClassLoader>();
+	
+	private Map<String, ModuleMeta> moduleMap = new HashMap<String, ModuleMeta>();
+	
+	private String modulesPath;
+	
+	public static ModuleEngine getInstance(){
+		if(instance==null){
+			instance = new ModuleEngine();
+		}
+		return instance;
+			
+	}
+	private ModuleEngine(){}
+	
+	public Module create(String id, ModuleMeta meta)throws Exception{
+		if(!loaders.containsKey(meta.getModuleName())){
+			throw new Exception("Не найден JarClassLoader для модуля "+meta.getModuleName());
+		}
+		log.debug("Создание инстанса модуля "+meta.getModuleName()+"...");
+		Class cls = loaders.get(meta.getModuleName()).loadClass(meta.getModuleClass());
+		Module module = (Module)cls.getConstructor(new Class[]{String.class}).newInstance(new Object[]{id});
+		log.debug("Создание инстанса модуля "+meta.getModuleName()+" завершено");
+		return module;
+	}
+	 
+	public void loadModules(String modulesPath)throws Exception{
+		log.info("Загрузка модулей...");
+		this.modulesPath=modulesPath;
+		new ModuleFinder().findNewModules(modulesPath);
 		
-	    /**
-	     * Создаем загрузчик модулей.
-	     */
-//	    ModuleLoader loader = new ModuleLoader(modulePath, ClassLoader.getSystemClassLoader());
-	    
-	    loader2 = new JarClassLoader(modulePath);
-	    
-	    /**
-	     * Получаем список доступных модулей.
-	     */
-//	    File dir = new File(modulePath);
-//	    String[] modules = dir.list();
-	    
-	    try{
-	    	Class clazz = loader2.loadClass("kz.xxx.module.ModulePrinter");
-	    	execute = (TestBean) clazz.newInstance(); 
-//	    	execute.load();
-//	    	execute.run();
-//	    	execute.unload();
-	    }catch(Exception ex){
-	    	ex.printStackTrace();
-	    }
-	    
-	    /**
-	     * Загружаем и исполняем каждый модуль. 
-	     */
-//	    for (String module: modules) {
-//	    	System.out.println(module);
-//	      try {
-//	        String moduleName = module.split(".class")[0];
-//	        Class clazz = loader2.loadClass(moduleName);
-//	        Module execute = (Module) clazz.newInstance(); 
-//	        
-//	        execute.load();
-//	        execute.run();
-//	        execute.unload();
-//	        
-//	      } catch (ClassNotFoundException e) {
-//	        e.printStackTrace();
-//	      } catch (InstantiationException e) {
-//	        e.printStackTrace();
-//	      } catch (IllegalAccessException e) {
-//	        e.printStackTrace();
-//	      }
-//	    }
+		File modulesDir = new File(modulesPath);
+		if(!modulesDir.exists())
+			throw new Exception("Не найдена директория модулей: "+modulesPath);
+		for(File module:modulesDir.listFiles()){
+			if(module.isDirectory()){
+				load(module.getAbsolutePath());
+			}
+		}
+		log.info("Загрузка модулей завершена");
+	}
+	
+	public ModuleMeta load(String modulePath)throws Exception{
+		log.info("Загрузка модуля "+modulePath+"...");
+		ModuleMeta meta = new ModuleMeta();
+		File moduleDir = new File(modulePath);
+		if(!moduleDir.exists())
+			throw new Exception("Не найдена директория "+modulePath);
+		File moduleXml = new File(moduleDir,"module.xml");
+		if(!moduleXml.exists())
+			throw new Exception("Не найден дескриктор модуля "+modulePath);
 		
+		DocumentBuilderFactory dbf = null;
+		DocumentBuilder db = null;
+		Document xml = null;
+		try{
+			dbf = DocumentBuilderFactory.newInstance();
+			db = dbf.newDocumentBuilder();
+			xml = db.parse(new FileInputStream(moduleXml));
+			
+			xml.getDocumentElement().normalize();
+			Element module = (Element)xml.getElementsByTagName("module").item(0);
+			Element moduleE = (Element)module;
+			String moduleName = ((Element)moduleE.getElementsByTagName("module-name").item(0)).getTextContent();
+			String displayName = ((Element)moduleE.getElementsByTagName("display-name").item(0)).getTextContent();
+			String moduleClass = ((Element)moduleE.getElementsByTagName("module-class").item(0)).getTextContent();
+			meta.setDisplayName(displayName);
+			meta.setModuleClass(moduleClass);
+			meta.setModuleName(moduleName);
+			meta.setModuleDirectoryPath(modulePath);
+			
+			if(loaders.containsKey(moduleName)){
+				System.out.println("модуль был загружен ранее");
+				return moduleMap.get(moduleName);
+			}
+			
+			JarClassLoader jcl = new JarClassLoader(new File(moduleDir,"lib").getPath());
+			if(loaders.containsKey(moduleName)){
+				throw new Exception("Модуль "+moduleName+" уже загружен в память");
+			}
+			loaders.put(moduleName, jcl);
+		}finally{
+			  
+		}
+		moduleMap.put(meta.getModuleName(), meta);
+		log.info("Загрузка модуля "+modulePath+" завершена");
+		return meta;
+	}
+	public Map<String, ModuleMeta> getModuleMap() {
+		return moduleMap;
+	}
+	public void setModuleMap(Map<String, ModuleMeta> moduleMap) {
+		this.moduleMap = moduleMap;
+	} 
+	
+	public JarClassLoader getClassLoader(String moduleName){
+		if(loaders.containsKey(moduleName))
+			return loaders.get(moduleName);
+		return null;
+	}
+	
+	public void undeploy(String moduleName){
+		String mp = new String(moduleMap.get(moduleName).getModuleDirectoryPath());
+		
+		moduleMap.remove(moduleName);
+		loaders.get(moduleName).destroy();
+		loaders.remove(moduleName);
+		
+		try {
+			FileUtils.deleteFile(mp+".zip");
+			Thread.sleep(1000);
+			FileUtils.deleteDirectory(mp);
+			
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+	}
+	public void loadNewModules(){
+		try {
+			loadModules(modulesPath);
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+	}
+	
+	
+	
+	public void destroy(){
 		
 	}
 	
-	public static void main(String args[]) {
-		ModuleEngine m2 = new ModuleEngine("E:/projects/xxx2");
-		ModuleEngine m1 = new ModuleEngine("E:/projects/xxx");
-	    m2.execute.load();
-	    m2.execute.load();
-	    m1.execute.load();
-	    m2.execute.load();
-	    m1.execute.load();
-	    m2.execute.load();
-	    m1.execute.load();
-	    
-	    m2.execute.load();
-	    m1.execute.load();
-	    m2.execute.load();
-	    m1.execute.load();
-	    m2.execute.load();
-	    m1.execute.load();
-	    m2.execute.load();
-	    m1.execute.load();
-	    m2.execute.load();
-	    m1.execute.load();
-	    m2.execute.load();
-	    m1.execute.load();
-	    m2.execute.load();
-	    m1.execute.load();
-	    m2.execute.load();
-	    m1.execute.load();
-	    m2.execute.load();
-	    m1.execute.load();
-	    m2.execute.load();
-	    m1.execute.load();
-	    m2.execute.load();
-	    
-	    m1.loader2.clear();
-	    m1.execute.load();
-    }
 }

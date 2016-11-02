@@ -1,0 +1,15 @@
+Правила создания модулей
+
+1. Наименования пакетов должно быть таким:  kz.tem.portal.module.<имя модуля>
+   Например: kz.tem.portal.module.ftpclient
+   Это например используется при загрузке ресурсов HTML wicket-движком. Чтобы не перебирать JAR-файлы всех модулей, а только искать в библиотеках нужного модуля.
+   
+2. В корне проекта должен быть файл дескриптор module.xml
+
+		<?xml version="1.0" encoding="UTF-8" standalone="yes"?> 
+		<module>
+			<module-name>ftpclient</module-name>
+			<display-name>FTP клиент</display-name>
+			<module-class>kz.tem.portal.module.ftpclient.FtpClientModule</module-class>
+		</module>
+2.1  Значение тега module-name ДОЛЖНО быть таким же как и наименование модуля в package. Т.е. смотрим значение тэга module-class (kz.tem.portal.module.ftpclient.FtpClientModule) и берем следующее слово после значения "kz.tem.portal.module". В данном случае получается слово ftpclient.   
