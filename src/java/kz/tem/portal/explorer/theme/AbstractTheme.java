@@ -11,7 +11,8 @@ public class AbstractTheme extends Panel{
 	public AbstractTheme(String id, PageInfo info) {
 		super(id);
 		try {
-			AbstractLayout layout = (AbstractLayout)Theme1.class.forName(info.getLayout()).getConstructor(new Class[]{String.class,PageInfo.class}).newInstance(new Object[]{"layout",info});
+			AbstractLayout layout = new AbstractLayout("layout", info);
+//			AbstractLayout layout = (AbstractLayout)Theme1.class.forName(info.getLayout()).getConstructor(new Class[]{String.class,PageInfo.class}).newInstance(new Object[]{"layout",info});
 			add(layout);
 		} catch (Exception e) {
 			e.printStackTrace();

@@ -6,7 +6,7 @@ import kz.tem.portal.server.page.PageInfo;
 public class Layout1 extends AbstractLayout{
 
 	public Layout1(String id, PageInfo info) {
-		super(id);
+		super(id,info);
 		addPortletPosition("portlet1");
 		addPortletPosition("portlet2");
 		

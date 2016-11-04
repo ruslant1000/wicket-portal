@@ -13,7 +13,7 @@ public class FakePageInfoFactory implements IPageInfoFactory{
 			instance = new FakePageInfoFactory();
 			instance.infoMap.clear();
 			
-			PageInfo pi1 = new PageInfo("page1", "kz.tem.portal.explorer.theme.Theme1", "kz.tem.portal.explorer.layout.Layout1");
+			PageInfo pi1 = new PageInfo("page1", "kz.tem.portal.explorer.theme.Theme1", "DefaultLayout.html");
 			pi1.getModules().put("portlet1", new LinkedList<String>());
 			pi1.getModules().get("portlet1").add("ftpclient");
 			pi1.getModules().put("portlet2", new LinkedList<String>());
