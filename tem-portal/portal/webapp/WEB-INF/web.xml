@@ -5,7 +5,6 @@
 	id="WebApp_ID" version="3.0">
 	<display-name>Tem Portal</display-name>
 
-
 	<filter>
 		<filter-name>PortalApplication</filter-name>
 		<filter-class>org.apache.wicket.protocol.http.WicketFilter</filter-class>
@@ -20,9 +19,21 @@
 		<dispatcher>REQUEST</dispatcher>
 		<dispatcher>INCLUDE</dispatcher>
 	</filter-mapping>
-	
-	
+
+
+
+	<context-param>
+		<param-name>contextConfigLocation</param-name>
+		<param-value>classpath:/kz/tem/portal/server/context/main.xml</param-value>
+	</context-param>
+
+
 	<listener>
-	<listener-class>kz.tem.portal.context.listener.PortalContextListener</listener-class>
-   </listener>
+		<listener-class>kz.tem.portal.context.listener.PortalContextListener</listener-class>
+	</listener>
+
+	<listener>
+		<listener-class>org.springframework.web.context.ContextLoaderListener</listener-class>
+	</listener>
+
 </web-app>

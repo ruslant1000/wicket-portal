@@ -6,7 +6,7 @@ import kz.tem.portal.server.page.PageInfo;
 public class Layout2 extends AbstractLayout{
 
 	public Layout2(String id, PageInfo info) {
-		super(id);
+		super(id,info);
 		// TODO Auto-generated constructor stub
 	}
 
