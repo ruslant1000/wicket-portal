@@ -60,6 +60,18 @@
 	<bean class="kz.tem.portal.server.register.impl.PageRegisterImpl">
 		<property name="sessionFactory" ref="mySessionFactory" />
 	</bean>
+	<bean class="kz.tem.portal.server.register.impl.PortletRegisterImpl">
+		<property name="sessionFactory" ref="mySessionFactory" />
+	</bean>
+	<bean id="userRegister" class="kz.tem.portal.server.register.impl.UserRegisterImpl" init-method="inits">
+		<property name="sessionFactory" ref="mySessionFactory" />
+	</bean>
+	
+	<bean class="kz.tem.portal.api.RegisterEngine">
+		<property name="userRegister" ref="userRegister" />
+	</bean>
+
+
 
 	<tx:annotation-driven transaction-manager="transactionManager"
 		mode="proxy" proxy-target-class="true" />

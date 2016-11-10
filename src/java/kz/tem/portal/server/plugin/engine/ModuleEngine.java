@@ -3,6 +3,8 @@ package kz.tem.portal.server.plugin.engine;
 import java.io.File;
 import java.io.FileInputStream;
 import java.util.HashMap;
+import java.util.LinkedList;
+import java.util.List;
 import java.util.Map;
 
 import javax.xml.parsers.DocumentBuilder;
@@ -17,7 +19,13 @@ import org.slf4j.LoggerFactory;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 
-
+/**
+ * 
+ * @author prog_01
+ * 
+ * Класс для работы с модулями
+ *
+ */
 public class ModuleEngine {
 	
 	private static Logger log = LoggerFactory.getLogger(ModuleEngine.class); 
@@ -39,6 +47,13 @@ public class ModuleEngine {
 	}
 	private ModuleEngine(){}
 	
+	/**
+	 * Создание конкретного инстанса конкретного модуля
+	 * @param id - wicket:id
+	 * @param meta - Информация и модуле
+	 * @return - Возвращает созданную wicket панель
+	 * @throws Exception
+	 */
 	public Module create(String id, ModuleMeta meta)throws Exception{
 		if(!loaders.containsKey(meta.getModuleName())){
 			throw new Exception("Не найден JarClassLoader для модуля "+meta.getModuleName());
@@ -49,7 +64,11 @@ public class ModuleEngine {
 		log.debug("Создание инстанса модуля "+meta.getModuleName()+" завершено");
 		return module;
 	}
-	 
+	 /**
+	  * Загрузка информации обо всех доступных модулях.
+	  * @param modulesPath - Полный путь к директории расположения модулей
+	  * @throws Exception
+	  */
 	public void loadModules(String modulesPath)throws Exception{
 		log.info("Загрузка модулей...");
 		this.modulesPath=modulesPath;
@@ -65,7 +84,12 @@ public class ModuleEngine {
 		}
 		log.info("Загрузка модулей завершена");
 	}
-	
+	/**
+	 * Загрузка информации об одном конкретном модуле
+	 * @param modulePath
+	 * @return
+	 * @throws Exception
+	 */
 	public ModuleMeta load(String modulePath)throws Exception{
 		log.info("Загрузка модуля "+modulePath+"...");
 		ModuleMeta meta = new ModuleMeta();
@@ -112,6 +136,12 @@ public class ModuleEngine {
 		log.info("Загрузка модуля "+modulePath+" завершена");
 		return meta;
 	}
+	
+	public List<ModuleMeta> getModulesList(){
+		List<ModuleMeta> list = new LinkedList<ModuleMeta>();
+		list.addAll(getModuleMap().values());
+		return list;
+	}
 	public Map<String, ModuleMeta> getModuleMap() {
 		return moduleMap;
 	}
@@ -124,7 +154,11 @@ public class ModuleEngine {
 			return loaders.get(moduleName);
 		return null;
 	}
-	
+	/**
+	 * Удаление информации о конкретном модуле. Удаление полностью из JVM. 
+	 * Нужно для того, чтобы потом можно было повторно загрузить модуль, но уже обновленный
+	 * @param moduleName
+	 */
 	public void undeploy(String moduleName){
 		String mp = new String(moduleMap.get(moduleName).getModuleDirectoryPath());
 		
@@ -141,6 +175,9 @@ public class ModuleEngine {
 			e.printStackTrace();
 		}
 	}
+	/**
+	 * Загрузка информации о тех модулях, которые еще небыли загружены. Например если в процессе работы добавить в папку модулей архив нового модуля. 
+	 */
 	public void loadNewModules(){
 		try {
 			loadModules(modulesPath);

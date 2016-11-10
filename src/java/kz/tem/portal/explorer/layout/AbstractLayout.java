@@ -5,11 +5,13 @@ import java.net.URL;
 import java.util.HashMap;
 import java.util.Map;
 
+import kz.tem.portal.PortalException;
 import kz.tem.portal.api.PortalEngine;
 import kz.tem.portal.api.model.LayoutInfo;
 import kz.tem.portal.explorer.portlet.PortletContainer;
-import kz.tem.portal.server.page.PageInfo;
-import kz.tem.portal.server.plugin.Module;
+import kz.tem.portal.server.model.Page;
+import kz.tem.portal.server.model.Portlet;
+import kz.tem.portal.server.register.IPortletRegister;
 
 import org.apache.wicket.MarkupContainer;
 import org.apache.wicket.core.util.resource.UrlResourceStream;
@@ -18,21 +20,33 @@ import org.apache.wicket.markup.IMarkupResourceStreamProvider;
 import org.apache.wicket.markup.html.panel.Panel;
 import org.apache.wicket.markup.repeater.RepeatingView;
 import org.apache.wicket.protocol.http.WebApplication;
+import org.apache.wicket.spring.injection.annot.SpringBean;
 import org.apache.wicket.util.resource.IResourceStream;
 
 @SuppressWarnings("serial")
 public class AbstractLayout extends Panel implements IMarkupResourceStreamProvider, IMarkupCacheKeyProvider {
 
-	private static String MARKUP_CACHE_KEY="AbstractLayout";
+	private String MARKUP_CACHE_KEY="AbstractLayout";
 	private Map<String, RepeatingView> portletsMap = new HashMap<String, RepeatingView>();
 	
 	private String layoutName;
 	
-	public AbstractLayout(String id, PageInfo pageInfo) {
+	@SpringBean
+	private IPortletRegister portletRegister;
+	
+	public AbstractLayout(String id, Page pageInfo) {
 		super(id);
+		MARKUP_CACHE_KEY=MARKUP_CACHE_KEY+pageInfo.getLayout();
+//		System.out.println("~~~ "+pageInfo.getUrl());
+//		try {
+//			Thread.sleep(5000);
+//		} catch (InterruptedException e) {
+//			// TODO Auto-generated catch block
+//			e.printStackTrace();
+//		}
 		//**********************************
 		// Это нудно для того, чтобы kz/tem/portal/explorer/layout/AbstractLayout не подгружал один и тот же HTML-layout (первый загруженный Layout).
-		WebApplication.get().getMarkupSettings().getMarkupFactory().getMarkupCache().removeMarkup(MARKUP_CACHE_KEY);
+//		WebApplication.get().getMarkupSettings().getMarkupFactory().getMarkupCache().removeMarkup(MARKUP_CACHE_KEY);
 		//**********************************
 		layoutName = pageInfo.getLayout();
 		System.out.println(layoutName);
@@ -45,13 +59,16 @@ public class AbstractLayout extends Panel implements IMarkupResourceStreamProvid
 				addPortletPosition(location);
 		}
 		
-		for(String position:pageInfo.getModules().keySet()){
-			System.out.println("### "+position);
-			for(String module:pageInfo.getModules().get(position)){
-				System.out.println("##### "+position+"  "+module);
-				addPortlet(position, module);
+		
+		try {
+			for(Portlet p:portletRegister.table(0, 0, pageInfo.getId()).records()){
+				addPortlet(p.getPosition(), p.getModuleName());
 			}
+		} catch (PortalException e) {
+			e.printStackTrace();
+			throw new RuntimeException(e);
 		}
+		
 	}
 	
 	public void addPortletPosition(String name){

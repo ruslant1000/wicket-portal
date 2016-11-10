@@ -3,6 +3,8 @@ package kz.tem.portal.server.register.impl;
 import static org.junit.Assert.*;
 
 import java.net.URL;
+import java.util.List;
+import java.util.Map;
 
 import kz.tem.portal.PortalException;
 import kz.tem.portal.server.model.Page;
@@ -88,6 +90,21 @@ public class PageRegisterImplTest {
 			fail(ExceptionUtils.fullError(e));
 		}
 		
+	}
+	
+	@Test
+	public void testTree() {
+		try {
+			List<Page> map = register.pagesTree();
+			for(Page p1:map){
+				System.out.println(p1.getTitle());
+				for(Page p2:p1.getChilds())
+					System.out.println("   "+p2.getTitle());
+			}
+		} catch (PortalException e) {
+			e.printStackTrace();
+			fail(e.getMessage());
+		}
 	}
 	public static void main(String[] args) {
 		URL url = Thread.currentThread().getContextClassLoader()

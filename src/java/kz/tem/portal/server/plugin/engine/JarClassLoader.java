@@ -26,12 +26,12 @@ public class JarClassLoader extends ClassLoader {
 	}
 
 	public Class loadClass(String className) throws ClassNotFoundException {
-		System.out.println("load " + className);
+//		System.out.println("load " + className);
 		return findClass(className);
 	}
 
 	public Class findClass(String className) {
-		System.out.println("find " + className);
+//		System.out.println("find " + className);
 		byte classByte[];
 		Class result = null;
 
@@ -53,15 +53,15 @@ public class JarClassLoader extends ClassLoader {
 		JarFile jar = null;
 		ByteArrayOutputStream byteStream = null;
 		try {
-			System.out.println("find in jar...");
+//			System.out.println("find in jar...");
 			
 			File pathDir = new File(path);
 
 			for (String jarFile : pathDir.list()) {
-				System.out.println(jarFile);
+//				System.out.println(jarFile);
 				
 					jar = new JarFile(new File(path, jarFile));
-					System.out.println(className.replaceAll("\\.", "/"));
+//					System.out.println(className.replaceAll("\\.", "/"));
 					JarEntry entry = jar.getJarEntry(className.replaceAll("\\.",
 							"/") + ".class");
 					if (entry == null){
