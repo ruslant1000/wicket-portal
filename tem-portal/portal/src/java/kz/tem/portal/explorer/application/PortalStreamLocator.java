@@ -17,9 +17,9 @@ public class PortalStreamLocator extends ResourceStreamLocator{
 	@Override
 	public IResourceStream locate(Class<?> arg0, String arg1, String arg2,
 			String arg3, Locale arg4, String arg5, boolean arg6) {
-		System.out.println("PATH: "+arg1);
-		System.out.println("CLASS: "+arg0);
-		System.out.println("BOOLEAN: "+arg6);
+//		System.out.println("PATH: "+arg1);
+//		System.out.println("CLASS: "+arg0);
+//		System.out.println("BOOLEAN: "+arg6);
 		return super.locate(arg0, arg1, arg2, arg3, arg4, arg5, arg6);
 	}
 	
@@ -98,7 +98,7 @@ private IResourceStream loca3(Class<?> clazz, String path){
 	
 	private IResourceStream moduleLocate(Class<?> arg0, String arg1){
 		String moduleName = arg1.substring("kz/tem/portal/module/".length()).split("/")[0];
-		System.out.println("moduleName: "+moduleName);
+//		System.out.println("moduleName: "+moduleName);
 		IResourceStream stream =null;
 		URL url = ModuleEngine.getInstance().getClassLoader(moduleName).getResource(arg1);
 		
@@ -114,8 +114,8 @@ private IResourceStream loca3(Class<?> clazz, String path){
 
 	@Override
 	public IResourceStream locate(Class<?> arg0, String arg1) {
-		System.out.println("PATH: "+arg1);
-		System.out.println("CLASS: "+arg0);
+//		System.out.println("PATH: "+arg1);
+//		System.out.println("CLASS: "+arg0);
 //		try {
 //			Thread.sleep(5000);
 //		} catch (InterruptedException e) {
@@ -126,8 +126,8 @@ private IResourceStream loca3(Class<?> clazz, String path){
 //			stream = loca2(arg0, arg1);
 			stream = moduleLocate(arg0, arg1);
 		}
-		if(stream!=null){
-			System.out.println("stream.length(): "+stream.length());
+//		if(stream!=null){
+//			System.out.println("stream.length(): "+stream.length());
 //			try {
 //				Thread.sleep(10000);
 //			} catch (InterruptedException e) {
@@ -135,7 +135,7 @@ private IResourceStream loca3(Class<?> clazz, String path){
 //				e.printStackTrace();
 //			}
 			
-		}
+//		}
 		if(stream==null)
 			stream = super.locate(arg0, arg1);
 		

@@ -25,6 +25,11 @@ public class LayoutInfo implements Serializable{
 	public void setLocations(List<String> locations) {
 		this.locations = locations;
 	}
+
+	@Override
+	public String toString() {
+		return name;
+	}
 	
 	
 }

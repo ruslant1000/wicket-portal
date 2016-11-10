@@ -1,5 +1,7 @@
 package kz.tem.portal.api;
 
+import kz.tem.portal.server.plugin.engine.ModuleEngine;
+
 public class PortalEngine {
 
 	
@@ -20,5 +22,12 @@ public class PortalEngine {
 	
 	public ExplorerEngine getExplorerEngine(){
 		return ExplorerEngine.getInstance();
+	}
+	
+	public ModuleEngine getModuleEngine(){
+		return ModuleEngine.getInstance();
+	} 
+	public RegisterEngine getRegisterEngine(){
+		return RegisterEngine.getInstance();
 	}
 }

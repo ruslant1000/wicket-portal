@@ -7,7 +7,7 @@ import javax.persistence.Id;
 import javax.persistence.MappedSuperclass;
 
 @MappedSuperclass
-public class IdEntity {
+public class IdEntity{
 
 	private Long id;
 	

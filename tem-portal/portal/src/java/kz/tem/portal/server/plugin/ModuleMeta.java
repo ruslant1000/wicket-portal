@@ -42,7 +42,9 @@ public class ModuleMeta implements Serializable{
 	public void setModuleDirectoryPath(String moduleDirectoryPath) {
 		this.moduleDirectoryPath = moduleDirectoryPath;
 	}
-	
+	public String toString(){
+		return moduleName;
+	}
 	
 
 }

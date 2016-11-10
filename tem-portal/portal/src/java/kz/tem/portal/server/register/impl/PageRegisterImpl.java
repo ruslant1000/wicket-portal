@@ -1,6 +1,10 @@
 package kz.tem.portal.server.register.impl;
 
+import java.util.HashMap;
+import java.util.LinkedList;
 import java.util.List;
+import java.util.Map;
+import java.util.TreeMap;
 
 import kz.tem.portal.PortalException;
 import kz.tem.portal.server.bean.ITable;
@@ -11,10 +15,12 @@ import org.hibernate.Criteria;
 import org.hibernate.Session;
 import org.hibernate.SessionFactory;
 import org.hibernate.criterion.Projections;
+import org.hibernate.criterion.Restrictions;
 import org.hibernate.exception.ConstraintViolationException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.orm.hibernate5.HibernateTemplate;
 import org.springframework.transaction.annotation.Transactional;
+@SuppressWarnings("serial")
 public class PageRegisterImpl implements IPageRegister{
 
 	@Autowired
@@ -42,6 +48,10 @@ public class PageRegisterImpl implements IPageRegister{
 		Session session = null;
 		try{
 			session = sessionFactory.getCurrentSession();
+//			if(page.getParentPage()!=null)
+//				page.setParentPageId(page.getParentPage().getId());
+//			else
+//				page.setParentPageId(null);
 			session.persist(page);
 			session.flush();
 			return page;
@@ -58,9 +68,13 @@ public class PageRegisterImpl implements IPageRegister{
 		Session session = null;
 		try{
 			session = sessionFactory.getCurrentSession();
+//			if(page.getParentPage()!=null)
+//				page.setParentPageId(page.getParentPage().getId());
+//			else
+//				page.setParentPageId(null);
 			session.merge(page);
 			session.flush();
-			session.evict(page);
+//			session.evict(page);
 		}catch(Exception ex){
 			session.clear();
 			throw new PortalException("Ошибка при сохранении страницы",ex);
@@ -74,13 +88,32 @@ public class PageRegisterImpl implements IPageRegister{
 		try{
 			session = sessionFactory.getCurrentSession();
 			Page page = session.get(Page.class, id);
-			if(page!=null)
-				session.evict(page);
+//			if(page!=null){
+//				session.evict(page);
+//			}
 			return page;
 		}catch(Exception ex){
 			throw new PortalException("Ошибка при попытке получить информацию о странице из базы данных",ex);
 		}
 	}
+	@Override
+	@Transactional(readOnly=true)
+	public Page getPage(String url) throws PortalException {
+		Session session = null;
+		try{
+			session = sessionFactory.getCurrentSession();
+			Criteria criteria = session.createCriteria(Page.class);
+			criteria.add(Restrictions.eq("url", url));
+			Page page = (Page) criteria.uniqueResult();
+//			if(page!=null){
+//				session.evict(page);
+//			}
+			return page;
+		}catch(Exception ex){
+			throw new PortalException("Ошибка при попытке получить информацию о странице из базы данных",ex);
+		}
+	}
+
 	@Override
 	@Transactional
 	public void deletePage(Long id) throws PortalException {
@@ -124,6 +157,38 @@ public class PageRegisterImpl implements IPageRegister{
 					return list;
 				}
 			};
+		}catch(Exception ex){
+			throw new PortalException("Не удалось получить список страниц",ex);
+		}
+	}
+	@Override
+	@Transactional(readOnly=true)
+	public List<Page> pagesTree() throws PortalException {
+		Session session = null;
+		try{
+			List<Page> tree = new LinkedList<Page>();
+			session = sessionFactory.getCurrentSession();
+			Criteria criteria = session.createCriteria(Page.class);
+			List<Page> list = criteria.list();
+			
+			if(list!=null && list.size()>0){
+				for(Page page:list){
+					if(page.getParentPage()==null){
+						tree.add(page);
+					}
+				}
+				for(Page page:list){
+					if(page.getParentPage()!=null){
+						for(Page key:tree){
+							if(key.getId().longValue()==page.getParentPage().getId().longValue()){
+								key.getChilds().add(page);
+							}
+						}
+					}
+				}
+			}
+			return tree;
+			
 		}catch(Exception ex){
 			throw new PortalException("Не удалось получить список страниц",ex);
 		}

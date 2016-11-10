@@ -2,6 +2,8 @@ package kz.tem.portal;
 
 @SuppressWarnings("serial")
 public class PortalException extends Exception{
+	
+	public static final String KEY_LOGIN_ERROR="LOGIN_ERROR";
 
 	private String key;
 
