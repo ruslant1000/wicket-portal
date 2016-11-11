@@ -8,6 +8,7 @@ import java.util.Map;
 import kz.tem.portal.api.PortalEngine;
 import kz.tem.portal.api.model.ThemeInfo;
 import kz.tem.portal.explorer.application.PortalApplication;
+import kz.tem.portal.explorer.application.PortalSession;
 import kz.tem.portal.explorer.layout.AbstractLayout;
 import kz.tem.portal.server.model.Page;
 import kz.tem.portal.server.register.IPageRegister;
@@ -24,6 +25,8 @@ import org.apache.wicket.markup.html.basic.Label;
 import org.apache.wicket.markup.html.panel.Panel;
 import org.apache.wicket.markup.repeater.RepeatingView;
 import org.apache.wicket.protocol.http.WebApplication;
+import org.apache.wicket.request.cycle.RequestCycle;
+import org.apache.wicket.request.flow.RedirectToUrlException;
 import org.apache.wicket.spring.injection.annot.SpringBean;
 import org.apache.wicket.util.resource.IResourceStream;
 
@@ -50,6 +53,8 @@ public class AbstractTheme extends Panel implements IMarkupResourceStreamProvide
 				RepeatingView menu = new RepeatingView("menu");
 				add(menu);
 				for(Page p1:tree){
+					if(!p1.getPublicPage() && !PortalSession.get().access(p1.getRole()))
+						continue;
 					Component m1 = new WebMarkupContainer(menu.newChildId());
 					Label ln = null;
 					if(theme.isMenuLink()){
@@ -65,6 +70,9 @@ public class AbstractTheme extends Panel implements IMarkupResourceStreamProvide
 						RepeatingView submemu = new RepeatingView("sub-menu");
 						((WebMarkupContainer)m1).add(submemu);
 						for(Page p2:p1.getChilds()){
+							if(!p1.getPublicPage() && !PortalSession.get().access(p2.getRole()))
+								continue;
+							
 							WebMarkupContainer m2 =new WebMarkupContainer(submemu.newChildId());
 							submemu.add(m2);
 							if(theme.isSubMenuLink()){
@@ -83,6 +91,26 @@ public class AbstractTheme extends Panel implements IMarkupResourceStreamProvide
 					
 					
 				}
+			}
+			if(theme.isUser()){
+				WebMarkupContainer user = new WebMarkupContainer("user");
+				add(user);
+				user.setVisible(PortalSession.get().isSignedIn());
+				Label username = new Label("user-name",PortalSession.get().isSignedIn()?PortalSession.get().getUser().getLogin():"");
+				user.add(username);
+				WebMarkupContainer logout = new WebMarkupContainer("user-logout");
+				
+				logout.add(new AttributeModifier("href", RequestCycle.get().getRequest().getContextPath()+"/logout"));
+				user.add(logout);
+			}
+			if(theme.isGuest()){
+				WebMarkupContainer guest = new WebMarkupContainer("guest");
+				add(guest);
+				guest.setVisible(!PortalSession.get().isSignedIn());
+				WebMarkupContainer login = new WebMarkupContainer("guest-login");
+				
+				login.add(new AttributeModifier("href", RequestCycle.get().getRequest().getContextPath()+"/login"));
+				guest.add(login);
 			}
 		} catch (Exception e) {
 			e.printStackTrace();

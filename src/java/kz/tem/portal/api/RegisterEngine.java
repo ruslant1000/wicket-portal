@@ -5,6 +5,7 @@ import java.io.Serializable;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import kz.tem.portal.server.register.ISettingsRegister;
 import kz.tem.portal.server.register.IUserRegister;
 
 @SuppressWarnings("serial")
@@ -15,6 +16,7 @@ public class RegisterEngine implements Serializable{
 	private static RegisterEngine instance = null;
 	
 	private IUserRegister userRegister;
+	private ISettingsRegister settingsRegister;
 	
 	private RegisterEngine(){
 		instance = this;
@@ -33,6 +35,14 @@ public class RegisterEngine implements Serializable{
 
 	public void setUserRegister(IUserRegister userRegister) {
 		this.userRegister = userRegister;
+	}
+
+	public ISettingsRegister getSettingsRegister() {
+		return settingsRegister;
+	}
+
+	public void setSettingsRegister(ISettingsRegister settingsRegister) {
+		this.settingsRegister = settingsRegister;
 	}
 	
 	

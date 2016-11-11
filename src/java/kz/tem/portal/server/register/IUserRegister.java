@@ -19,5 +19,9 @@ public interface IUserRegister extends Serializable{
 	
 	public ITable<User> table(int first,int count)throws PortalException;
 	
+	
+	
+	
+	
 
 }

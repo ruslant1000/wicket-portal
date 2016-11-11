@@ -66,9 +66,17 @@
 	<bean id="userRegister" class="kz.tem.portal.server.register.impl.UserRegisterImpl" init-method="inits">
 		<property name="sessionFactory" ref="mySessionFactory" />
 	</bean>
+	<bean id="settingsRegister" class="kz.tem.portal.server.register.impl.SettingsRegisterImpl">
+		<property name="sessionFactory" ref="mySessionFactory" />
+	</bean>
+	<bean class="kz.tem.portal.server.register.impl.RoleRegisterImpl">
+		<property name="sessionFactory" ref="mySessionFactory" />
+	</bean>
+	
 	
 	<bean class="kz.tem.portal.api.RegisterEngine">
 		<property name="userRegister" ref="userRegister" />
+		<property name="settingsRegister" ref="settingsRegister" />
 	</bean>
 
 

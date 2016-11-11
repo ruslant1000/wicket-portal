@@ -68,10 +68,24 @@ padding: 0;
 	
 	text-decoration: underline;
 }
-
+.user-session{
+	
+}
 </style>
 	<div style="border: 2px solid green; padding: 10px; margin: 10px;">
 	
+	
+		<div class="user-session" align="right">
+			<div wicket:id="user">
+				<span class="user-name" wicket:id="user-name"/>
+				<a class="user-logout" wicket:id="user-logout">Выход</a>
+			</div>	
+			<div wicket:id="guest">
+				<a class="user-login" wicket:id="guest-login">Вход</a>
+			</div>
+		</div>
+		
+		
 		<div class="main-menu-bar">
 			<ul class="dropdown">
 			

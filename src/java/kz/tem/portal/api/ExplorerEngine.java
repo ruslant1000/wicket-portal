@@ -15,9 +15,12 @@ import org.apache.wicket.protocol.http.WebApplication;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import kz.tem.portal.PortalException;
 import kz.tem.portal.api.model.LayoutInfo;
 import kz.tem.portal.api.model.ThemeInfo;
 import kz.tem.portal.server.bean.ITable;
+import kz.tem.portal.server.model.Settings;
+import kz.tem.portal.server.register.ISettingsRegister;
 
 public class ExplorerEngine {
 	
@@ -28,16 +31,53 @@ public class ExplorerEngine {
 	private Map<String, LayoutInfo> layouts = new HashMap<String, LayoutInfo>();
 	private Map<String, ThemeInfo> themes = new HashMap<String, ThemeInfo>();
 	
+	/**
+	 * Настройки портала. относительный URL страницы, которая используется в качестве главной
+	 */
+	public static final String SETTINGS_MAIN_PAGE="Main page";
+	/**
+	 * общие настройки портала
+	 */
+	private Map<String, String> settings = new HashMap<String, String>();
+	
 	public static ExplorerEngine getInstance(){
 		if(instance==null)
 			instance = new ExplorerEngine();
 		return instance;
 	}
 	
-	private ExplorerEngine(){}
+	private ExplorerEngine(){
+		settings.clear();
+		settings.put(SETTINGS_MAIN_PAGE, null);
+		loadSettings();
+	}
 	
-	
-//************************************
+	public Map<String, String> getSettings() {
+		return settings;
+	}
+
+	public void setSettings(Map<String, String> settings) {
+		this.settings = settings;
+	}
+	public String getSettingsValue(String name){
+		return settings.get(name);
+	}
+	/**
+	 * Загрузка значений всех настроек в память, чтобы не делать вызов базы по много раз
+	 */
+	public void loadSettings(){
+		try {
+			for(Settings sett:RegisterEngine.getInstance().getSettingsRegister().table(0, 0).records()){
+				this.settings.put(sett.getName(), sett.getValue());
+			}
+		} catch (PortalException e) {
+			e.printStackTrace();
+			log.error("Could not load settings",e);
+		}
+		
+	}
+
+	//************************************
 //  Работа с Layout's
 	public Map<String, LayoutInfo> getLayouts(){
 		return layouts;
@@ -207,6 +247,16 @@ public class ExplorerEngine {
 							theme.setSubMenu(true);
 						if(wicketId.contains("sub-menu-link"))
 							theme.setSubMenuLink(true);
+						if(wicketId.contains("user"))
+							theme.setUser(true);
+						if(wicketId.contains("user-name"))
+							theme.setUserName(true);
+						if(wicketId.contains("user-logout"))
+							theme.setUserLogout(true);
+						if(wicketId.contains("guest"))
+							theme.setGuest(true);
+						if(wicketId.contains("guest-login"))
+							theme.setGuestLogin(true);
 					}
 				}
 			}
@@ -227,10 +277,14 @@ public class ExplorerEngine {
 		list.addAll(getThemes().values());
 		return list;
 	}
-	//************************************	
+	//************************************
+	
+	
 	public static void main(String[] args) {
 		System.out.println(readWicketId("<td><div wicket:id=\"portlet1\"><a wicket:id=\"aaa\"/></div></td>"));
 	}
+
+
 	
 
 }

@@ -1,5 +1,7 @@
 package kz.tem.portal.explorer.panel.admin.pages;
 
+import java.util.Arrays;
+
 import org.apache.wicket.model.PropertyModel;
 import org.apache.wicket.spring.injection.annot.SpringBean;
 
@@ -19,6 +21,7 @@ public class PageForm extends DefaultInputForm{
 	
 	private LayoutInfo layout = null;
 	private ThemeInfo theme = null;
+	private String publicPage = "Публичня";
 	
 	private Page page;
 	public PageForm(String id) {
@@ -40,6 +43,7 @@ public class PageForm extends DefaultInputForm{
 			addCombobox("Theme", new PropertyModel<ThemeInfo>(PageForm.this, "theme"),PortalEngine.getInstance().getExplorerEngine().getThemesList(),   true);
 			addCombobox("Layout", new PropertyModel<LayoutInfo>(PageForm.this, "layout"),PortalEngine.getInstance().getExplorerEngine().getLayoutsList(),   true);
 			addCombobox("Parent page", new PropertyModel<Page>(page, "parentPage"),pageRegister.pages(0, 0).records(),   false);
+			addCombobox("Page visible", new PropertyModel<String>(PageForm.this, "publicPage"),Arrays.asList("Публичная","Приватная"),   true);
 		} catch (PortalException e) {
 			e.printStackTrace();
 			throw new RuntimeException();
@@ -59,6 +63,11 @@ public class PageForm extends DefaultInputForm{
 			page.setTheme(theme.getName());
 		}else
 			page.setTheme(null);
+		
+		if(publicPage!=null && publicPage.equals("Публичная"))
+			page.setPublicPage(true);
+		else
+			page.setPublicPage(false);
 		pageRegister.addNewPage(page);
 		info("Готово!!!");
 	}

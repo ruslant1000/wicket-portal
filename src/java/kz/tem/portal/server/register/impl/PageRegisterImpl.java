@@ -12,6 +12,7 @@ import kz.tem.portal.server.model.Page;
 import kz.tem.portal.server.register.IPageRegister;
 
 import org.hibernate.Criteria;
+import org.hibernate.Hibernate;
 import org.hibernate.Session;
 import org.hibernate.SessionFactory;
 import org.hibernate.criterion.Projections;
@@ -105,6 +106,7 @@ public class PageRegisterImpl implements IPageRegister{
 			Criteria criteria = session.createCriteria(Page.class);
 			criteria.add(Restrictions.eq("url", url));
 			Page page = (Page) criteria.uniqueResult();
+			Hibernate.initialize(page.getRole());
 //			if(page!=null){
 //				session.evict(page);
 //			}
@@ -140,7 +142,9 @@ public class PageRegisterImpl implements IPageRegister{
 				criteria.setMaxResults(count);
 			}
 			final List<Page> list = criteria.list();
-			
+			if(list!=null && list.size()>0)
+				for(Page p:list)
+					Hibernate.initialize(p.getRole());
 			Criteria crit2 = session.createCriteria(Page.class);
 			crit2.setProjection(Projections.rowCount());
 			final long total = (Long) crit2.uniqueResult();
@@ -176,6 +180,7 @@ public class PageRegisterImpl implements IPageRegister{
 					if(page.getParentPage()==null){
 						tree.add(page);
 					}
+					Hibernate.initialize(page.getRole());
 				}
 				for(Page page:list){
 					if(page.getParentPage()!=null){
