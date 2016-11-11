@@ -2,13 +2,18 @@ package kz.tem.portal.server.model;
 
 
 import java.io.Serializable;
+import java.util.HashSet;
 import java.util.LinkedList;
 import java.util.List;
+import java.util.Set;
 
 import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
+import javax.persistence.JoinColumn;
+import javax.persistence.JoinTable;
+import javax.persistence.ManyToMany;
 import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
 import javax.persistence.Table;
@@ -20,7 +25,6 @@ import javax.persistence.Transient;
 @Table(name="PT_PAGE")
 @Entity
 public class Page extends IdEntity implements Serializable{
-
 
 	private String url;
 	
@@ -37,6 +41,10 @@ public class Page extends IdEntity implements Serializable{
 	private List<Portlet> portlets = new LinkedList<Portlet>();
 	
 	private List<Page> childs = new LinkedList<Page>();
+	
+	private boolean publicPage =false;
+	
+	private Set<Role> role = new HashSet<Role>();
 	
 	@Column(unique=true, nullable=false)
 	public String getUrl() {
@@ -100,8 +108,25 @@ public class Page extends IdEntity implements Serializable{
 	public void setChilds(List<Page> childs) {
 		this.childs = childs;
 	}
+
+	public boolean getPublicPage() {
+		return publicPage;
+	}
+
+	public void setPublicPage(boolean publicPage) {
+		this.publicPage = publicPage;
+	}
 	
-	
+	@ManyToMany(fetch=FetchType.LAZY, cascade=CascadeType.ALL)
+	@JoinTable(name="PT_PAGE_ROLE", joinColumns={@JoinColumn( name="PAGE_ID",nullable=false) }, 
+	inverseJoinColumns={@JoinColumn(name="ROLE_ID", nullable=false)}
+	)
+	public Set<Role> getRole() {
+		return role;
+	}
+	public void setRole(Set<Role> role) {
+		this.role = role;
+	}
 	
 //	public Long getParentPageId() {
 //		return parentPageId;

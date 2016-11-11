@@ -5,9 +5,13 @@ import java.util.Iterator;
 
 import kz.tem.portal.api.PortalEngine;
 import kz.tem.portal.explorer.page.AbstractThemePage;
+import kz.tem.portal.explorer.page.AccessDeniedPage;
 import kz.tem.portal.explorer.page.SignInPage;
+import kz.tem.portal.explorer.page.SignOutPage;
 import kz.tem.portal.explorer.page.admin.pages.PagesConfig;
 import kz.tem.portal.explorer.page.admin.portlets.PortletsConfig;
+import kz.tem.portal.explorer.page.admin.settings.SettingsPage;
+import kz.tem.portal.explorer.page.admin.users.UsersPage;
 import kz.tem.portal.server.plugin.engine.ModuleEngine;
 import kz.tem.portal.server.register.IUserRegister;
 import kz.tem.portal.server.register.impl.UserRegisterImpl;
@@ -54,11 +58,15 @@ public class PortalApplication extends AuthenticatedWebApplication {
 		// getPageSettings().setRecreateBookmarkablePagesAfterExpiry(true);
 
 		mountPage("login", SignInPage.class);
+		mountPage("logout", SignOutPage.class);
+		mountPage("accessdenied", AccessDeniedPage.class);
 		
 		mountPage("pg/${seg1}", AbstractThemePage.class);
 
 		mountPage("admin/pages", PagesConfig.class);
 		mountPage("admin/portlets", PortletsConfig.class);
+		mountPage("admin/settings", SettingsPage.class);
+		mountPage("admin/users", UsersPage.class);
 
 		System.out.println("@@@  "
 				+ getFrameworkSettings().getSerializer().getClass().getName());

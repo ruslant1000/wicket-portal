@@ -4,7 +4,10 @@ import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
 import java.util.List;
 
+import net.sf.ehcache.hibernate.HibernateUtil;
+
 import org.hibernate.Criteria;
+import org.hibernate.Hibernate;
 import org.hibernate.Session;
 import org.hibernate.SessionFactory;
 import org.hibernate.criterion.Projections;
@@ -145,6 +148,8 @@ public class UserRegisterImpl implements IUserRegister{
 				
 				throw new PortalException(PortalException.KEY_LOGIN_ERROR,"Password not match");
 			}
+			
+			Hibernate.initialize(user.getRole());
 			return user;
 		}catch(Exception ex){
 			log.error("Ошибка аутентификации",ex);
@@ -185,7 +190,11 @@ public class UserRegisterImpl implements IUserRegister{
 				criteria.setMaxResults(count);
 			}
 			final List<User> list = criteria.list();
-			
+			if(list!=null && list.size()>0){
+				for(User u:list){
+					Hibernate.initialize(u.getRole());
+				}
+			}
 			Criteria crit2 = session.createCriteria(User.class);
 			crit2.setProjection(Projections.rowCount());
 			final long total = (Long) crit2.uniqueResult();

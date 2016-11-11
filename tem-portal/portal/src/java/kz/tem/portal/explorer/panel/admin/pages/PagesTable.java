@@ -85,6 +85,12 @@ public class PagesTable extends AbstractTable<Page>{
 				public Component cell(String id,final Page record) throws Exception {
 					return new Label(id,record.getParentPage()!=null?record.getParentPage().getTitle():"");
 				}
+			},new AColumn<Page>("Page visible","publicPage") {
+
+				@Override
+				public Component cell(String id,final Page record) throws Exception {
+					return new Label(id,record.getPublicPage()==true?"Публичная":"Приватная");
+				}
 			}
 		};
 		

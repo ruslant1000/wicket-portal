@@ -2,6 +2,7 @@ package kz.tem.portal.explorer.page.admin.pages;
 
 import kz.tem.portal.explorer.page.AdminPage;
 import kz.tem.portal.explorer.panel.admin.pages.PageForm;
+import kz.tem.portal.explorer.panel.admin.pages.PageRoleTable;
 import kz.tem.portal.explorer.panel.admin.pages.PagesTable;
 
 @SuppressWarnings("serial")
@@ -20,6 +21,8 @@ public class PagesConfig extends AdminPage{
 			
 		};
 		add(form);
+		
+		add(new PageRoleTable("roles"));
 	}
 	
 }

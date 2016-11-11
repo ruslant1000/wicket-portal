@@ -30,6 +30,27 @@ public class ThemeInfo implements Serializable{
 	 */
 	private boolean subMenuLink = false;
 	
+	/**
+	 * Признак того, что в HTML файле есть метка wicket:id="user"
+	 */
+	private boolean user = false;
+	/**
+	 * Признак того, что в HTML файле есть метка wicket:id="user-name"
+	 */
+	private boolean userName = false;
+	/**
+	 * Признак того, что в HTML файле есть метка wicket:id="user-logout"
+	 */
+	private boolean userLogout = false;
+	/**
+	 * Признак того, что в HTML файле есть метка wicket:id="guest"
+	 */
+	private boolean guest= false;
+	/**
+	 * Признак того, что в HTML файле есть метка wicket:id="guest-login"
+	 */
+	private boolean guestLogin= false;
+	
 	public String getName() {
 		return name;
 	}
@@ -84,6 +105,47 @@ public class ThemeInfo implements Serializable{
 
 	public void setSubMenuLink(boolean subMenuLink) {
 		this.subMenuLink = subMenuLink;
+	}
+	
+
+	public boolean isUser() {
+		return user;
+	}
+
+	public void setUser(boolean user) {
+		this.user = user;
+	}
+
+	public boolean isUserName() {
+		return userName;
+	}
+
+	public void setUserName(boolean userName) {
+		this.userName = userName;
+	}
+
+	public boolean isUserLogout() {
+		return userLogout;
+	}
+
+	public void setUserLogout(boolean userLogout) {
+		this.userLogout = userLogout;
+	}
+
+	public boolean isGuest() {
+		return guest;
+	}
+
+	public void setGuest(boolean guest) {
+		this.guest = guest;
+	}
+
+	public boolean isGuestLogin() {
+		return guestLogin;
+	}
+
+	public void setGuestLogin(boolean guestLogin) {
+		this.guestLogin = guestLogin;
 	}
 
 	public String toString(){

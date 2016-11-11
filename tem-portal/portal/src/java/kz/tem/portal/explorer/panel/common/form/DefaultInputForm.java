@@ -48,7 +48,6 @@ public class DefaultInputForm extends Panel implements IForm{
 		
 	}
 	
-	public void addFieldString(){}
 	
 	public FormFieldsBuilder fields(){
 		return fieldsBuilder;
