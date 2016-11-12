@@ -3,6 +3,16 @@ package kz.tem.portal.explorer.application;
 import java.net.URL;
 import java.util.Iterator;
 
+import org.apache.wicket.Page;
+import org.apache.wicket.application.AbstractClassResolver;
+import org.apache.wicket.application.IClassResolver;
+import org.apache.wicket.authroles.authentication.AbstractAuthenticatedWebSession;
+import org.apache.wicket.authroles.authentication.AuthenticatedWebApplication;
+import org.apache.wicket.markup.html.WebPage;
+import org.apache.wicket.protocol.http.WebApplication;
+import org.apache.wicket.request.cycle.RequestCycle;
+import org.apache.wicket.spring.injection.annot.SpringComponentInjector;
+
 import kz.tem.portal.api.PortalEngine;
 import kz.tem.portal.explorer.page.AbstractThemePage;
 import kz.tem.portal.explorer.page.AccessDeniedPage;
@@ -13,30 +23,11 @@ import kz.tem.portal.explorer.page.admin.portlets.PortletsConfig;
 import kz.tem.portal.explorer.page.admin.settings.SettingsPage;
 import kz.tem.portal.explorer.page.admin.users.UsersPage;
 import kz.tem.portal.server.plugin.engine.ModuleEngine;
-import kz.tem.portal.server.register.IUserRegister;
-import kz.tem.portal.server.register.impl.UserRegisterImpl;
-
-import org.apache.wicket.Component;
-import org.apache.wicket.MarkupContainer;
-import org.apache.wicket.Page;
-import org.apache.wicket.application.AbstractClassResolver;
-import org.apache.wicket.application.DefaultClassResolver;
-import org.apache.wicket.application.IClassResolver;
-import org.apache.wicket.authroles.authentication.AbstractAuthenticatedWebSession;
-import org.apache.wicket.authroles.authentication.AuthenticatedWebApplication;
-import org.apache.wicket.markup.ComponentTag;
-import org.apache.wicket.markup.MarkupStream;
-import org.apache.wicket.markup.html.WebPage;
-import org.apache.wicket.markup.resolver.IComponentResolver;
-import org.apache.wicket.protocol.http.WebApplication;
-import org.apache.wicket.request.cycle.RequestCycle;
-import org.apache.wicket.serialize.ISerializer;
-import org.apache.wicket.serialize.java.JavaSerializer;
-import org.apache.wicket.spring.injection.annot.SpringBean;
-import org.apache.wicket.spring.injection.annot.SpringComponentInjector;
-import org.apache.wicket.util.file.IResourceFinder;
-import org.apache.wicket.util.resource.IResourceStream;
-
+/**
+ * 
+ * @author Ruslan Temirbulatov
+ *
+ */
 public class PortalApplication extends AuthenticatedWebApplication {
 
 	

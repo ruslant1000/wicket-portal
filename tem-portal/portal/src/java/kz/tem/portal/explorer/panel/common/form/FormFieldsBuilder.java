@@ -13,7 +13,7 @@ import org.apache.wicket.markup.html.form.TextField;
 import org.apache.wicket.model.IModel;
 /**
  * 
- * @author prog_01
+ * @author Ruslan Temirbulatov
  * 
  * Конструктор полей ввода для форм ввода.
  *

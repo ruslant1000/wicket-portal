@@ -1,11 +1,14 @@
 package kz.tem.portal.explorer.panel.common.table;
 
-import org.apache.wicket.ajax.AjaxEventBehavior;
-import org.apache.wicket.ajax.AjaxRequestTarget;
 import org.apache.wicket.markup.html.form.CheckBox;
 import org.apache.wicket.markup.html.panel.Panel;
 import org.apache.wicket.model.Model;
-
+/**
+ * 
+ * @author Ruslan Temirbulatov
+ *
+ * @param <T>
+ */
 @SuppressWarnings("serial")
 public class FirstColumnCheck<T> extends Panel{
 

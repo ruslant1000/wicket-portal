@@ -14,7 +14,11 @@ import kz.tem.portal.server.model.Page;
 import kz.tem.portal.server.model.Role;
 import kz.tem.portal.server.register.IPageRegister;
 import kz.tem.portal.server.register.impl.RoleRegisterImpl;
-
+/**
+ * 
+ * @author Ruslan Temirbulatov
+ *
+ */
 @SuppressWarnings("serial")
 public class PageRoleTable extends AbstractTable<Page>{
 

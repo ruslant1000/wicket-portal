@@ -1,5 +1,9 @@
 package kz.tem.portal.api;
-
+/**
+ * 
+ * @author Ruslan Temirbulatov
+ *
+ */
 public class ServerEngine {
 	
 	private static ServerEngine instance=null;

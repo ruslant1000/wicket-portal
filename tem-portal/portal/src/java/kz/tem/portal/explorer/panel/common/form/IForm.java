@@ -4,7 +4,11 @@ import java.io.Serializable;
 import java.util.List;
 
 import org.apache.wicket.model.IModel;
-
+/**
+ * 
+ * @author Ruslan Temirbulatov
+ *
+ */
 public interface IForm extends Serializable{
 
 	public void addFieldString(String title, IModel<String> model, boolean required);

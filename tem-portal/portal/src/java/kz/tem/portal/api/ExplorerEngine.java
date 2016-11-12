@@ -21,7 +21,11 @@ import kz.tem.portal.api.model.ThemeInfo;
 import kz.tem.portal.server.bean.ITable;
 import kz.tem.portal.server.model.Settings;
 import kz.tem.portal.server.register.ISettingsRegister;
-
+/**
+ * 
+ * @author Ruslan Temirbulatov
+ *
+ */
 public class ExplorerEngine {
 	
 	private static Logger log = LoggerFactory.getLogger(ExplorerEngine.class);

@@ -6,7 +6,11 @@ import kz.tem.portal.server.plugin.engine.ModuleEngine;
 
 import org.apache.wicket.markup.html.basic.Label;
 import org.apache.wicket.markup.html.panel.Panel;
-
+/**
+ * 
+ * @author Ruslan Temirbulatov
+ *
+ */
 @SuppressWarnings("serial")
 public class PortletContainer extends Panel{
 

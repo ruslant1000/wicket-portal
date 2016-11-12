@@ -4,7 +4,11 @@ import kz.tem.portal.explorer.page.AdminPage;
 import kz.tem.portal.explorer.panel.admin.pages.PageForm;
 import kz.tem.portal.explorer.panel.admin.pages.PageRoleTable;
 import kz.tem.portal.explorer.panel.admin.pages.PagesTable;
-
+/**
+ * 
+ * @author Ruslan Temirbulatov
+ *
+ */
 @SuppressWarnings("serial")
 public class PagesConfig extends AdminPage{
 

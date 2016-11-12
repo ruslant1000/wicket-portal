@@ -13,7 +13,11 @@ import kz.tem.portal.explorer.panel.common.toolbar.SimpleToolbar;
 import kz.tem.portal.server.bean.ITable;
 import kz.tem.portal.server.model.Page;
 import kz.tem.portal.server.register.IPageRegister;
-
+/**
+ * 
+ * @author Ruslan Temirbulatov
+ *
+ */
 @SuppressWarnings("serial")
 public class PagesTable extends AbstractTable<Page>{
 

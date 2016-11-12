@@ -3,15 +3,6 @@ package kz.tem.portal.explorer.theme;
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.util.List;
-import java.util.Map;
-
-import kz.tem.portal.api.PortalEngine;
-import kz.tem.portal.api.model.ThemeInfo;
-import kz.tem.portal.explorer.application.PortalApplication;
-import kz.tem.portal.explorer.application.PortalSession;
-import kz.tem.portal.explorer.layout.AbstractLayout;
-import kz.tem.portal.server.model.Page;
-import kz.tem.portal.server.register.IPageRegister;
 
 import org.apache.wicket.AttributeModifier;
 import org.apache.wicket.Component;
@@ -26,10 +17,21 @@ import org.apache.wicket.markup.html.panel.Panel;
 import org.apache.wicket.markup.repeater.RepeatingView;
 import org.apache.wicket.protocol.http.WebApplication;
 import org.apache.wicket.request.cycle.RequestCycle;
-import org.apache.wicket.request.flow.RedirectToUrlException;
 import org.apache.wicket.spring.injection.annot.SpringBean;
 import org.apache.wicket.util.resource.IResourceStream;
 
+import kz.tem.portal.api.PortalEngine;
+import kz.tem.portal.api.model.ThemeInfo;
+import kz.tem.portal.explorer.application.PortalApplication;
+import kz.tem.portal.explorer.application.PortalSession;
+import kz.tem.portal.explorer.layout.AbstractLayout;
+import kz.tem.portal.server.model.Page;
+import kz.tem.portal.server.register.IPageRegister;
+/**
+ * 
+ * @author Ruslan Temirbulatov
+ *
+ */
 @SuppressWarnings("serial")
 public class AbstractTheme extends Panel implements IMarkupResourceStreamProvider, IMarkupCacheKeyProvider{
 

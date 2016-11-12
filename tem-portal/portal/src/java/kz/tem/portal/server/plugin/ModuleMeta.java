@@ -1,11 +1,12 @@
 package kz.tem.portal.server.plugin;
 
 import java.io.Serializable;
+
 /**
  * 
- * @author prog_01
+ * @author Ruslan Temirbulatov
+ * 
  * Описание модуля
- *
  */
 @SuppressWarnings("serial")
 public class ModuleMeta implements Serializable{

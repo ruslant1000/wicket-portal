@@ -3,7 +3,12 @@ package kz.tem.portal.explorer.panel.common.table;
 import java.io.Serializable;
 
 import org.apache.wicket.Component;
-
+/**
+ * 
+ * @author Ruslan Temirbulatov
+ *
+ * @param <T>
+ */
 @SuppressWarnings("serial")
 public abstract class AColumn<T> implements Serializable{
 	

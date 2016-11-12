@@ -1,7 +1,11 @@
 package kz.tem.portal.api.model;
 
 import java.io.Serializable;
-
+/**
+ * 
+ * @author Ruslan Temirbulatov
+ *
+ */
 @SuppressWarnings("serial")
 public class ThemeInfo implements Serializable{
 

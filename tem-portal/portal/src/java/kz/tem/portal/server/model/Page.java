@@ -20,7 +20,11 @@ import javax.persistence.Table;
 import javax.persistence.Transient;
 
 
-
+/**
+ * 
+ * @author Ruslan Temirbulatov
+ *
+ */
 @SuppressWarnings("serial")
 @Table(name="PT_PAGE")
 @Entity

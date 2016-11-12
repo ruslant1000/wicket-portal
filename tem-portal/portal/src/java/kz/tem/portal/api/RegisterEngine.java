@@ -7,7 +7,11 @@ import org.slf4j.LoggerFactory;
 
 import kz.tem.portal.server.register.ISettingsRegister;
 import kz.tem.portal.server.register.IUserRegister;
-
+/**
+ * 
+ * @author Ruslan Temirbulatov
+ *
+ */
 @SuppressWarnings("serial")
 public class RegisterEngine implements Serializable{
 	

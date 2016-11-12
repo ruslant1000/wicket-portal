@@ -23,6 +23,11 @@ import org.apache.wicket.request.flow.RedirectToUrlException;
 import org.apache.wicket.request.mapper.info.PageInfo;
 import org.apache.wicket.spring.injection.annot.SpringBean;
 
+/**
+ * 
+ * @author Ruslan Temirbulatov
+ *
+ */
 @SuppressWarnings("serial")
 public class AbstractThemePage extends WebPage{
 	
