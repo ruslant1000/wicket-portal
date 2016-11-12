@@ -16,7 +16,11 @@ import org.hibernate.SessionFactory;
 import org.hibernate.criterion.Projections;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.transaction.annotation.Transactional;
-
+/**
+ * 
+ * @author Ruslan Temirbulatov
+ *
+ */
 @SuppressWarnings("serial")
 public class SettingsRegisterImpl implements ISettingsRegister{
 

@@ -12,7 +12,11 @@ import kz.tem.portal.api.model.ThemeInfo;
 import kz.tem.portal.explorer.panel.common.form.DefaultInputForm;
 import kz.tem.portal.server.model.Page;
 import kz.tem.portal.server.register.IPageRegister;
-
+/**
+ * 
+ * @author Ruslan Temirbulatov
+ *
+ */
 @SuppressWarnings("serial")
 public class PageForm extends DefaultInputForm{
 	

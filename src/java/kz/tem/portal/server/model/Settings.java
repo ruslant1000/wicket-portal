@@ -5,7 +5,11 @@ import java.io.Serializable;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.Table;
-
+/**
+ * 
+ * @author Ruslan Temirbulatov
+ *
+ */
 @SuppressWarnings("serial")
 @Entity
 @Table(name="PT_SETTINGS")

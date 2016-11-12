@@ -10,7 +10,11 @@ import java.util.jar.JarEntry;
 import java.util.jar.JarFile;
 
 import kz.tem.portal.utils.FileUtils;
-
+/**
+ * 
+ * @author Ruslan Temirbulatov
+ *
+ */
 public class JarClassLoader extends ClassLoader {
 	private String path;
 	// private String[] jarFiles = new

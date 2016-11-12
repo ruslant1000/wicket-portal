@@ -1,15 +1,7 @@
 package kz.tem.portal.server.register.impl;
 
-import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.List;
-import java.util.Map;
-import java.util.TreeMap;
-
-import kz.tem.portal.PortalException;
-import kz.tem.portal.server.bean.ITable;
-import kz.tem.portal.server.model.Page;
-import kz.tem.portal.server.register.IPageRegister;
 
 import org.hibernate.Criteria;
 import org.hibernate.Hibernate;
@@ -21,6 +13,16 @@ import org.hibernate.exception.ConstraintViolationException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.orm.hibernate5.HibernateTemplate;
 import org.springframework.transaction.annotation.Transactional;
+
+import kz.tem.portal.PortalException;
+import kz.tem.portal.server.bean.ITable;
+import kz.tem.portal.server.model.Page;
+import kz.tem.portal.server.register.IPageRegister;
+/**
+ * 
+ * @author Ruslan Temirbulatov
+ *
+ */
 @SuppressWarnings("serial")
 public class PageRegisterImpl implements IPageRegister{
 

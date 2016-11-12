@@ -10,7 +10,11 @@ import kz.tem.portal.server.plugin.engine.ModuleEngine;
 import kz.tem.portal.server.plugin.engine.ModuleFinder;
  
 //import org.slf4j.LoggerFactory;
-
+/**
+ * 
+ * @author Ruslan Temirbulatov
+ *
+ */
 public class PortalContextListener implements ServletContextListener{
 
 	private Logger log = LoggerFactory.getLogger(PortalContextListener.class);

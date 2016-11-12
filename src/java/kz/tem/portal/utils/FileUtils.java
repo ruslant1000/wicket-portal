@@ -1,7 +1,11 @@
 package kz.tem.portal.utils;
 
 import java.io.File;
-
+/**
+ * 
+ * @author Ruslan Temirbulatov
+ *
+ */
 public class FileUtils {
 
 	public static void deleteFile(String name)throws Exception{

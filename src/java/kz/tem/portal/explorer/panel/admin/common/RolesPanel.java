@@ -9,7 +9,11 @@ import kz.tem.portal.server.model.User;
 import org.apache.wicket.ajax.AjaxRequestTarget;
 import org.apache.wicket.markup.html.panel.Panel;
 import org.apache.wicket.markup.repeater.RepeatingView;
-
+/**
+ * 
+ * @author Ruslan Temirbulatov
+ *
+ */
 @SuppressWarnings("serial")
 public class RolesPanel extends Panel{
 

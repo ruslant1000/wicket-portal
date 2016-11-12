@@ -12,10 +12,13 @@ import org.springframework.transaction.annotation.Transactional;
 
 import kz.tem.portal.PortalException;
 import kz.tem.portal.server.bean.ITable;
-import kz.tem.portal.server.model.Page;
 import kz.tem.portal.server.model.Portlet;
 import kz.tem.portal.server.register.IPortletRegister;
-
+/**
+ * 
+ * @author Ruslan Temirbulatov
+ *
+ */
 @SuppressWarnings("serial")
 public class PortletRegisterImpl implements IPortletRegister{
 

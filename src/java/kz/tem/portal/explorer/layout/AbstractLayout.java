@@ -22,7 +22,11 @@ import org.apache.wicket.markup.repeater.RepeatingView;
 import org.apache.wicket.protocol.http.WebApplication;
 import org.apache.wicket.spring.injection.annot.SpringBean;
 import org.apache.wicket.util.resource.IResourceStream;
-
+/**
+ * 
+ * @author Ruslan Temirbulatov
+ *
+ */
 @SuppressWarnings("serial")
 public class AbstractLayout extends Panel implements IMarkupResourceStreamProvider, IMarkupCacheKeyProvider {
 

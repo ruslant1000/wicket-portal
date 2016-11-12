@@ -1,13 +1,16 @@
 package kz.tem.portal.server.register;
 
 import java.io.Serializable;
-import java.util.List;
 import java.util.Map;
 
 import kz.tem.portal.PortalException;
 import kz.tem.portal.server.bean.ITable;
 import kz.tem.portal.server.model.Settings;
-
+/**
+ * 
+ * @author Ruslan Temirbulatov
+ *
+ */
 public interface ISettingsRegister extends Serializable{
 	
 	public void saveAllSettings(Map<String,String> settings)throws PortalException;

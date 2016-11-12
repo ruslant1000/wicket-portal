@@ -1,5 +1,9 @@
 package kz.tem.portal;
-
+/**
+ * 
+ * @author Ruslan Temirbulatov
+ *
+ */
 @SuppressWarnings("serial")
 public class PortalException extends Exception{
 	

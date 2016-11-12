@@ -19,12 +19,11 @@ import org.slf4j.LoggerFactory;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 
+
 /**
  * 
- * @author prog_01
- * 
+ * @author Ruslan Temirbulatov
  * Класс для работы с модулями
- *
  */
 public class ModuleEngine {
 	

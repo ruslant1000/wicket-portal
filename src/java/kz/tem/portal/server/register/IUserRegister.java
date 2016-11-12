@@ -5,7 +5,11 @@ import java.io.Serializable;
 import kz.tem.portal.PortalException;
 import kz.tem.portal.server.bean.ITable;
 import kz.tem.portal.server.model.User;
-
+/**
+ * 
+ * @author Ruslan Temirbulatov
+ *
+ */
 public interface IUserRegister extends Serializable{
 	
 	public void defaults();

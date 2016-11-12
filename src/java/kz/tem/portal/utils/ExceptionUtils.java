@@ -2,7 +2,11 @@ package kz.tem.portal.utils;
 
 import java.util.LinkedList;
 import java.util.List;
-
+/**
+ * 
+ * @author Ruslan Temirbulatov
+ *
+ */
 public class ExceptionUtils {
 
 	public static List<String> errors(Throwable cause){

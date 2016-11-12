@@ -2,14 +2,17 @@ package kz.tem.portal.server.plugin.engine;
 
 import java.io.File;
 import java.util.HashSet;
-import java.util.Map;
 import java.util.Set;
-
-import kz.tem.portal.utils.UnZipUtils;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import kz.tem.portal.utils.UnZipUtils;
+/**
+ * 
+ * @author Ruslan Temirbulatov
+ *
+ */
 public class ModuleFinder {
  
 	private static Logger log = LoggerFactory.getLogger(ModuleFinder.class);

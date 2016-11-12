@@ -9,7 +9,11 @@ import kz.tem.portal.explorer.panel.common.table.AbstractTable;
 import kz.tem.portal.server.bean.ITable;
 import kz.tem.portal.server.model.User;
 import kz.tem.portal.server.register.IUserRegister;
-
+/**
+ * 
+ * @author Ruslan Temirbulatov
+ *
+ */
 @SuppressWarnings("serial")
 public class UsersTable extends AbstractTable<User>{
 

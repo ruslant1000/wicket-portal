@@ -3,7 +3,11 @@ package kz.tem.portal.explorer.panel.common.form.field;
 import org.apache.wicket.markup.html.form.CheckBox;
 import org.apache.wicket.markup.html.panel.Panel;
 import org.apache.wicket.model.IModel;
-
+/**
+ * 
+ * @author Ruslan Temirbulatov
+ *
+ */
 @SuppressWarnings("serial")
 public class FCheckboxField extends Panel{
 

@@ -8,7 +8,11 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.zip.ZipEntry;
 import java.util.zip.ZipOutputStream;
-
+/**
+ * 
+ * @author Ruslan Temirbulatov
+ *
+ */
 public class ZipUtils {
 
 	

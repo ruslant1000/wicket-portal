@@ -13,7 +13,12 @@ import org.apache.wicket.markup.html.form.CheckBox;
 import org.apache.wicket.markup.html.panel.Panel;
 import org.apache.wicket.markup.repeater.RepeatingView;
 import org.apache.wicket.model.Model;
-
+/**
+ * 
+ * @author Ruslan Temirbulatov
+ *
+ * @param <T>
+ */
 @SuppressWarnings("serial")
 public abstract class AbstractTable<T> extends Panel{
 

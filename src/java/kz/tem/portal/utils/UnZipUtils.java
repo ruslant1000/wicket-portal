@@ -7,7 +7,11 @@ import java.io.IOException;
 import java.util.List;
 import java.util.zip.ZipEntry;
 import java.util.zip.ZipInputStream;
-
+/**
+ * 
+ * @author Ruslan Temirbulatov
+ *
+ */
 public class UnZipUtils {
 
 	public static void unzip(String zipFileName, String outputFolder)

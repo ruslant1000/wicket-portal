@@ -2,12 +2,15 @@ package kz.tem.portal.server.register;
 
 import java.io.Serializable;
 import java.util.List;
-import java.util.Map;
 
 import kz.tem.portal.PortalException;
 import kz.tem.portal.server.bean.ITable;
 import kz.tem.portal.server.model.Page;
-
+/**
+ * 
+ * @author Ruslan Temirbulatov
+ *
+ */
 public interface IPageRegister extends Serializable{
 
 	public Page addNewPage(Page page) throws PortalException;
