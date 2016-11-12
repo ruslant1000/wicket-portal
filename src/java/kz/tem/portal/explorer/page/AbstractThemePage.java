@@ -13,6 +13,7 @@ import kz.tem.portal.server.register.IUserRegister;
 import kz.tem.portal.server.register.impl.UserRegisterImpl;
 
 import org.apache.wicket.Application;
+import org.apache.wicket.RestartResponseAtInterceptPageException;
 import org.apache.wicket.authroles.authentication.AuthenticatedWebApplication;
 import org.apache.wicket.authroles.authentication.AuthenticatedWebSession;
 import org.apache.wicket.markup.html.WebPage;
@@ -63,8 +64,10 @@ public class AbstractThemePage extends WebPage{
 		}
 		
 		AuthenticatedWebApplication app = (AuthenticatedWebApplication)Application.get();
-		if(!AuthenticatedWebSession.get().isSignedIn() && !info.getPublicPage())
-	         app.restartResponseAtSignInPage();
+		if(!AuthenticatedWebSession.get().isSignedIn() && !info.getPublicPage()){
+			 throw new RestartResponseAtInterceptPageException(SignInPage.class);
+//	         app.restartResponseAtSignInPage();
+		}
 		
 		if(!info.getPublicPage() && AuthenticatedWebSession.get().isSignedIn() && !PortalSession.get().access(info.getRole()))
 			setResponsePage(AccessDeniedPage.class);
