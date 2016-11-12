@@ -16,7 +16,11 @@ import kz.tem.portal.utils.ExceptionUtils;
 import org.junit.BeforeClass;
 import org.junit.Test;
 import org.springframework.context.support.ClassPathXmlApplicationContext;
-
+/**
+ * 
+ * @author Ruslan Temirbulatov
+ *
+ */
 public class UserRegisterImplTest {
 
 	private static IUserRegister register;

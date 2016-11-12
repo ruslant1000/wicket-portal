@@ -14,7 +14,11 @@ import kz.tem.portal.utils.ExceptionUtils;
 import org.junit.BeforeClass;
 import org.junit.Test;
 import org.springframework.context.support.ClassPathXmlApplicationContext;
-
+/**
+ * 
+ * @author Ruslan Temirbulatov
+ *
+ */
 public class PageRegisterImplTest {
 
 	private static IPageRegister register;
