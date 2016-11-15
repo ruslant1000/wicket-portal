@@ -3,10 +3,12 @@ package kz.tem.portal.explorer.panel.common.table;
 import java.util.LinkedList;
 import java.util.List;
 
+import kz.tem.portal.explorer.panel.common.form.field.FAjaxCheckboxField;
 import kz.tem.portal.explorer.panel.common.form.field.FCheckboxField;
 import kz.tem.portal.server.bean.ITable;
 
 import org.apache.wicket.Component;
+import org.apache.wicket.ajax.AjaxRequestTarget;
 import org.apache.wicket.markup.html.WebMarkupContainer;
 import org.apache.wicket.markup.html.basic.Label;
 import org.apache.wicket.markup.html.form.CheckBox;
@@ -76,7 +78,19 @@ public abstract class AbstractTable<T> extends Panel{
 		table.add(view);
 		
 		if(withCheckboxColumn){
-			FCheckboxField chk = new FCheckboxField(view.newChildId(), new Model<Boolean>());
+			FAjaxCheckboxField chk = new FAjaxCheckboxField(view.newChildId(), new Model<Boolean>()){
+
+				@Override
+				public void onChangeValue(AjaxRequestTarget target)
+						throws Exception {
+					super.onChangeValue(target);
+					for(FirstColumnCheck<T> chk2:rowsCheckboxes){
+						chk2.setSelected(getValue());
+						target.add(chk2);
+					}
+				}
+				
+			};
 			view.add(chk);
 		}
 		

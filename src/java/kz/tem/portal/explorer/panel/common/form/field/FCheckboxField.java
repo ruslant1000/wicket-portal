@@ -11,10 +11,16 @@ import org.apache.wicket.model.IModel;
 @SuppressWarnings("serial")
 public class FCheckboxField extends Panel{
 
+	private CheckBox field=null;
 	public FCheckboxField(String id,IModel<Boolean> model) {
 		super(id);
-		CheckBox field = new CheckBox("field",model);
+		field = new CheckBox("field",model);
 		add(field);
+		onCheckBox(field);
+	}
+	
+	public Boolean getValue(){
+		return field.getModelObject();
 	}
 	
 	public void onCheckBox(CheckBox field){

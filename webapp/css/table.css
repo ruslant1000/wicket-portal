@@ -1,0 +1,14 @@
+.abstract-table{
+	
+}
+.abstract-table tr:nth-child(odd){
+	background: #cce6ff;
+}
+
+.abstract-table tr:nth-child(even){
+	background: #ffffff;
+}
+.abstract-table td{
+	line-height:28px;
+	padding-left: 5px;
+}
