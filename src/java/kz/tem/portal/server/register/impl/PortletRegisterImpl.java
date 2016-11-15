@@ -39,7 +39,7 @@ public class PortletRegisterImpl implements IPortletRegister{
 		Session session = null;
 		try{
 			session = sessionFactory.getCurrentSession();
-			session.persist(portlet);
+			session.save(portlet);
 			session.flush();
 			return portlet;
 		}catch(Exception ex){

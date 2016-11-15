@@ -5,12 +5,11 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import org.apache.wicket.Component;
+import org.apache.wicket.model.IModel;
+
 import kz.tem.portal.explorer.panel.common.form.field.FComboboxField;
 import kz.tem.portal.explorer.panel.common.form.field.FTextStringField;
-
-import org.apache.wicket.Component;
-import org.apache.wicket.markup.html.form.TextField;
-import org.apache.wicket.model.IModel;
 /**
  * 
  * @author Ruslan Temirbulatov

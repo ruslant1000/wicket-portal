@@ -4,13 +4,13 @@ import java.net.MalformedURLException;
 import java.net.URL;
 import java.util.Locale;
 
-import kz.tem.portal.server.plugin.engine.ModuleEngine;
-
 import org.apache.wicket.WicketRuntimeException;
 import org.apache.wicket.core.util.resource.UrlResourceStream;
 import org.apache.wicket.core.util.resource.locator.ResourceStreamLocator;
 import org.apache.wicket.util.resource.IResourceStream;
 import org.apache.wicket.util.string.Strings;
+
+import kz.tem.portal.server.plugin.engine.ModuleEngine;
 /**
  * 
  * @author Ruslan Temirbulatov

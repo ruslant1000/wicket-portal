@@ -2,13 +2,11 @@ package kz.tem.portal.explorer.page;
 
 import java.net.URL;
 
-import kz.tem.portal.server.plugin.Module;
-import kz.tem.portal.server.plugin.ModuleMeta;
-import kz.tem.portal.server.plugin.engine.ModuleEngine;
-
 import org.apache.wicket.core.util.resource.UrlResourceStream;
 import org.apache.wicket.markup.html.WebPage;
-import org.apache.wicket.markup.html.basic.Label;
+
+import kz.tem.portal.server.plugin.ModuleMeta;
+import kz.tem.portal.server.plugin.engine.ModuleEngine;
 
 @SuppressWarnings("serial")
 public class TestPage extends WebPage {

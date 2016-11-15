@@ -2,18 +2,15 @@ package kz.tem.portal.explorer.panel.common.form;
 
 import java.util.List;
 
-import kz.tem.portal.utils.ExceptionUtils;
-
-import org.apache.wicket.Component;
 import org.apache.wicket.markup.html.WebMarkupContainer;
 import org.apache.wicket.markup.html.basic.Label;
 import org.apache.wicket.markup.html.form.Form;
-import org.apache.wicket.markup.html.form.TextField;
 import org.apache.wicket.markup.html.panel.FeedbackPanel;
 import org.apache.wicket.markup.html.panel.Panel;
 import org.apache.wicket.markup.repeater.RepeatingView;
 import org.apache.wicket.model.IModel;
-import org.apache.wicket.model.PropertyModel;
+
+import kz.tem.portal.utils.ExceptionUtils;
 /**
  * 
  * @author Ruslan Temirbulatov

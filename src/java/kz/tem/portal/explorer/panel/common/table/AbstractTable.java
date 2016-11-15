@@ -3,18 +3,16 @@ package kz.tem.portal.explorer.panel.common.table;
 import java.util.LinkedList;
 import java.util.List;
 
-import kz.tem.portal.explorer.panel.common.form.field.FAjaxCheckboxField;
-import kz.tem.portal.explorer.panel.common.form.field.FCheckboxField;
-import kz.tem.portal.server.bean.ITable;
-
 import org.apache.wicket.Component;
 import org.apache.wicket.ajax.AjaxRequestTarget;
 import org.apache.wicket.markup.html.WebMarkupContainer;
 import org.apache.wicket.markup.html.basic.Label;
-import org.apache.wicket.markup.html.form.CheckBox;
 import org.apache.wicket.markup.html.panel.Panel;
 import org.apache.wicket.markup.repeater.RepeatingView;
 import org.apache.wicket.model.Model;
+
+import kz.tem.portal.explorer.panel.common.form.field.FAjaxCheckboxField;
+import kz.tem.portal.server.bean.ITable;
 /**
  * 
  * @author Ruslan Temirbulatov

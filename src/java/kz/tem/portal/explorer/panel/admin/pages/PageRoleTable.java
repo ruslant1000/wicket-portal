@@ -6,14 +6,12 @@ import org.apache.wicket.spring.injection.annot.SpringBean;
 
 import kz.tem.portal.PortalException;
 import kz.tem.portal.explorer.panel.admin.common.RolesPanel;
-import kz.tem.portal.explorer.panel.admin.users.RolesTable;
 import kz.tem.portal.explorer.panel.common.table.AColumn;
 import kz.tem.portal.explorer.panel.common.table.AbstractTable;
 import kz.tem.portal.server.bean.ITable;
 import kz.tem.portal.server.model.Page;
 import kz.tem.portal.server.model.Role;
 import kz.tem.portal.server.register.IPageRegister;
-import kz.tem.portal.server.register.impl.RoleRegisterImpl;
 /**
  * 
  * @author Ruslan Temirbulatov

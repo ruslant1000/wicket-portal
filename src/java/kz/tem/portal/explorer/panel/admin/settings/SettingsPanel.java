@@ -3,15 +3,13 @@ package kz.tem.portal.explorer.panel.admin.settings;
 import java.util.HashMap;
 import java.util.Map;
 
+import org.apache.wicket.markup.html.panel.Panel;
+import org.apache.wicket.model.PropertyModel;
+import org.apache.wicket.spring.injection.annot.SpringBean;
+
 import kz.tem.portal.api.ExplorerEngine;
 import kz.tem.portal.explorer.panel.common.form.DefaultInputForm;
 import kz.tem.portal.server.register.ISettingsRegister;
-
-import org.apache.wicket.markup.html.form.Form;
-import org.apache.wicket.markup.html.panel.Panel;
-import org.apache.wicket.model.Model;
-import org.apache.wicket.model.PropertyModel;
-import org.apache.wicket.spring.injection.annot.SpringBean;
 /**
  * 
  * @author Ruslan Temirbulatov

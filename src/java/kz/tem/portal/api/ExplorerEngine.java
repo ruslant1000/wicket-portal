@@ -18,9 +18,7 @@ import org.slf4j.LoggerFactory;
 import kz.tem.portal.PortalException;
 import kz.tem.portal.api.model.LayoutInfo;
 import kz.tem.portal.api.model.ThemeInfo;
-import kz.tem.portal.server.bean.ITable;
 import kz.tem.portal.server.model.Settings;
-import kz.tem.portal.server.register.ISettingsRegister;
 /**
  * 
  * @author Ruslan Temirbulatov

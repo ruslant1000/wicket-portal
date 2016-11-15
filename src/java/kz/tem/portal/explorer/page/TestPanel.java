@@ -1,12 +1,12 @@
 package kz.tem.portal.explorer.page;
 
-import kz.tem.portal.server.plugin.Module;
-import kz.tem.portal.server.plugin.ModuleMeta;
-import kz.tem.portal.server.plugin.engine.ModuleEngine;
-
 import org.apache.wicket.ajax.AjaxRequestTarget;
 import org.apache.wicket.ajax.markup.html.AjaxLink;
 import org.apache.wicket.markup.html.panel.Panel;
+
+import kz.tem.portal.server.plugin.Module;
+import kz.tem.portal.server.plugin.ModuleMeta;
+import kz.tem.portal.server.plugin.engine.ModuleEngine;
 
 @SuppressWarnings("serial")
 public class TestPanel extends Panel{

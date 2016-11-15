@@ -1,10 +1,10 @@
 package kz.tem.portal.explorer.page;
 
-import kz.tem.portal.explorer.application.PortalSession;
-
 import org.apache.wicket.markup.html.WebPage;
 import org.apache.wicket.request.cycle.RequestCycle;
 import org.apache.wicket.request.flow.RedirectToUrlException;
+
+import kz.tem.portal.explorer.application.PortalSession;
 /**
  * 
  * @author Ruslan Temirbulatov

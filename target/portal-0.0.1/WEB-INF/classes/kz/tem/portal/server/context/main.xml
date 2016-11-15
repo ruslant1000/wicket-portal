@@ -6,20 +6,32 @@
 	xsi:schemaLocation="
  http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-4.0.xsd http://www.springframework.org/schema/context http://www.springframework.org/schema/context/spring-context-4.0.xsd http://www.springframework.org/schema/tx http://www.springframework.org/schema/tx/spring-tx.xsd http://www.springframework.org/schema/aop http://www.springframework.org/schema/aop/spring-aop-3.1.xsd">
 
+
+
+	<bean id="placeholderConfig"
+		class="org.springframework.beans.factory.config.PropertyPlaceholderConfigurer">
+		<property name="location" value="classpath:config.properties">  <!--reads config.properties file -->
+		</property>
+	</bean>
+
+
 	<bean id="myDataSource" class="org.apache.tomcat.dbcp.dbcp.BasicDataSource"
 		destroy-method="close">
-		<property name="driverClassName" value="com.mysql.jdbc.Driver" />
+		<!-- <property name="driverClassName" value="com.mysql.jdbc.Driver" />
 		<property name="url" value="jdbc:mysql://192.168.0.18:3306/test" />
 		<property name="username" value="root" />
-		<property name="password" value="admin123" />
+		<property name="password" value="admin123" /> -->
+		<property name="driverClassName" value="${db.driver}" />
+		<property name="url" value="${db.url}" />
+		<property name="username" value="${db.user}" />
+		<property name="password" value="${db.password}" />
 	</bean>
 
 	<bean id="c3p0" class="com.mchange.v2.c3p0.ComboPooledDataSource">
-		<property name="driverClass" value="com.mysql.jdbc.Driver" />
-		<property name="jdbcUrl"
-			value="jdbc:mysql://192.168.0.18/test?useUnicode=true&amp;characterEncoding=UTF-8" />
-		<property name="user" value="root" />
-		<property name="password" value="admin123" />
+		<property name="driverClass" value="${db.driver}" />
+		<property name="jdbcUrl" value="${db.url}" />
+		<property name="user" value="${db.user}" />
+		<property name="password" value="${db.password}" />
 
 		<property name="minPoolSize" value="5" />
 		<property name="maxPoolSize" value="20" />

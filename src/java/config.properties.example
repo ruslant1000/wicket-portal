@@ -1,0 +1,4 @@
+db.driver=com.mysql.jdbc.Driver
+db.url=jdbc:mysql://195.189.30.203/test_ruslan?useUnicode=true&amp;characterEncoding=UTF-8
+db.user=root
+db.password=admin123

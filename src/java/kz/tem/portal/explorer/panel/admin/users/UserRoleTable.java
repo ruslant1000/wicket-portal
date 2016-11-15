@@ -6,7 +6,6 @@ import org.apache.wicket.spring.injection.annot.SpringBean;
 
 import kz.tem.portal.PortalException;
 import kz.tem.portal.explorer.panel.admin.common.RolesPanel;
-import kz.tem.portal.explorer.panel.common.component.AjaxDeletableItem;
 import kz.tem.portal.explorer.panel.common.table.AColumn;
 import kz.tem.portal.explorer.panel.common.table.AbstractTable;
 import kz.tem.portal.server.bean.ITable;

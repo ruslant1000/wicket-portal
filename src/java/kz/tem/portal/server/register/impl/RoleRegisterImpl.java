@@ -2,16 +2,16 @@ package kz.tem.portal.server.register.impl;
 
 import java.util.List;
 
-import kz.tem.portal.PortalException;
-import kz.tem.portal.server.bean.ITable;
-import kz.tem.portal.server.model.Role;
-import kz.tem.portal.server.register.IRoleRegister;
-
 import org.hibernate.Criteria;
 import org.hibernate.Session;
 import org.hibernate.SessionFactory;
 import org.hibernate.criterion.Projections;
 import org.springframework.transaction.annotation.Transactional;
+
+import kz.tem.portal.PortalException;
+import kz.tem.portal.server.bean.ITable;
+import kz.tem.portal.server.model.Role;
+import kz.tem.portal.server.register.IRoleRegister;
 /**
  * 
  * @author Ruslan Temirbulatov

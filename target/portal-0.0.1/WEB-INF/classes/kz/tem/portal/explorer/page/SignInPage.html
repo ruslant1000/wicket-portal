@@ -6,60 +6,6 @@
 <title>Аутентификация</title>
 </head>
 <body>
-	<style type="text/css">
-	
-.outer {
-    display: table;
-    position: absolute;
-    height: 100%;
-    width: 100%;
-}
-
-.middle {
-    display: table-cell;
-    vertical-align: middle;
-}
-	
-.form {
-	border: 2px solid green;
-	padding: 20px;
-
-}
-
-.form .field {
-	padding-left: 10px;
-}
-.feedbackPanel{
-	width: 300px;
-}
-.feedbackPanel span{
-	color:red;
-}
-</style>
-	<div class="outer">
-		<div class="middle" align="center">
-			<form wicket:id="form">
-
-				<table width="200px">
-					<tr>
-						<td align="right">Login:</td>
-						<td class="field"><input type="text" wicket:id="username" /></td>
-					</tr>
-					<tr>
-						<td align="right">Password:</td>
-						<td class="field"><input type="password" wicket:id="password" /></td>
-					</tr>
-					<tr>
-						<td></td>
-						<td><input type="submit" value="Войти"></td>
-					</tr>
-				</table>
-
-
-
-			</form>
-			<div wicket:id="feeds"/>
-		</div>
-	</div>
+	<div wicket:id="login"/>
 </body>
 </html>

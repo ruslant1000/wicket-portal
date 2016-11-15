@@ -5,17 +5,17 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
-import kz.tem.portal.PortalException;
-import kz.tem.portal.server.bean.ITable;
-import kz.tem.portal.server.model.Settings;
-import kz.tem.portal.server.register.ISettingsRegister;
-
 import org.hibernate.Criteria;
 import org.hibernate.Session;
 import org.hibernate.SessionFactory;
 import org.hibernate.criterion.Projections;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.transaction.annotation.Transactional;
+
+import kz.tem.portal.PortalException;
+import kz.tem.portal.server.bean.ITable;
+import kz.tem.portal.server.model.Settings;
+import kz.tem.portal.server.register.ISettingsRegister;
 /**
  * 
  * @author Ruslan Temirbulatov

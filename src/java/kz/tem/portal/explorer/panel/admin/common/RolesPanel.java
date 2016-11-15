@@ -2,13 +2,12 @@ package kz.tem.portal.explorer.panel.admin.common;
 
 import java.util.Set;
 
-import kz.tem.portal.explorer.panel.common.component.AjaxDeletableItem;
-import kz.tem.portal.server.model.Role;
-import kz.tem.portal.server.model.User;
-
 import org.apache.wicket.ajax.AjaxRequestTarget;
 import org.apache.wicket.markup.html.panel.Panel;
 import org.apache.wicket.markup.repeater.RepeatingView;
+
+import kz.tem.portal.explorer.panel.common.component.AjaxDeletableItem;
+import kz.tem.portal.server.model.Role;
 /**
  * 
  * @author Ruslan Temirbulatov

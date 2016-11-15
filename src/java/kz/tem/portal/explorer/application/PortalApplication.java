@@ -16,7 +16,8 @@ import org.apache.wicket.spring.injection.annot.SpringComponentInjector;
 import kz.tem.portal.api.PortalEngine;
 import kz.tem.portal.explorer.page.AbstractThemePage;
 import kz.tem.portal.explorer.page.AccessDeniedPage;
-import kz.tem.portal.explorer.page.SignInPage;
+import kz.tem.portal.explorer.page.AuthenticatePage;
+import kz.tem.portal.explorer.page.LoginPage;
 import kz.tem.portal.explorer.page.SignOutPage;
 import kz.tem.portal.explorer.page.admin.pages.PagesConfig;
 import kz.tem.portal.explorer.page.admin.portlets.PortletsConfig;
@@ -48,7 +49,9 @@ public class PortalApplication extends AuthenticatedWebApplication {
 
 		// getPageSettings().setRecreateBookmarkablePagesAfterExpiry(true);
 
-		mountPage("login", SignInPage.class);
+		mountPage("authenticate", AuthenticatePage.class);
+		mountPage("login", LoginPage.class);
+		
 		mountPage("logout", SignOutPage.class);
 		mountPage("accessdenied", AccessDeniedPage.class);
 		
@@ -182,7 +185,7 @@ public class PortalApplication extends AuthenticatedWebApplication {
 
 	@Override
 	protected Class<? extends WebPage> getSignInPageClass() {
-		return SignInPage.class;
+		return AuthenticatePage.class;
 	}
 
 	@Override

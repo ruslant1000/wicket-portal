@@ -1,5 +1,13 @@
 package kz.tem.portal.explorer.page;
 
+import org.apache.wicket.Application;
+import org.apache.wicket.RestartResponseAtInterceptPageException;
+import org.apache.wicket.authroles.authentication.AuthenticatedWebApplication;
+import org.apache.wicket.authroles.authentication.AuthenticatedWebSession;
+import org.apache.wicket.markup.html.WebPage;
+import org.apache.wicket.markup.html.basic.Label;
+import org.apache.wicket.spring.injection.annot.SpringBean;
+
 import kz.tem.portal.PortalException;
 import kz.tem.portal.api.ExplorerEngine;
 import kz.tem.portal.explorer.application.PortalSession;
@@ -10,18 +18,6 @@ import kz.tem.portal.explorer.theme.AbstractTheme;
 import kz.tem.portal.server.model.Page;
 import kz.tem.portal.server.register.IPageRegister;
 import kz.tem.portal.server.register.IUserRegister;
-import kz.tem.portal.server.register.impl.UserRegisterImpl;
-
-import org.apache.wicket.Application;
-import org.apache.wicket.RestartResponseAtInterceptPageException;
-import org.apache.wicket.authroles.authentication.AuthenticatedWebApplication;
-import org.apache.wicket.authroles.authentication.AuthenticatedWebSession;
-import org.apache.wicket.markup.html.WebPage;
-import org.apache.wicket.markup.html.basic.Label;
-import org.apache.wicket.request.cycle.RequestCycle;
-import org.apache.wicket.request.flow.RedirectToUrlException;
-import org.apache.wicket.request.mapper.info.PageInfo;
-import org.apache.wicket.spring.injection.annot.SpringBean;
 
 /**
  * 
@@ -70,7 +66,7 @@ public class AbstractThemePage extends WebPage{
 		
 		AuthenticatedWebApplication app = (AuthenticatedWebApplication)Application.get();
 		if(!AuthenticatedWebSession.get().isSignedIn() && !info.getPublicPage()){
-			 throw new RestartResponseAtInterceptPageException(SignInPage.class);
+			 throw new RestartResponseAtInterceptPageException(AuthenticatePage.class);
 //	         app.restartResponseAtSignInPage();
 		}
 		

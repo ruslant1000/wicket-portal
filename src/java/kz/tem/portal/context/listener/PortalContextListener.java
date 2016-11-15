@@ -7,7 +7,6 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import kz.tem.portal.server.plugin.engine.ModuleEngine;
-import kz.tem.portal.server.plugin.engine.ModuleFinder;
  
 //import org.slf4j.LoggerFactory;
 /**

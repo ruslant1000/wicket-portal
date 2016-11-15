@@ -1,21 +1,11 @@
 package kz.tem.portal.server.register.impl;
 
-import static org.junit.Assert.*;
-
-import java.net.URL;
-import java.util.List;
-import java.util.Map;
-
-import kz.tem.portal.PortalException;
-import kz.tem.portal.server.model.Page;
-import kz.tem.portal.server.model.User;
-import kz.tem.portal.server.register.IPageRegister;
-import kz.tem.portal.server.register.IUserRegister;
-import kz.tem.portal.utils.ExceptionUtils;
-
 import org.junit.BeforeClass;
 import org.junit.Test;
 import org.springframework.context.support.ClassPathXmlApplicationContext;
+
+import kz.tem.portal.server.model.User;
+import kz.tem.portal.server.register.IUserRegister;
 /**
  * 
  * @author Ruslan Temirbulatov

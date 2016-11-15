@@ -1,11 +1,11 @@
 package kz.tem.portal.explorer.portlet;
 
+import org.apache.wicket.markup.html.basic.Label;
+import org.apache.wicket.markup.html.panel.Panel;
+
 import kz.tem.portal.server.plugin.Module;
 import kz.tem.portal.server.plugin.ModuleMeta;
 import kz.tem.portal.server.plugin.engine.ModuleEngine;
-
-import org.apache.wicket.markup.html.basic.Label;
-import org.apache.wicket.markup.html.panel.Panel;
 /**
  * 
  * @author Ruslan Temirbulatov

@@ -2,13 +2,13 @@ package kz.tem.portal.explorer.application;
 
 import java.util.Set;
 
-import kz.tem.portal.api.RegisterEngine;
-import kz.tem.portal.server.model.Role;
-import kz.tem.portal.server.model.User;
-
 import org.apache.wicket.authroles.authentication.AuthenticatedWebSession;
 import org.apache.wicket.authroles.authorization.strategies.role.Roles;
 import org.apache.wicket.request.Request;
+
+import kz.tem.portal.api.RegisterEngine;
+import kz.tem.portal.server.model.Role;
+import kz.tem.portal.server.model.User;
 /**
  * 
  * @author Ruslan Temirbulatov

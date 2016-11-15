@@ -10,14 +10,14 @@ import java.util.Map;
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
 
-import kz.tem.portal.server.plugin.Module;
-import kz.tem.portal.server.plugin.ModuleMeta;
-import kz.tem.portal.utils.FileUtils;
-
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
+
+import kz.tem.portal.server.plugin.Module;
+import kz.tem.portal.server.plugin.ModuleMeta;
+import kz.tem.portal.utils.FileUtils;
 
 
 /**
