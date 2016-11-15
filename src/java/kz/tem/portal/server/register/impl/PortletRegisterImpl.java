@@ -2,6 +2,12 @@ package kz.tem.portal.server.register.impl;
 
 import java.util.List;
 
+import kz.tem.portal.PortalException;
+import kz.tem.portal.server.bean.ITable;
+import kz.tem.portal.server.model.Portlet;
+import kz.tem.portal.server.plugin.ModuleConfig;
+import kz.tem.portal.server.register.IPortletRegister;
+
 import org.hibernate.Criteria;
 import org.hibernate.Session;
 import org.hibernate.SessionFactory;
@@ -9,11 +15,6 @@ import org.hibernate.criterion.Projections;
 import org.hibernate.criterion.Restrictions;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.transaction.annotation.Transactional;
-
-import kz.tem.portal.PortalException;
-import kz.tem.portal.server.bean.ITable;
-import kz.tem.portal.server.model.Portlet;
-import kz.tem.portal.server.register.IPortletRegister;
 /**
  * 
  * @author Ruslan Temirbulatov
@@ -125,5 +126,44 @@ public class PortletRegisterImpl implements IPortletRegister{
 	public ITable<Portlet> table(int first, int count, Long pageId)
 			throws PortalException {
 		return table(first, count, pageId, null);
+	}
+	@Override
+	@Transactional
+	public void updatePortletSettings(Long portletId, ModuleConfig config)
+			throws PortalException {
+		Session session = null;
+		try{
+			session = sessionFactory.getCurrentSession();
+			Portlet portlet = session.get(Portlet.class, portletId);
+			portlet.setSettings(config.toXML().getBytes());
+			session.merge(portlet);
+			session.flush();
+			session.evict(portlet);
+		}catch(Exception ex){
+			session.clear();
+			throw new PortalException("Ошибка при сохранении портлета",ex);
+		}
+		
+	}
+	@Override
+	@Transactional(readOnly=true)
+	public ModuleConfig getPortletSettings(Long portletId)
+			throws PortalException {
+		Session session = null;
+		try{
+			ModuleConfig config= null;
+			session = sessionFactory.getCurrentSession();
+			Portlet portlet = session.get(Portlet.class, portletId);
+			byte[] settings = portlet.getSettings();
+			
+			if(settings!=null){
+				config = ModuleConfig.parse(new String(settings));
+			}
+			session.evict(portlet);
+			return config;
+		}catch(Exception ex){
+			session.clear();
+			throw new PortalException("Ошибка при сохранении портлета",ex);
+		}
 	}
 }

@@ -16,6 +16,7 @@ import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 
 import kz.tem.portal.server.plugin.Module;
+import kz.tem.portal.server.plugin.ModuleConfig;
 import kz.tem.portal.server.plugin.ModuleMeta;
 import kz.tem.portal.utils.FileUtils;
 
@@ -53,13 +54,13 @@ public class ModuleEngine {
 	 * @return - Возвращает созданную wicket панель
 	 * @throws Exception
 	 */
-	public Module create(String id, ModuleMeta meta)throws Exception{
+	public Module create(String id, ModuleMeta meta, ModuleConfig config)throws Exception{
 		if(!loaders.containsKey(meta.getModuleName())){
 			throw new Exception("Не найден JarClassLoader для модуля "+meta.getModuleName());
 		}
 		log.debug("Создание инстанса модуля "+meta.getModuleName()+"...");
 		Class cls = loaders.get(meta.getModuleName()).loadClass(meta.getModuleClass());
-		Module module = (Module)cls.getConstructor(new Class[]{String.class}).newInstance(new Object[]{id});
+		Module module = (Module)cls.getConstructor(new Class[]{String.class,ModuleConfig.class}).newInstance(new Object[]{id,config});
 		log.debug("Создание инстанса модуля "+meta.getModuleName()+" завершено");
 		return module;
 	}

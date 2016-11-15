@@ -21,6 +21,7 @@ import kz.tem.portal.api.model.LayoutInfo;
 import kz.tem.portal.explorer.portlet.PortletContainer;
 import kz.tem.portal.server.model.Page;
 import kz.tem.portal.server.model.Portlet;
+import kz.tem.portal.server.plugin.ModuleConfig;
 import kz.tem.portal.server.register.IPortletRegister;
 /**
  * 
@@ -66,7 +67,7 @@ public class AbstractLayout extends Panel implements IMarkupResourceStreamProvid
 		
 		try {
 			for(Portlet p:portletRegister.table(0, 0, pageInfo.getId()).records()){
-				addPortlet(p.getPosition(), p.getModuleName());
+				addPortlet(p.getPosition(), p.getModuleName(),portletRegister.getPortletSettings(p.getId()),p);
 			}
 		} catch (PortalException e) {
 			e.printStackTrace();
@@ -82,9 +83,9 @@ public class AbstractLayout extends Panel implements IMarkupResourceStreamProvid
 		add(view);
 	}
 
-	public void addPortlet(String position, String module){
+	public void addPortlet(String position, String module, ModuleConfig config, Portlet portlet){
 		RepeatingView rep =portletsMap.get(position);
-		PortletContainer cnt = new PortletContainer(rep.newChildId(), module);
+		PortletContainer cnt = new PortletContainer(rep.newChildId(), module,config,portlet);
 		rep.add(cnt);
 	}
 

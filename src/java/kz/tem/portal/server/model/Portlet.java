@@ -1,12 +1,17 @@
 package kz.tem.portal.server.model;
 
 import java.io.Serializable;
+import java.util.HashSet;
+import java.util.Set;
 
+import javax.persistence.Basic;
 import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
+import javax.persistence.Lob;
 import javax.persistence.ManyToOne;
+import javax.persistence.OneToMany;
 import javax.persistence.Table;
 /**
  * 
@@ -23,7 +28,10 @@ public class Portlet extends IdEntity implements Serializable{
 	private String position;
 	
 	private String moduleName;
-
+	
+	
+	private byte[] settings;
+	
 	@ManyToOne(fetch=FetchType.EAGER)
 	public Page getPage() {
 		return page;
@@ -48,5 +56,17 @@ public class Portlet extends IdEntity implements Serializable{
 	public void setModuleName(String moduleName) {
 		this.moduleName = moduleName;
 	}
+
+	@Lob
+	@Basic(fetch=FetchType.LAZY)
+	public byte[] getSettings() {
+		return settings;
+	}
+
+	public void setSettings(byte[] settings) {
+		this.settings = settings;
+	}
+
+
 	
 }
