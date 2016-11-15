@@ -1,11 +1,39 @@
 <!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
 
 <wicket:panel>
-<div style="border: 1px green dotted; padding: 10px;">
-<div wicket:id="mmm"></div>
-    <a wicket:id="config">Configs</a>
-    
-    
+<style type="text/css">
+.portlet-container{
+	border: 1px green dotted; 
+	padding: 10px; 
+	position: relative;
+}
+.portlet-container .controls{
+	position: absolute;
+	top:0px;
+	display: none;
+	-webkit-transition: all 5s;
+-moz-transition: all 5s;
+-ms-transition: all 5s;
+-o-transition: all 5s;
+transition: all 5s;
+}
+.portlet-container:HOVER .controls{
+	display: block;
+	
+	-webkit-transition: all 5s;
+-moz-transition: all 5s;
+-ms-transition: all 5s;
+-o-transition: all 5s;
+transition: all 5s;
+
+
+}
+</style>
+<div class="portlet-container">
 	<div wicket:id="module"></div>
+	
+	<div class="controls">
+		<a wicket:id="config">Configs</a>
+	</div>
 </div>
 </wicket:panel>

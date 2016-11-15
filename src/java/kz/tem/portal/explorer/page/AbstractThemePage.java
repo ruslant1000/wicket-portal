@@ -1,9 +1,14 @@
 package kz.tem.portal.explorer.page;
 
 import org.apache.wicket.Application;
+import org.apache.wicket.AttributeModifier;
 import org.apache.wicket.RestartResponseAtInterceptPageException;
+import org.apache.wicket.ajax.AjaxRequestTarget;
+import org.apache.wicket.ajax.markup.html.AjaxLink;
 import org.apache.wicket.authroles.authentication.AuthenticatedWebApplication;
 import org.apache.wicket.authroles.authentication.AuthenticatedWebSession;
+import org.apache.wicket.extensions.ajax.markup.html.modal.ModalWindow;
+import org.apache.wicket.markup.html.WebMarkupContainer;
 import org.apache.wicket.markup.html.WebPage;
 import org.apache.wicket.markup.html.basic.Label;
 import org.apache.wicket.spring.injection.annot.SpringBean;
@@ -103,6 +108,41 @@ public class AbstractThemePage extends WebPage{
 		add(new PagesTable("table"));
 		add(new DefaultInputForm("form"));
 		add(new DefaultInputStatelesForm("form2"));
+		
+		
+		WebMarkupContainer modal = new WebMarkupContainer("modal");
+		add(modal);
+		modal.setOutputMarkupId(true);
+		modal.add(new AjaxLink<Void>("close") {
+
+			@Override
+			public void onClick(AjaxRequestTarget target) {
+				AbstractThemePage.this.get("modal").add(new AttributeModifier("style", "display:none"));
+				AbstractThemePage.this.get("modal").get("content").replaceWith(new WebMarkupContainer("content").setOutputMarkupId(true));
+				target.add(AbstractThemePage.this.get("modal"));
+				
+			}
+		});
+		modal.add(new WebMarkupContainer("content").setOutputMarkupId(true));
+		
+	}
+	
+	public void showModal(String title,AjaxRequestTarget target, IComponentCreator creator){
+		
+		
+		
+		
+		try {
+			AbstractThemePage.this.get("modal").add(new AttributeModifier("style", "display:block"));
+			AbstractThemePage.this.get("modal").get("content").replaceWith(creator.create("content").setOutputMarkupId(true));
+			
+			target.add(AbstractThemePage.this.get("modal"));
+		} catch (Exception e) {
+			e.printStackTrace();
+			throw new RuntimeException(e);
+		}
+		
+		
 		
 	}
 }
