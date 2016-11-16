@@ -23,8 +23,12 @@ public class Module extends Panel {
 			}
 		} catch (Exception e) {
 			e.printStackTrace();
-			throw new RuntimeException("������ ������������� ������",e);
+			throw new RuntimeException("Инициализация модуля не удалась",e);
 		}
+	}
+	
+	public void create()throws Exception{
+		throw new NotYetImplementedException("Не реализован обязательный метод create");
 	}
 	
 	public ModuleConfig getModuleConfig(){

@@ -18,7 +18,8 @@ public class TestPanel extends Panel{
 				.iterator().next();
 		Module module;
 		try {
-			module = ModuleEngine.getInstance().create("xxx",meta,null);
+			module = ModuleEngine.getInstance().init("xxx",meta,null);
+			module.create();
 			add(module);
 		} catch (Exception e) {
 			e.printStackTrace();

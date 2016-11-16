@@ -24,7 +24,7 @@ import kz.tem.portal.utils.FileUtils;
 /**
  * 
  * @author Ruslan Temirbulatov
- * Класс для работы с модулями
+ * 
  */
 public class ModuleEngine {
 	
@@ -48,57 +48,57 @@ public class ModuleEngine {
 	private ModuleEngine(){}
 	
 	/**
-	 * Создание конкретного инстанса конкретного модуля
+	 * РРЅРёС†РёР°Р»РёР·Р°С†РёСЏ РјРѕРґСѓР»СЏ
 	 * @param id - wicket:id
-	 * @param meta - Информация и модуле
-	 * @return - Возвращает созданную wicket панель
+	 * @param meta - РёРЅС„РѕСЂРјР°С†РёСЏ Рѕ РјРѕРґСѓР»Рµ
+	 * @return - 
 	 * @throws Exception
 	 */
-	public Module create(String id, ModuleMeta meta, ModuleConfig config)throws Exception{
+	public Module init(String id, ModuleMeta meta, ModuleConfig config)throws Exception{
 		if(!loaders.containsKey(meta.getModuleName())){
-			throw new Exception("Не найден JarClassLoader для модуля "+meta.getModuleName());
+			throw new Exception("РЅРµ РЅР°Р№РґРµРЅ JarClassLoader: "+meta.getModuleName());
 		}
-		log.debug("Создание инстанса модуля "+meta.getModuleName()+"...");
+		log.debug("пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅ "+meta.getModuleName()+"...");
 		Class cls = loaders.get(meta.getModuleName()).loadClass(meta.getModuleClass());
 		Module module = (Module)cls.getConstructor(new Class[]{String.class,ModuleConfig.class}).newInstance(new Object[]{id,config});
-		log.debug("Создание инстанса модуля "+meta.getModuleName()+" завершено");
+		log.debug("пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅ "+meta.getModuleName()+" пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ");
 		return module;
 	}
 	 /**
-	  * Загрузка информации обо всех доступных модулях.
-	  * @param modulesPath - Полный путь к директории расположения модулей
+	  * Р—Р°РіСЂСѓР·РєР° РјРѕРґСѓР»РµР№ РёР· РґРёСЂРµРєС‚РѕСЂРёРё modulesPath.
+	  * @param modulesPath - РґРёСЂРµРєС‚РѕСЂРёСЏ СЂР°СЃРїРѕР»РѕР¶РµРЅРёСЏ РјРѕРґСѓР»РµР№
 	  * @throws Exception
 	  */
 	public void loadModules(String modulesPath)throws Exception{
-		log.info("Загрузка модулей...");
+		log.info("пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅ...");
 		this.modulesPath=modulesPath;
 		new ModuleFinder().findNewModules(modulesPath);
 		
 		File modulesDir = new File(modulesPath);
 		if(!modulesDir.exists())
-			throw new Exception("Не найдена директория модулей: "+modulesPath);
+			throw new Exception("пїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅ: "+modulesPath);
 		for(File module:modulesDir.listFiles()){
 			if(module.isDirectory()){
 				load(module.getAbsolutePath());
 			}
 		}
-		log.info("Загрузка модулей завершена");
+		log.info("пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ");
 	}
 	/**
-	 * Загрузка информации об одном конкретном модуле
+	 * пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅ пїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅ
 	 * @param modulePath
 	 * @return
 	 * @throws Exception
 	 */
 	public ModuleMeta load(String modulePath)throws Exception{
-		log.info("Загрузка модуля "+modulePath+"...");
+		log.info("пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅ "+modulePath+"...");
 		ModuleMeta meta = new ModuleMeta();
 		File moduleDir = new File(modulePath);
 		if(!moduleDir.exists())
-			throw new Exception("Не найдена директория "+modulePath);
+			throw new Exception("пїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ "+modulePath);
 		File moduleXml = new File(moduleDir,"module.xml");
 		if(!moduleXml.exists())
-			throw new Exception("Не найден дескриктор модуля "+modulePath);
+			throw new Exception("пїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅ "+modulePath);
 		
 		DocumentBuilderFactory dbf = null;
 		DocumentBuilder db = null;
@@ -120,20 +120,20 @@ public class ModuleEngine {
 			meta.setModuleDirectoryPath(modulePath);
 			
 			if(loaders.containsKey(moduleName)){
-				System.out.println("модуль был загружен ранее");
+				System.out.println("пїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅ");
 				return moduleMap.get(moduleName);
 			}
 			
 			JarClassLoader jcl = new JarClassLoader(new File(moduleDir,"lib").getPath());
 			if(loaders.containsKey(moduleName)){
-				throw new Exception("Модуль "+moduleName+" уже загружен в память");
+				throw new Exception("пїЅпїЅпїЅпїЅпїЅпїЅ "+moduleName+" пїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅ пїЅпїЅпїЅпїЅпїЅпїЅ");
 			}
 			loaders.put(moduleName, jcl);
 		}finally{
 			  
 		}
 		moduleMap.put(meta.getModuleName(), meta);
-		log.info("Загрузка модуля "+modulePath+" завершена");
+		log.info("пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅ "+modulePath+" пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ");
 		return meta;
 	}
 	
@@ -155,8 +155,7 @@ public class ModuleEngine {
 		return null;
 	}
 	/**
-	 * Удаление информации о конкретном модуле. Удаление полностью из JVM. 
-	 * Нужно для того, чтобы потом можно было повторно загрузить модуль, но уже обновленный
+	 * Р’С‹РіСЂСѓР·РєР° РјРѕРґСѓР»СЏ РёР· JVM
 	 * @param moduleName
 	 */
 	public void undeploy(String moduleName){
@@ -176,7 +175,7 @@ public class ModuleEngine {
 		}
 	}
 	/**
-	 * Загрузка информации о тех модулях, которые еще небыли загружены. Например если в процессе работы добавить в папку модулей архив нового модуля. 
+	 * Р”РѕР·Р°РіСЂСѓР·РєР° РЅРµР·Р°РіСЂСѓР¶РµРЅРЅС‹С… РјРѕРґСѓР»РµР№ 
 	 */
 	public void loadNewModules(){
 		try {

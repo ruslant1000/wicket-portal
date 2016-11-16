@@ -32,7 +32,19 @@ padding: 0;
 
 .main-menu-bar div.dropdown-inside {
 	position: absolute;
+	z-index: 9999;
 	left: -9999px;
+	xleft: 0px;
+	opacity: 0;
+	-moz-transition: opacity 0.5s, left 0s;
+	-moz-transition-delay: 0s, 0.5s;
+    -webkit-transition: opacity 0.5s, left 0s;
+    -webkit-transition-delay: 0s, 0.5s;
+    -o-transition: opacity 0.5s, left 0s;
+    -o-transition-delay: 0s, 0.5s;
+    transition: opacity 0.5s, left 0s;
+    transition-delay: 0s, 0.5s;
+    
 }
 
 .main-menu-bar ul.dropdown li.dropdown-top {
@@ -60,8 +72,18 @@ padding: 0;
 }
 
 .main-menu-bar ul.dropdown li.dropdown-top:hover .dropdown-inside {
-	display: block;
+	xdisplay: block;
+	opacity: 1;
 	left: 0;
+	
+	-moz-transition: opacity 0.5s, left 0s;
+	-moz-transition-delay: 0s, 0s;
+    -webkit-transition: opacity 0.5s, left 0s;
+    -webkit-transition-delay: 0s, 0s;
+    -o-transition: opacity 0.5s, left 0s;
+    -o-transition-delay: 0s, 0s;
+    transition: opacity 0.5s, left 0s;
+    transition-delay: 0s, 0s;
 }
 
 
