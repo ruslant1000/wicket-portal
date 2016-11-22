@@ -56,7 +56,7 @@ public class AbstractThemePage extends WebPage{
 
 	public AbstractThemePage(){
 		
-		WebApplication.get().getMarkupSettings().getMarkupFactory().getMarkupCache().clear();
+//		WebApplication.get().getMarkupSettings().getMarkupFactory().getMarkupCache().clear();
 		
 		
 		

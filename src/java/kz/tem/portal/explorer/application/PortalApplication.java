@@ -55,6 +55,7 @@ public class PortalApplication extends AuthenticatedWebApplication {
 		// WebApplication.get().getMarkupSettings().getMarkupFactory().getMarkupCache().shutdown();
 		// getDebugSettings().setComponentUseCheck(false);
 
+		
 		//**************************
 		// Это нужно для того, чтобы PropertyModel в модулях работал корректно.
 		// Иначе при ПОВТОРНОМ деплое модуля будет вылетать ошибка 
