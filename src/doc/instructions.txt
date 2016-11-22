@@ -1,21 +1,21 @@
-1. Как добавить settings.xml для maven в eclipse
-1.1 Тут описано как это сделать http://crunchify.com/missing-maven-settings-xml-file-for-your-eclipse-what-if-you-need-two-settings-xml-file-for-work-personal-workspace/
-1.2 Вкратце
-	Надо создать файл на файловой системе settings.xml (лучше скопировать с установленного maven)
-	В меню "Window -> Preferences -> Maven -> User settings" 
-	в поле "Global settings" указать файл, заранее созданный, settings.xml.
+1. РљР°Рє РґРѕР±Р°РІРёС‚СЊ settings.xml РґР»СЏ maven РІ eclipse
+1.1 РўСѓС‚ РѕРїРёСЃР°РЅРѕ РєР°Рє СЌС‚Рѕ СЃРґРµР»Р°С‚СЊ http://crunchify.com/missing-maven-settings-xml-file-for-your-eclipse-what-if-you-need-two-settings-xml-file-for-work-personal-workspace/
+1.2 Р’РєСЂР°С‚С†Рµ
+	РќР°РґРѕ СЃРѕР·РґР°С‚СЊ С„Р°Р№Р» РЅР° С„Р°Р№Р»РѕРІРѕР№ СЃРёСЃС‚РµРјРµ settings.xml (Р»СѓС‡С€Рµ СЃРєРѕРїРёСЂРѕРІР°С‚СЊ СЃ СѓСЃС‚Р°РЅРѕРІР»РµРЅРЅРѕРіРѕ maven)
+	Р’ РјРµРЅСЋ "Window -> Preferences -> Maven -> User settings" 
+	РІ РїРѕР»Рµ "Global settings" СѓРєР°Р·Р°С‚СЊ С„Р°Р№Р», Р·Р°СЂР°РЅРµРµ СЃРѕР·РґР°РЅРЅС‹Р№, settings.xml.
 
 
-2. Как сделадь авто-деплой в томкат.
-2.1 Тут описано как использовать томкат7 и плагин для автодеплоя.
+2. РљР°Рє СЃРґРµР»Р°РґСЊ Р°РІС‚Рѕ-РґРµРїР»РѕР№ РїРѕСЂС‚Р°Р»Р° РІ С‚РѕРјРєР°С‚.
+2.1 РўСѓС‚ РѕРїРёСЃР°РЅРѕ РєР°Рє РёСЃРїРѕР»СЊР·РѕРІР°С‚СЊ С‚РѕРјРєР°С‚7 Рё РїР»Р°РіРёРЅ РґР»СЏ Р°РІС‚РѕРґРµРїР»РѕСЏ.
 	https://www.mkyong.com/maven/how-to-deploy-maven-based-war-file-to-tomcat/
-2.2 Вкратце
-	Надо в томате в файле conf/tomcat-users.xml добавить настройки
+2.2 Р’РєСЂР°С‚С†Рµ
+	РќР°РґРѕ РІ С‚РѕРјР°С‚Рµ РІ С„Р°Р№Р»Рµ conf/tomcat-users.xml РґРѕР±Р°РІРёС‚СЊ РЅР°СЃС‚СЂРѕР№РєРё
 		<role rolename="manager-gui"/>
 		<role rolename="manager-script"/>
 		<user username="admin" password="password" roles="manager-gui,manager-script" />
 		
-	Надо в мавен в файле settings.xml добавить
+	РќР°РґРѕ РІ РјР°РІРµРЅ РІ С„Р°Р№Р»Рµ settings.xml РґРѕР±Р°РІРёС‚СЊ
 	<servers> 
 	  <server>
         <id>Tomcat7Server</id>
@@ -23,9 +23,32 @@
         <password>password</password>
       </server>
     </servers>
+3. РљР°Рє СЃРґРµР»Р°С‚СЊ Р°РІС‚Рѕ-РґРµРїР»РѕР№ РјРѕРґСѓР»СЏ РЅР° РїРѕСЂС‚Р°Р»
+3.1 Р”РѕР±Р°РІРёС‚СЊ РІ pom.xml РјРѕРґСѓР»СЏ РїР»Р°РіРёРЅ, РєРѕС‚РѕСЂС‹Р№ Р±СѓРґРµС‚ СЃСЂР°Р±Р°С‚С‹РІР°С‚СЊ РєР°Р¶РґС‹Р№ СЂР°Р· РєРѕРіРґР° Р±СѓРґРµС‚ РІС‹Р·С‹РІР°С‚СЊСЃСЏ INSTALL 
+			<plugin>
+				<groupId>org.codehaus.mojo</groupId>
+				<artifactId>exec-maven-plugin</artifactId>
+				<version>1.5.0</version>
+				<configuration>
+					<mainClass>kz.tem.portal.server.plugin.RemoteModuleDeploy</mainClass>
+					<arguments>
+						<argument>${project.build.directory}/msystext-0.0.1-bundle.zip</argument> <!-- СЌС‚Рѕ Р°СЂС…РёРІ РјРѕРґСѓР»СЏ -->
+						<argument>msystext</argument> <!-- СЌС‚Рѕ РёРјСЏ РјРѕРґСѓР»СЏ-->
+						<argument>http://localhost:8081/portal</argument> <!-- СЌС‚Рѕ Р°РґСЂРµСЃ РїРѕСЂС‚Р°Р»Р° -->
+					</arguments>
+				</configuration>
+				<executions>
+					<execution>
+						<phase>package</phase>
+						<goals>
+							<goal>java</goal>
+						</goals>
+					</execution>
+				</executions>
+			</plugin>
+			
+4. Maven РєРѕРјР°РЅРґС‹
+4.1 Р§С‚РѕР±С‹ СЃРґРµР»Р°С‚СЊ РїРµСЂРІС‹Р№ РґРµРїР»РѕР№ РЅР° С‚РѕРјРєР°С‚ РЅСѓР¶РЅРѕ РІ build СѓРєР°Р·Р°С‚СЊ: tomcat7:deploy
+4.2 Р§С‚РѕР±С‹ СЃРґРµР»Р°С‚СЊ РїРѕРІС‚РѕСЂРЅС‹Р№ РґРµРїР»РѕР№ РЅР° С‚РѕРјРєР°С‚ РЅСѓР¶РЅРѕ РІ build СѓРєР°Р·Р°С‚СЊ: tomcat7:redeploy
 
-3. Maven команды
-3.1 Чтобы сделать первый деплой на томкат нужно в build указать: tomcat7:deploy
-3.2 Чтобы сделать повторный деплой на томкат нужно в build указать: tomcat7:redeploy
-		
 	

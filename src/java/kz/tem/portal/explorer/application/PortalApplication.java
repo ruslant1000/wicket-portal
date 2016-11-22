@@ -2,16 +2,24 @@ package kz.tem.portal.explorer.application;
 
 import java.net.URL;
 import java.util.Iterator;
+import java.util.Map;
 
 import org.apache.wicket.Page;
 import org.apache.wicket.application.AbstractClassResolver;
 import org.apache.wicket.application.IClassResolver;
 import org.apache.wicket.authroles.authentication.AbstractAuthenticatedWebSession;
 import org.apache.wicket.authroles.authentication.AuthenticatedWebApplication;
+import org.apache.wicket.core.util.lang.PropertyResolver;
+import org.apache.wicket.core.util.lang.PropertyResolver.IGetAndSet;
 import org.apache.wicket.markup.html.WebPage;
 import org.apache.wicket.protocol.http.WebApplication;
 import org.apache.wicket.request.cycle.RequestCycle;
+import org.apache.wicket.request.resource.IResource;
+import org.apache.wicket.request.resource.ResourceReference;
 import org.apache.wicket.spring.injection.annot.SpringComponentInjector;
+import org.apache.wicket.util.time.Duration;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.ApplicationContext;
 
 import kz.tem.portal.api.PortalEngine;
 import kz.tem.portal.explorer.page.AbstractThemePage;
@@ -23,6 +31,8 @@ import kz.tem.portal.explorer.page.admin.pages.PagesConfig;
 import kz.tem.portal.explorer.page.admin.portlets.PortletsConfig;
 import kz.tem.portal.explorer.page.admin.settings.SettingsPage;
 import kz.tem.portal.explorer.page.admin.users.UsersPage;
+import kz.tem.portal.explorer.services.FileUploadService;
+import kz.tem.portal.explorer.services.TestService;
 import kz.tem.portal.server.plugin.engine.ModuleEngine;
 /**
  * 
@@ -31,7 +41,8 @@ import kz.tem.portal.server.plugin.engine.ModuleEngine;
  */
 public class PortalApplication extends AuthenticatedWebApplication {
 
-	
+	@Autowired
+	private ApplicationContext context;
 	
 	@Override
 	protected void init() {
@@ -44,6 +55,25 @@ public class PortalApplication extends AuthenticatedWebApplication {
 		// WebApplication.get().getMarkupSettings().getMarkupFactory().getMarkupCache().shutdown();
 		// getDebugSettings().setComponentUseCheck(false);
 
+		//**************************
+		// Это нужно для того, чтобы PropertyModel в модулях работал корректно.
+		// Иначе при ПОВТОРНОМ деплое модуля будет вылетать ошибка 
+		//    java.lang.IllegalArgumentException: Can not set java.lang.String field...
+		// Т.е. PropertyResolver кэширует объект модели и потом уже оперирует устаревшим объектом во вновь загруженном модуле.
+		PropertyResolver.setClassCache(this, new PropertyResolver.IClassCache() {
+			
+			@Override
+			public void put(Class<?> clz, Map<String, IGetAndSet> values) {
+			}
+			
+			@Override
+			public Map<String, IGetAndSet> get(Class<?> clz) {
+				return null;
+			}
+		});
+		//**************************
+		
+		
 		PortalEngine.getInstance().getExplorerEngine().initLayouts(this);
 		PortalEngine.getInstance().getExplorerEngine().initThemes(this);
 
@@ -61,6 +91,13 @@ public class PortalApplication extends AuthenticatedWebApplication {
 		mountPage("admin/portlets", PortletsConfig.class);
 		mountPage("admin/settings", SettingsPage.class);
 		mountPage("admin/users", UsersPage.class);
+		
+		
+	
+		//TODO  надо будет отключить при вводе в эксплуатацию, потому что это нарушает систему безопасности. Либо добавить сервисам авторизацию
+		mountResource("test","services/test", new TestService());
+		mountResource("upload","services/upload", new FileUploadService());
+		
 
 		System.out.println("@@@  "
 				+ getFrameworkSettings().getSerializer().getClass().getName());
@@ -68,7 +105,7 @@ public class PortalApplication extends AuthenticatedWebApplication {
 				+ getApplicationSettings().getClassResolver().getClass()
 						.getName());
 
-		getApplicationSettings().setClassResolver(new PortalClassResolver());
+//		getApplicationSettings().setClassResolver(new PortalClassResolver());
 		
 		
 		
@@ -114,6 +151,9 @@ public class PortalApplication extends AuthenticatedWebApplication {
 		// });
 		// getResourceSettings().setResourceStreamLocator(new
 		// CustomResourceStreamLocator());
+		
+		
+		
 	}
 
 	@Override
@@ -166,14 +206,26 @@ public class PortalApplication extends AuthenticatedWebApplication {
 
 	}
 
+	
+	public void mountResource(String key,String path,  final IResource resource){
+		ResourceReference ref= new ResourceReference(key){
+			private static final long serialVersionUID = 1L;
+
+			@Override
+			public IResource getResource() {
+				return resource;
+			}};
+		mountResource(path, ref);
+	}
+	
 	public static PortalApplication get() {
 		return (PortalApplication) WebApplication.get();
 	}
 
 	/**
-	 * � ������ Page �������� ������ ������������� URL. �������� 'suburl1'. �
-	 * ��� ���� ����� �������� ������ �������� URL ����� �������� ��� � ����
-	 * '/<portal-context-path>/pg/suburl1'. �������� '/portal/pg/suburl1'
+	 * � ������ Page �������� ������ ������������� URL. �������� 'suburl1'. �
+	 * ��� ���� ����� �������� ������ �������� URL ����� �������� ��� � ����
+	 * '/<portal-context-path>/pg/suburl1'. �������� '/portal/pg/suburl1'
 	 * 
 	 * @param page
 	 * @return

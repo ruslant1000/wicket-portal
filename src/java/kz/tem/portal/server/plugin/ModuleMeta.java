@@ -6,7 +6,7 @@ import java.io.Serializable;
  * 
  * @author Ruslan Temirbulatov
  * 
- * Описание модуля
+ * РњРµС‚Р° РґР°РЅРЅС‹Рµ РјРѕРґСѓР»СЏ
  */
 @SuppressWarnings("serial")
 public class ModuleMeta implements Serializable{
@@ -14,9 +14,9 @@ public class ModuleMeta implements Serializable{
 	public String moduleName;
 	public String displayName;
 	public String moduleClass;
-	/**
-	 * Полный путь к директории расположения модуля 
-	 */
+	
+	private String contextLocation;
+	
 	public String moduleDirectoryPath;
 	
 	public String getModuleName() {
@@ -42,6 +42,13 @@ public class ModuleMeta implements Serializable{
 	}
 	public void setModuleDirectoryPath(String moduleDirectoryPath) {
 		this.moduleDirectoryPath = moduleDirectoryPath;
+	}
+	
+	public String getContextLocation() {
+		return contextLocation;
+	}
+	public void setContextLocation(String contextLocation) {
+		this.contextLocation = contextLocation;
 	}
 	public String toString(){
 		return moduleName;

@@ -11,6 +11,7 @@ import org.apache.wicket.extensions.ajax.markup.html.modal.ModalWindow;
 import org.apache.wicket.markup.html.WebMarkupContainer;
 import org.apache.wicket.markup.html.WebPage;
 import org.apache.wicket.markup.html.basic.Label;
+import org.apache.wicket.protocol.http.WebApplication;
 import org.apache.wicket.spring.injection.annot.SpringBean;
 
 import kz.tem.portal.PortalException;
@@ -54,6 +55,11 @@ public class AbstractThemePage extends WebPage{
 
 
 	public AbstractThemePage(){
+		
+		WebApplication.get().getMarkupSettings().getMarkupFactory().getMarkupCache().clear();
+		
+		
+		
 		String url = getRequestCycle().getRequest().getClientUrl().getPath();
 		if(url.trim().length()==0){
 			url = ExplorerEngine.getInstance().getSettingsValue(ExplorerEngine.SETTINGS_MAIN_PAGE);

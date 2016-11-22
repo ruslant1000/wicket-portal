@@ -1,5 +1,5 @@
 .abstract-table{
-	
+	border: 3px solid red;
 }
 .abstract-table tr:nth-child(odd){
 	background: #cce6ff;

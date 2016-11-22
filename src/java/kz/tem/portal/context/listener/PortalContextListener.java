@@ -3,8 +3,11 @@ package kz.tem.portal.context.listener;
 import javax.servlet.ServletContextEvent;
 import javax.servlet.ServletContextListener;
 
+import org.apache.wicket.spring.SpringBeanLocator;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.context.ApplicationContextInitializer;
+import org.springframework.web.context.support.SpringBeanAutowiringSupport;
 
 import kz.tem.portal.server.plugin.engine.ModuleEngine;
  
@@ -32,8 +35,10 @@ public class PortalContextListener implements ServletContextListener{
 			ModuleEngine.getInstance().loadModules(arg0.getServletContext().getRealPath("modules"));
 		} catch (Exception e) {
 			e.printStackTrace();
-			log.error("Не удалось загрузить все модули",e);
+			log.error("пїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅ",e);
 		}
+		
+		
 //		LoggerFactory.getLogger("XXXX").info("sdsfsdfsd");
 	}
 	

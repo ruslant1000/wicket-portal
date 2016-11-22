@@ -28,6 +28,9 @@ public class PortletContainer extends Panel {
 			final Portlet portlet) {
 		super(id);
 		try {
+			
+			if(!ModuleEngine.getInstance().getModuleMap().containsKey(moduleName))
+				throw new Exception("Модуль не найден: "+moduleName);
 			ModuleMeta meta = ModuleEngine.getInstance().getModuleMap()
 					.get(moduleName);
 
@@ -66,7 +69,9 @@ public class PortletContainer extends Panel {
 		} catch (Exception ex) {
 			ex.printStackTrace();
 			add(new Label("module", "модуль недоступен. " + ex.getMessage()));
-			throw new RuntimeException(ex);
+			if(PortletContainer.this.get("config")==null){
+				add(new WebMarkupContainer("config"));
+			}
 		}
 
 	}

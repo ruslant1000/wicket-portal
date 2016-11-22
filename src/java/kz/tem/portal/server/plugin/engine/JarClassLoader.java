@@ -9,6 +9,21 @@ import java.util.Hashtable;
 import java.util.jar.JarEntry;
 import java.util.jar.JarFile;
 
+import org.apache.wicket.util.resource.IResourceStream;
+import org.hibernate.SessionFactory;
+import org.springframework.beans.factory.xml.XmlBeanDefinitionReader;
+import org.springframework.context.ApplicationContext;
+import org.springframework.context.support.ClassPathXmlApplicationContext;
+import org.springframework.context.support.GenericApplicationContext;
+import org.springframework.core.io.ByteArrayResource;
+import org.springframework.core.io.DefaultResourceLoader;
+import org.springframework.core.io.InputStreamResource;
+import org.springframework.orm.hibernate5.LocalSessionFactoryBean;
+import org.springframework.util.ClassUtils;
+import org.xml.sax.InputSource;
+
+import sun.misc.Resource;
+import kz.tem.portal.context.listener.ModuleContextListener;
 import kz.tem.portal.utils.FileUtils;
 /**
  * 
@@ -44,15 +59,7 @@ public class JarClassLoader extends ClassLoader {
 			return result;
 		}
 
-		try {
-			return JarClassLoader.class.getClassLoader().loadClass(className);
-			// return super.findClass(className);
-		} catch (Exception e) {
-		}
-		try {
-			return findSystemClass(className);
-		} catch (Exception e) {
-		}
+		
 		InputStream is = null;
 		JarFile jar = null;
 		ByteArrayOutputStream byteStream = null;
@@ -89,13 +96,24 @@ public class JarClassLoader extends ClassLoader {
 			classes.put(className, result);
 			return result;
 		} catch (Exception e) {
-			return null;
+			
 		}finally{
 			
 			try{byteStream.close();}catch(Exception ex){}
 			try{is.close();}catch(Exception ex){}
 			try {jar.close();} catch (IOException e) {}
 		}
+		try {
+			return JarClassLoader.class.getClassLoader().loadClass(className);
+			// return super.findClass(className);
+		} catch (Exception e) {
+		}
+		try {
+			return findSystemClass(className);
+		} catch (Exception e) {
+		}
+		
+		return null;
 	}
 
 
@@ -133,13 +151,57 @@ public class JarClassLoader extends ClassLoader {
 
 	public static void main(String[] args) throws Exception {
 		JarClassLoader j = new JarClassLoader(
-				"G:\\projects\\tem-portal\\apache-tomcat-7.0.37\\webapps\\portal\\modules\\ftp-client-0.0.1-bundle\\lib");
-		URL url = j
-				.getResource("kz/tem/portal/module/ftpclient/FtpClientModule.html");
-		System.out.println(url);
-		Class s = j.loadClass("kz.tem.portal.module.ftpclient.BeanX");
-		Object o = s.getConstructor(new Class[]{String.class}).newInstance(new Object[]{"s"});
-		j.destroy();
+				"G:\\projects\\tem-portal\\apache-tomcat-7.0.37\\webapps\\portal\\modules\\msystext-0.0.1-bundle\\lib");
+		
+		
+		
+//		InputStream ins = j.getResourceAsStream("kz/tem/portal/msystext/server/context/main.xml");
+//		System.out.println(ins.available());
+////		
+////		
+//		
+//		GenericApplicationContext context = new GenericApplicationContext(); 
+////
+//		  XmlBeanDefinitionReader reader = new XmlBeanDefinitionReader(context);
+//		  reader.setValidationMode(XmlBeanDefinitionReader.VALIDATION_XSD);
+//		  
+////		  //get the classloader
+////		  
+////		  
+////		  ClassLoader loader = Thread.currentThread().getContextClassLoader();
+////		  //set the loader
+//		  reader.setBeanClassLoader(j);
+//		  reader.setResourceLoader(new DefaultResourceLoader(j));
+////		  //get the bean definitions
+////		  j.getResource("kz/tem/portal/msystext/server/context/main.xml")
+//		  reader.loadBeanDefinitions(new InputStreamResource(ins));
+////		  //init
+//		  context.refresh();
+//		
+//		  
+//		  
+//		  
+//		  context.start();
+//		  
+//		  
+//		  SessionFactory sess = (SessionFactory)context.getBean("mySessionFactory");
+		
+//		ApplicationContext context = 
+//	             new ClassPathXmlApplicationContext("kz/tem/portal/msystext/server/context/main.xml");
+		
+		
+//		ModuleEngine.initializeSpringContext(j, "kz/tem/portal/msystext/server/context/main.xml");
+//		Class s = j.loadClass("kz.tem.portal.msystext.server.context.ContextListener");
+//		s.getConstructor(new Class[]{String.class}).newInstance("classpath:main.xml");
+//		ModuleContextListener mcl = (ModuleContextListener)s.newInstance();
+//		mcl.initialize();
+//		URL url = j
+//				.getResource("kz/tem/portal/module/ftpclient/FtpClientModule.html");
+//		System.out.println(url);
+//		Class s = j.loadClass("kz.tem.portal.module.ftpclient.BeanX");
+//		Object o = s.getConstructor(new Class[]{String.class}).newInstance(new Object[]{"s"});
+		
+//		j.destroy();
 //		j=null;
 		
 //		File pathDir = new File("G:\\projects\\tem-portal\\apache-tomcat-7.0.37\\webapps\\portal\\modules\\ftp-client-0.0.1-bundle\\lib\\ftp-client-0.0.1.jar");
@@ -150,7 +212,7 @@ public class JarClassLoader extends ClassLoader {
 //		is.close();
 //		jar.close();
 		
-		FileUtils.deleteDirectory("G:\\projects\\tem-portal\\apache-tomcat-7.0.37\\webapps\\portal\\modules\\ftp-client-0.0.1-bundle");
+//		FileUtils.deleteDirectory("G:\\projects\\tem-portal\\apache-tomcat-7.0.37\\webapps\\portal\\modules\\ftp-client-0.0.1-bundle");
 //		File f = new File("G:\\projects\\tem-portal\\apache-tomcat-7.0.37\\webapps\\portal\\modules\\ftp-client-0.0.1-bundle");
 //		boolean b = f.delete();
 //		System.out.println(b);
