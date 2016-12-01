@@ -14,7 +14,7 @@ import kz.tem.portal.explorer.panel.common.form.field.FTextStringField;
  * 
  * @author Ruslan Temirbulatov
  * 
- * Конструктор полей ввода для форм ввода.
+ * РљРѕРЅСЃС‚СЂСѓРєС‚РѕСЂ РїРѕР»РµР№ РІРІРѕРґР° РґР»СЏ С„РѕСЂРј РІРІРѕРґР°.
  *
  */
 @SuppressWarnings("serial")
@@ -23,7 +23,7 @@ public class FormFieldsBuilder implements Serializable{
 
 	private Map<String, IModel> requireds = new HashMap<String, IModel>();
 	/**
-	 * Поле для ввода строк.
+	 * РџРѕР»Рµ РґР»СЏ РІРІРѕРґР° СЃС‚СЂРѕРє.
 	 * @param id
 	 * @param model
 	 * @return
@@ -47,11 +47,11 @@ public class FormFieldsBuilder implements Serializable{
 		for(String f:requireds.keySet()){
 			Object value = requireds.get(f).getObject();
 			if(value==null){
-				parent.error("Не заполнено обязательное поле '"+f+"'");
+				parent.error("РќРµ Р·Р°РїРѕР»РЅРµРЅРѕ РѕР±СЏР·Р°С‚РµР»СЊРЅРѕРµ РїРѕР»Рµ '"+f+"'");
 				valid = false;
 			}else{ 
 				if(value instanceof String && value.toString().trim().length()==0){
-					parent.error("Не заполнено обязательное поле '"+f+"'");
+					parent.error("РќРµ Р·Р°РїРѕР»РЅРµРЅРѕ РѕР±СЏР·Р°С‚РµР»СЊРЅРѕРµ РїРѕР»Рµ '"+f+"'");
 					valid = false;
 				}
 			}

@@ -48,7 +48,7 @@ public class FileUploadService extends AbstractResource {
 					ModuleEngine.getInstance().undeploy(moduleName);
 					
 					System.out.println("!!!! module undeployed");
-					Thread.sleep(5000);
+					Thread.sleep(1000);
 					
 					ins = request.getInputStream();
 

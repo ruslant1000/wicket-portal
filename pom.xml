@@ -43,7 +43,7 @@
 				<configuration>
 					<url>http://localhost:8081/manager/text</url>
 					<server>Tomcat7Server</server>
-					<path>/portal</path>
+					<path>/</path>
 				</configuration>
 
 			</plugin>
@@ -74,15 +74,16 @@
 								<include>kz/tem/portal/explorer/panel/common/**/*</include>
 								<include>kz/tem/portal/server/bean/*</include>
 								<include>kz/tem/portal/server/plugin/*</include>
+								<include>kz/tem/portal/server/plugin/engine/JarClassLoader*</include>
 								<include>kz/tem/portal/explorer/page/AbstractThemePage*</include>
 								<include>kz/tem/portal/explorer/page/IComponentCreator*</include>
 								<include>kz/tem/portal/context/listener/ModuleContextListener*</include>
 								<include>kz/tem/portal/server/model/IdEntity*</include>
 								
 							</includes>
-							<excludes>
+							<!-- <excludes>
 								<exclude>kz/tem/portal/server/plugin/engine/*</exclude>
-							</excludes>
+							</excludes> -->
 						</configuration>
 					</execution>
 				</executions>
@@ -192,6 +193,10 @@
 			<artifactId>spring-aop</artifactId>
 			<version>4.3.3.RELEASE</version>
 		</dependency>
+		
+	
+        
+        
 		<dependency>
 			<groupId>org.springframework</groupId>
 			<artifactId>spring-aspects</artifactId>

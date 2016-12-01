@@ -60,7 +60,8 @@ public class PageRegisterImpl implements IPageRegister{
 			return page;
 		}catch(Exception ex){
 			session.clear();
-			throw new PortalException("Ошибка добавления новой страницы",ex);
+			ex.printStackTrace();
+			throw new PortalException("РќРµ СѓРґР°Р»РѕСЃСЊ РґРѕР±Р°РІРёС‚СЊ РЅРѕРІСѓСЋ СЃС‚СЂР°РЅРёС†Сѓ",ex);
 		}
 		
 		
@@ -80,7 +81,7 @@ public class PageRegisterImpl implements IPageRegister{
 //			session.evict(page);
 		}catch(Exception ex){
 			session.clear();
-			throw new PortalException("Ошибка при сохранении страницы",ex);
+			throw new PortalException("РќРµ СѓРґР°Р»РѕСЃСЊ СЃРѕС…СЂР°РЅРёС‚СЊ СЃС‚СЂР°РЅРёС†Сѓ",ex);
 		}
 		
 	}
@@ -96,7 +97,7 @@ public class PageRegisterImpl implements IPageRegister{
 //			}
 			return page;
 		}catch(Exception ex){
-			throw new PortalException("Ошибка при попытке получить информацию о странице из базы данных",ex);
+			throw new PortalException("РќРµ СѓРґР°Р»РѕСЃСЊ РїРѕР»СѓС‡РёС‚СЊ РґР°РЅРЅС‹Рµ СЃС‚СЂР°РЅРёС†С‹",ex);
 		}
 	}
 	@Override
@@ -114,7 +115,7 @@ public class PageRegisterImpl implements IPageRegister{
 //			}
 			return page;
 		}catch(Exception ex){
-			throw new PortalException("Ошибка при попытке получить информацию о странице из базы данных",ex);
+			throw new PortalException("РќРµ СѓРґР°Р»РѕСЃСЊ РїРѕР»СѓС‡РёС‚СЊ РґР°РЅРЅС‹Рµ СЃС‚СЂР°РЅРёС†С‹",ex);
 		}
 	}
 
@@ -128,7 +129,7 @@ public class PageRegisterImpl implements IPageRegister{
 			session.flush();
 		}catch(Exception ex){
 			session.clear();
-			throw new PortalException("Ошибка при удалении страницы",ex);
+			throw new PortalException("РќРµ СѓРґР°Р»РѕСЃСЊ СѓРґР°Р»РёС‚СЊ СЃС‚СЂР°РЅРёС†Сѓ",ex);
 		}
 		
 	}
@@ -164,7 +165,7 @@ public class PageRegisterImpl implements IPageRegister{
 				}
 			};
 		}catch(Exception ex){
-			throw new PortalException("Не удалось получить список страниц",ex);
+			throw new PortalException("РќРµ СѓРґР°Р»РѕСЃСЊ РїРѕР»СѓС‡РёС‚СЊ С‚Р°Р±Р»РёС†Сѓ СЃС‚СЂР°РЅРёС†",ex);
 		}
 	}
 	@Override
@@ -197,7 +198,7 @@ public class PageRegisterImpl implements IPageRegister{
 			return tree;
 			
 		}catch(Exception ex){
-			throw new PortalException("Не удалось получить список страниц",ex);
+			throw new PortalException("РќРµ СѓРґР°Р»РѕСЃСЊ РїРѕР»СѓС‡РёС‚СЊ РґРµСЂРµРІРѕ СЃС‚СЂР°РЅРёС†",ex);
 		}
 	}
 

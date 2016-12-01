@@ -61,10 +61,8 @@ public class ModuleEngine {
 		if(!loaders.containsKey(meta.getModuleName())){
 			throw new Exception("не найден JarClassLoader: "+meta.getModuleName());
 		}
-		log.debug("�������� �������� ������ "+meta.getModuleName()+"...");
 		Class cls = loaders.get(meta.getModuleName()).loadClass(meta.getModuleClass());
 		Module module = (Module)cls.getConstructor(new Class[]{String.class,ModuleConfig.class}).newInstance(new Object[]{id,config});
-		log.debug("�������� �������� ������ "+meta.getModuleName()+" ���������");
 		return module;
 	}
 	 /**

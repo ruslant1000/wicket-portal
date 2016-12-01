@@ -26,7 +26,7 @@ public class PageRegisterImplTest {
 	
 	@BeforeClass
 	public static void setUpBeforeClass() throws Exception {
-		ClassPathXmlApplicationContext ctx = new ClassPathXmlApplicationContext("/kz/tem/portal/server/context/main.xml");
+		ClassPathXmlApplicationContext ctx = new ClassPathXmlApplicationContext("main.xml");
 		register = ctx.getBean(PageRegisterImpl.class);
 	}
  
@@ -60,7 +60,7 @@ public class PageRegisterImplTest {
 			page.setUrl(url);
 			page.setTitle("title");
 			page = register.addNewPage(page);
-			fail("Должна быть ошибка Duplicate entry...");
+			fail("пїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅ Duplicate entry...");
 		} catch (PortalException e) {
 			System.out.println(ExceptionUtils.fullError(e));
 //			fail(ExceptionUtils.fullError(e));
@@ -70,7 +70,7 @@ public class PageRegisterImplTest {
 			page.setUrl(url);
 			page.setTitle("title");
 			page = register.addNewPage(page);
-			fail("Должна быть ошибка Duplicate entry...");
+			fail("пїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅ Duplicate entry...");
 		} catch (PortalException e) {
 			System.out.println(ExceptionUtils.fullError(e));
 //			fail(ExceptionUtils.fullError(e));
@@ -110,6 +110,28 @@ public class PageRegisterImplTest {
 			e.printStackTrace();
 			fail(e.getMessage());
 		}
+	}
+	@Test
+	public void tt() throws PortalException{
+		Page page = new Page();
+		String key = "-"+System.currentTimeMillis();
+		page.setTheme("theme"+key);
+		page.setLayout("layout"+key);
+		page.setUrl("url"+key);
+		page.setTitle("title"+key);
+		page = register.addNewPage(page);
+		System.out.println(page.getId());
+		Long id = page.getId();
+		Page page1 = register.getPage(id);
+		Page page2 = register.getPage(id);
+		
+		System.out.println(page1.getId());
+		System.out.println(page2.getId());
+		
+		
+		Page p0 = register.pages(0, 0).records().get(0);
+		Page p1 = register.pages(0, 0).records().get(0);
+		System.out.println(p0.getId());
 	}
 	public static void main(String[] args) {
 		URL url = Thread.currentThread().getContextClassLoader()

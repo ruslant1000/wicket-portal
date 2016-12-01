@@ -8,6 +8,8 @@ import org.apache.wicket.ajax.markup.html.AjaxLink;
 import org.apache.wicket.authroles.authentication.AuthenticatedWebApplication;
 import org.apache.wicket.authroles.authentication.AuthenticatedWebSession;
 import org.apache.wicket.extensions.ajax.markup.html.modal.ModalWindow;
+import org.apache.wicket.markup.head.IHeaderResponse;
+import org.apache.wicket.markup.head.OnDomReadyHeaderItem;
 import org.apache.wicket.markup.html.WebMarkupContainer;
 import org.apache.wicket.markup.html.WebPage;
 import org.apache.wicket.markup.html.basic.Label;
@@ -110,10 +112,10 @@ public class AbstractThemePage extends WebPage{
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
-		add(new Label("info",txt));
-		add(new PagesTable("table"));
-		add(new DefaultInputForm("form"));
-		add(new DefaultInputStatelesForm("form2"));
+//		add(new Label("info",txt));
+//		add(new PagesTable("table"));
+//		add(new DefaultInputForm("form"));
+//		add(new DefaultInputStatelesForm("form2"));
 		
 		
 		WebMarkupContainer modal = new WebMarkupContainer("modal");
@@ -130,7 +132,7 @@ public class AbstractThemePage extends WebPage{
 			}
 		});
 		modal.add(new WebMarkupContainer("content").setOutputMarkupId(true));
-		
+//		setVersioned(false);
 	}
 	
 	public void showModal(String title,AjaxRequestTarget target, IComponentCreator creator){
@@ -151,4 +153,15 @@ public class AbstractThemePage extends WebPage{
 		
 		
 	}
+
+
+	@Override
+	public void renderHead(IHeaderResponse response) {
+		super.renderHead(response);
+		response.render(OnDomReadyHeaderItem.forScript("Wicket.Event.subscribe('/ajax/call/beforeSend',function( attributes, jqXHR, settings ) {       $('#m_ajax_loading-animation').css('left','0px');$('#m_ajax_loading-animation').find('.loading-animation-mask').css('opacity','0.5');$('#m_ajax_loading-animation').find('.loading-animation-inner').css('opacity','1');        });"));
+		response.render(OnDomReadyHeaderItem.forScript("Wicket.Event.subscribe('/ajax/call/complete',function( attributes, jqXHR, settings ) {       $('#m_ajax_loading-animation').css('left','-99999px');$('#m_ajax_loading-animation').find('.loading-animation-mask').css('opacity','0');$('#m_ajax_loading-animation').find('.loading-animation-inner').css('opacity','0');        });"));
+	}
+	
+	
+	
 }

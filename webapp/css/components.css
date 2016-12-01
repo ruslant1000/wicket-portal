@@ -1,0 +1,16 @@
+.temportal-theme .tabber {
+	border-top: 1px solid gray;
+	border-left: 1px solid gray;
+	border-right: 1px solid gray;
+	padding: 5px;
+	margin: 0px;
+	text-decoration: none;
+	color: #8C8C8C;
+	
+	font-weight: bold;
+	text-transform: uppercase;
+	font-size: 0.8em;
+}
+.temportal-theme .tabber.selected{
+	color: #454545;
+}

@@ -1,0 +1,19 @@
+.default-ajax-wait-indicator {
+	display: table;
+	position: absolute;
+	height: 100%;
+	width: 100%;
+	left: 0px;
+	top: 0px;
+}
+
+.default-ajax-wait-indicator .default-ajax-wait-indicator-container{
+	display: table-cell;
+    vertical-align: middle;
+}
+.default-ajax-wait-indicator .default-ajax-wait-indicator-container .image{
+	background: url("/images/loading_animation.gif");
+	display:block;
+	width:100px;
+	height: 100px;
+}

@@ -51,7 +51,7 @@ public class PortletContainer extends Panel {
 							});
 				}
 			});
-			try {
+			try { 
 
 				module.create();
 //				add(new Label("module", "OK"));

@@ -39,10 +39,20 @@ public abstract class AbstractTable<T> extends Panel{
 		setOutputMarkupId(true);
 	
 		this.withCheckboxColumn=withCheckboxColumn;
+		
+	}
+	
+	
+	
+	@Override
+	protected void onInitialize() {
+		super.onInitialize();
 		add(before("before"));
 		build();
 	}
-	
+
+
+
 	public Component before(String id){
 		WebMarkupContainer cmp = new WebMarkupContainer(id);
 		cmp.setOutputMarkupId(true);

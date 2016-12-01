@@ -43,15 +43,11 @@
 		<property name="loginTimeout" value="5000" />
 	</bean>
 
-	<bean id="jndii" class="org.springframework.jndi.JndiObjectFactoryBean">
-	    <property name="jndiName" value="java:comp/env/jdbc/appname"/>
-	</bean>
-	
 	<bean id="mySessionFactory"
 		class="org.springframework.orm.hibernate5.LocalSessionFactoryBean">
 		
-		<!-- <property name="dataSource" ref="c3p0" /> -->
-		<property name="dataSource" ref="jndii" />
+		<property name="dataSource" ref="c3p0" />
+		<!-- <property name="dataSource" ref="jndii" /> -->
 		<property name="packagesToScan">
 			<list>
 				<value>kz.tem.portal.server.model</value>

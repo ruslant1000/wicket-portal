@@ -29,8 +29,23 @@ import kz.tem.portal.utils.FileUtils;
  * 
  * @author Ruslan Temirbulatov
  *
- */
+ */ 
 public class JarClassLoader extends ClassLoader {
+
+	/**
+	 * Тут указывается ClassLoader для поиска классов бинов, загруженных через Spring модуля
+	 * XmlBeanDefinitionReader.getBeanClassLoader()
+	 */
+	private ClassLoader springClassLoader = null;
+	
+	public ClassLoader getSpringClassLoader() {
+		return springClassLoader;
+	}
+
+	public void setSpringClassLoader(ClassLoader springClassLoader) {
+		this.springClassLoader = springClassLoader;
+	}
+
 	private String path;
 	// private String[] jarFiles = new
 	// String[]{"E:/projects/xxx/xxx.jar","E:/projects/xxx/zzz.jar"}; //Path to
@@ -50,6 +65,12 @@ public class JarClassLoader extends ClassLoader {
 	}
 
 	public Class findClass(String className) {
+		
+		
+		if(className.indexOf("CategoryRegisterImpl")!=-1)
+			System.out.println("\t jar: "+className);
+		
+		
 //		System.out.println("find " + className);
 		byte classByte[];
 		Class result = null;
@@ -59,10 +80,30 @@ public class JarClassLoader extends ClassLoader {
 			return result;
 		}
 
+		try {
+			return JarClassLoader.class.getClassLoader().loadClass(className);
+			// return super.findClass(className);
+		} catch (Exception e) {
+		}
+		try {
+			return findSystemClass(className);
+		} catch (Exception e) {
+		}
+		
 		
 		InputStream is = null;
 		JarFile jar = null;
 		ByteArrayOutputStream byteStream = null;
+		
+		
+//		if(className.contains("$$EnhancerBySpringCGLIB$$"))
+//			className = className.split("\\$\\$EnhancerBySpringCGLIB\\$\\$")[0];
+//		
+//		result = (Class) classes.get(className); // checks in cached classes
+//		if (result != null) {
+//			return result;
+//		}
+		
 		try {
 //			System.out.println("find in jar...");
 			
@@ -103,14 +144,13 @@ public class JarClassLoader extends ClassLoader {
 			try{is.close();}catch(Exception ex){}
 			try {jar.close();} catch (IOException e) {}
 		}
-		try {
-			return JarClassLoader.class.getClassLoader().loadClass(className);
-			// return super.findClass(className);
-		} catch (Exception e) {
-		}
-		try {
-			return findSystemClass(className);
-		} catch (Exception e) {
+		if(springClassLoader!=null){
+			try {
+				result = springClassLoader.loadClass(className);
+				return result;
+			} catch (ClassNotFoundException e) {
+				
+			}
 		}
 		
 		return null;

@@ -1,15 +1,19 @@
+<?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
 
 <wicket:panel>
-<div wicket:id="feedbackPanel"></div>
-<form wicket:id="form" class="default-form">
+<div  class="default-form">
+<div style="color:red;" wicket:id="feedbackPanel"></div>
+<div style="color:green;" wicket:id="success"></div>
+<form wicket:id="form">
 	<fieldset>
 		<span wicket:id="fields" class="field">
 			<label wicket:id="label" class="field-label"/>
 			<span wicket:id="f" class="field-input"/>
 		</span>
 	</fieldset>
-	<input type="submit" value="Сохранить"/>
+	<button wicket:id="buttons" value="Сохранить"><span wicket:id="value"/></button>
+	<!-- <input wicket:id="submit" type="submit" value="Сохранить"/> -->
 </form>
-
+</div>
 </wicket:panel>

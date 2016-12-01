@@ -16,6 +16,7 @@ import org.apache.wicket.protocol.http.WebApplication;
 import org.apache.wicket.request.cycle.RequestCycle;
 import org.apache.wicket.request.resource.IResource;
 import org.apache.wicket.request.resource.ResourceReference;
+import org.apache.wicket.serialize.java.JavaSerializer;
 import org.apache.wicket.spring.injection.annot.SpringComponentInjector;
 import org.apache.wicket.util.time.Duration;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -52,7 +53,7 @@ public class PortalApplication extends AuthenticatedWebApplication {
 		getResourceSettings().setResourceStreamLocator(
 				new PortalStreamLocator());
 
-		// WebApplication.get().getMarkupSettings().getMarkupFactory().getMarkupCache().shutdown();
+//		 WebApplication.get().getMarkupSettings().getMarkupFactory().getMarkupCache().shutdown();
 		// getDebugSettings().setComponentUseCheck(false);
 
 		
@@ -72,6 +73,7 @@ public class PortalApplication extends AuthenticatedWebApplication {
 				return null;
 			}
 		});
+//		JavaSerializer.
 		//**************************
 		
 		
@@ -86,6 +88,8 @@ public class PortalApplication extends AuthenticatedWebApplication {
 		mountPage("logout", SignOutPage.class);
 		mountPage("accessdenied", AccessDeniedPage.class);
 		
+		
+//		mount(new MountedMapperWithoutPageComponentInfo("pg/${seg1}", AbstractThemePage.class));
 		mountPage("pg/${seg1}", AbstractThemePage.class);
 
 		mountPage("admin/pages", PagesConfig.class);
@@ -99,6 +103,8 @@ public class PortalApplication extends AuthenticatedWebApplication {
 		mountResource("test","services/test", new TestService());
 		mountResource("upload","services/upload", new FileUploadService());
 		
+		
+		
 
 		System.out.println("@@@  "
 				+ getFrameworkSettings().getSerializer().getClass().getName());
@@ -106,10 +112,32 @@ public class PortalApplication extends AuthenticatedWebApplication {
 				+ getApplicationSettings().getClassResolver().getClass()
 						.getName());
 
-//		getApplicationSettings().setClassResolver(new PortalClassResolver());
+		getApplicationSettings().setClassResolver(new PortalClassResolver());
 		
 		
 		
+		
+//		getFrameworkSettings().setSerializer(new JavaSerializer(getApplicationKey()){
+//
+//			
+//			@Override
+//			public byte[] serialize(Object object) {
+//				System.out.println("SERIALIZE: "+object.getClass().getName());
+//				return super.serialize(object);
+//			}
+//
+//			@Override
+//			public Object deserialize(byte[] data) {
+//				System.out.println("TRY deserialize---------");
+//				try{
+//					return super.deserialize(data);	
+//				}catch(Exception ex){
+//					ex.printStackTrace();
+//				}
+//				return null;
+//			}
+//			
+//		});
 
 		// getFrameworkSettings().setSerializer(new JavaSerializer(
 		// getApplicationKey() ){
@@ -170,11 +198,6 @@ public class PortalApplication extends AuthenticatedWebApplication {
 			public ClassLoader getClassLoader() {
 				ClassLoader loader = Thread.currentThread()
 						.getContextClassLoader();
-				if (loader == null) {
-					loader = ModuleEngine.getInstance().getClassLoader(
-							"ftpclient");
-					// loader = DefaultClassResolver.class.getClassLoader();
-				}
 				return loader;
 			}
 		};
@@ -186,10 +209,18 @@ public class PortalApplication extends AuthenticatedWebApplication {
 			try {
 				return res.resolveClass(classname);
 			} catch (ClassNotFoundException ex) {
-				Class c = ModuleEngine.getInstance()
-						.getClassLoader("ftpclient").findClass(classname);
-				if (c == null)
+				Class c = null;
+				
+				if(classname.startsWith("kz.tem.portal")){
+					System.out.println("!!!!! search "+classname);
+					c = ModuleEngine.getInstance()
+					.getClassLoader(classname.split("\\.")[3]).findClass(classname);
+					System.out.println("!!! "+(c==null?"NOT":"")+" found "+classname);
+				}
+				if (c == null){
+					System.out.println("$$$$: ["+classname+"]");
 					throw new ClassNotFoundException(classname);
+				}
 				return c;
 				// throw ex;
 			}
@@ -245,4 +276,5 @@ public class PortalApplication extends AuthenticatedWebApplication {
 	protected Class<? extends AbstractAuthenticatedWebSession> getWebSessionClass() {
 		return PortalSession.class;
 	}
+	
 }

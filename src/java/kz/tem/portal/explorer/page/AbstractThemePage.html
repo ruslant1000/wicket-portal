@@ -2,7 +2,7 @@
 <html>
 <head>
 <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
-<title>Tem portal test page</title>
+<title>Wicket portal page</title>
 </head>
 <body>
 	<style type="text/css">
@@ -41,20 +41,65 @@
 	text-decoration: none;
 	cursor: pointer;
 }
+.loading-animation-mask{
+	position: absolute;
+	top: 0px;
+	left: 0px;
+	width: 100%;
+	height: 100%;
+	background-color: white;
+	display: block;
+	opacity: 0;
+	z-index: -1;
+	
+	-moz-transition: opacity 2s;
+    -webkit-transition: opacity 2s;
+    -o-transition: opacity 2s;
+    transition: opacity 2s;
+    
+    
+    
+}
+.loading-animation-outer{
+    display: table;
+    position: fixed;
+    height: 100%;
+    width: 100%;
+    left:0px;
+    top:0px;
+}
+.loading-animation-inner{
+    display: table-cell;
+    vertical-align: middle;
+    opacity: 0;
+    -moz-transition: opacity 2s;
+    -webkit-transition: opacity 2s;
+    -o-transition: opacity 2s;
+    transition: opacity 2s;
+}
+
+
 </style>
 
-	<h1>Abstract page</h1>
-	<span wicket:id="info"></span>
-	<div wicket:id="theme"></div>
+	<div class="temportal-theme" wicket:id="theme"></div>
 	<div wicket:id="modal" class="modal-window">
 		<div class="modal-content">
 			<a wicket:id="close" class="close">x</a>
 			<div wicket:id="content"></div>
 		</div>
 	</div>
-	<div wicket:id="table"></div>
-	<div wicket:id="form"></div>
-	<div wicket:id="form2"></div>
+	
 
+	
+	
+	<!-- Анимационная иконка, которая появляется во время срабатываения Ajax-запросов. Нужна как индикатор -->
+	<div id="m_ajax_loading-animation" align="center" style="left:-99999px;z-index: 99999;" class="loading-animation-outer">
+		<div class="loading-animation-inner" align="center">
+			<img src="/images/loading_animation.gif" />
+		</div>
+		<div class="loading-animation-mask" />
+	</div>
+	<!-- ---------------- -->
+	
 	</body>
 </html>

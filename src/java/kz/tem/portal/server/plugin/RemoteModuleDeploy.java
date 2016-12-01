@@ -15,7 +15,7 @@ public class RemoteModuleDeploy {
 	
 	public static void deploy(String fileName,String moduleName, String portalUrl)throws Exception{
 		System.out.println("Deploying module "+fileName+"...");
-		
+		System.out.println("   portalUrl: "+portalUrl);
 		
 		String USER_AGENT = "Mozilla/5.0";
 		String url = portalUrl+"/services/upload";
@@ -82,7 +82,7 @@ public class RemoteModuleDeploy {
 		System.out.println("RemoteModuleDeploy...");
 		deploy("G:\\projects\\tem-portal\\msys-text\\msystext\\target\\msystext-0.0.1-bundle.zip",
 				"msystext",
-				"http://localhost:8081/portal");
+				"http://localhost:8081");
 	}
 
 }

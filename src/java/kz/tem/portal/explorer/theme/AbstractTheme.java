@@ -128,7 +128,6 @@ public class AbstractTheme extends Panel implements IMarkupResourceStreamProvide
 	@Override
 	public IResourceStream getMarkupResourceStream(MarkupContainer container,
 			Class<?> containerClass) {
-		System.out.println("!!!!!! getMarkupResourceStream "+theme.getName());
 		URL url;
 		try {
 			url = WebApplication.get().getServletContext().getResource("themes/"+theme.getFileName());

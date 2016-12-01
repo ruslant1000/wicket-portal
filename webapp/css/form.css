@@ -1,0 +1,8 @@
+.default-form{
+	border: 1px solid gray;
+	padding: 5px;
+}
+
+.default-form fieldset{
+	border: none;
+}
