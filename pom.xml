@@ -71,6 +71,7 @@
 							
 							<includes>
 							
+								<include>kz/tem/portal/explorer/application/PortalSession*</include>
 								<include>kz/tem/portal/explorer/panel/common/**/*</include>
 								<include>kz/tem/portal/server/bean/*</include>
 								<include>kz/tem/portal/server/plugin/*</include>

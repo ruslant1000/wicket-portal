@@ -1,0 +1,136 @@
+
+/*далее иконки для типов файлов*/
+.filetype{
+	background: url("/images/filetype/small/csv.png") no-repeat;
+	padding-left: 20px;	
+}
+.filetype:HOVER{
+	padding-left: 20px;
+}
+.filetype.folder{
+	background: url("/images/filetype/small/folder.png") no-repeat;
+}
+
+.filetype.csv{
+	background: url("/images/filetype/small/csv.png") no-repeat;
+}
+
+.filetype.bmp{
+	background: url("/images/filetype/small/bmp.png") no-repeat;
+}
+.filetype.css{
+	background: url("/images/filetype/small/css.png") no-repeat;
+}
+.filetype.doc{
+	background: url("/images/filetype/small/doc.png") no-repeat;
+}
+.filetype.docx{
+	background: url("/images/filetype/small/docx.png") no-repeat;
+}
+.filetype.dot{
+	background: url("/images/filetype/small/dot.png") no-repeat;
+}
+.filetype.gif{
+	background: url("/images/filetype/small/gif.png") no-repeat;
+}
+.filetype.gz{
+	background: url("/images/filetype/small/gz.png") no-repeat;
+}
+.filetype.htm{
+	background: url("/images/filetype/small/htm.png") no-repeat;
+}
+.filetype.html{
+	background: url("/images/filetype/small/html.png") no-repeat;
+}
+.filetype.jpeg{
+	background: url("/images/filetype/small/jpeg.png") no-repeat;
+}
+.filetype.jpg{
+	background: url("/images/filetype/small/jpg.png") no-repeat;
+}
+.filetype.js{
+	background: url("/images/filetype/small/js.png") no-repeat;
+}
+.filetype.lar{
+	background: url("/images/filetype/small/lar.png") no-repeat;
+}
+.filetype.odb{
+	background: url("/images/filetype/small/odb.png") no-repeat;
+}
+.filetype.odf{
+	background: url("/images/filetype/small/odf.png") no-repeat;
+}
+.filetype.odg{
+	background: url("/images/filetype/small/odg.png") no-repeat;
+}
+.filetype.odp{
+	background: url("/images/filetype/small/odp.png") no-repeat;
+}
+.filetype.ods{
+	background: url("/images/filetype/small/ods.png") no-repeat;
+}
+.filetype.odt{
+	background: url("/images/filetype/small/odt.png") no-repeat;
+}
+.filetype.page{
+	background: url("/images/filetype/small/page.png") no-repeat;
+}
+.filetype.pdf{
+	background: url("/images/filetype/small/pdf.png") no-repeat;
+}
+.filetype.png{
+	background: url("/images/filetype/small/png.png") no-repeat;
+}
+.filetype.ppt{
+	background: url("/images/filetype/small/ppt.png") no-repeat;
+}
+.filetype.pptx{
+	background: url("/images/filetype/small/pptx.png") no-repeat;
+}
+.filetype.rtf{
+	background: url("/images/filetype/small/rtf.png") no-repeat;
+}
+.filetype.swf{
+	background: url("/images/filetype/small/swf.png") no-repeat;
+}
+.filetype.sxc{
+	background: url("/images/filetype/small/sxc.png") no-repeat;
+}
+.filetype.sxi{
+	background: url("/images/filetype/small/sxi.png") no-repeat;
+}
+.filetype.sxw{
+	background: url("/images/filetype/small/sxw.png") no-repeat;
+}
+.filetype.tar{
+	background: url("/images/filetype/small/tar.png") no-repeat;
+}
+.filetype.tgz{
+	background: url("/images/filetype/small/tgz.png") no-repeat;
+}
+.filetype.tiff{
+	background: url("/images/filetype/small/tiff.png") no-repeat;
+}
+.filetype.tsv{
+	background: url("/images/filetype/small/tsv.png") no-repeat;
+}
+.filetype.txt{
+	background: url("/images/filetype/small/txt.png") no-repeat;
+}
+.filetype.vsd{
+	background: url("/images/filetype/small/vsd.png") no-repeat;
+}
+.filetype.xls{
+	background: url("/images/filetype/small/xls.png") no-repeat;
+}
+.filetype.xlsx{
+	background: url("/images/filetype/small/xlsx.png") no-repeat;
+}
+.filetype.xml{
+	background: url("/images/filetype/small/xml.png") no-repeat;
+}
+.filetype.zip{
+	background: url("/images/filetype/small/zip.png") no-repeat;
+}
+
+

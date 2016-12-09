@@ -4,7 +4,13 @@ import java.net.URL;
 import java.util.Iterator;
 import java.util.Map;
 
+import org.apache.wicket.Component;
 import org.apache.wicket.Page;
+import org.apache.wicket.ajax.AbstractDefaultAjaxBehavior;
+import org.apache.wicket.ajax.AjaxRequestHandler;
+import org.apache.wicket.ajax.AjaxRequestTarget;
+import org.apache.wicket.ajax.AjaxRequestTarget.IJavaScriptResponse;
+import org.apache.wicket.ajax.attributes.AjaxRequestAttributes;
 import org.apache.wicket.application.AbstractClassResolver;
 import org.apache.wicket.application.IClassResolver;
 import org.apache.wicket.authroles.authentication.AbstractAuthenticatedWebSession;
@@ -13,11 +19,15 @@ import org.apache.wicket.core.util.lang.PropertyResolver;
 import org.apache.wicket.core.util.lang.PropertyResolver.IGetAndSet;
 import org.apache.wicket.markup.html.WebPage;
 import org.apache.wicket.protocol.http.WebApplication;
+import org.apache.wicket.request.IRequestHandler;
+import org.apache.wicket.request.Url;
+import org.apache.wicket.request.cycle.IRequestCycleListener;
 import org.apache.wicket.request.cycle.RequestCycle;
 import org.apache.wicket.request.resource.IResource;
 import org.apache.wicket.request.resource.ResourceReference;
 import org.apache.wicket.serialize.java.JavaSerializer;
 import org.apache.wicket.spring.injection.annot.SpringComponentInjector;
+import org.apache.wicket.util.IContextProvider;
 import org.apache.wicket.util.time.Duration;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.ApplicationContext;
@@ -35,6 +45,7 @@ import kz.tem.portal.explorer.page.admin.users.UsersPage;
 import kz.tem.portal.explorer.services.FileUploadService;
 import kz.tem.portal.explorer.services.TestService;
 import kz.tem.portal.server.plugin.engine.ModuleEngine;
+
 /**
  * 
  * @author Ruslan Temirbulatov
@@ -44,7 +55,7 @@ public class PortalApplication extends AuthenticatedWebApplication {
 
 	@Autowired
 	private ApplicationContext context;
-	
+
 	@Override
 	protected void init() {
 		super.init();
@@ -53,30 +64,31 @@ public class PortalApplication extends AuthenticatedWebApplication {
 		getResourceSettings().setResourceStreamLocator(
 				new PortalStreamLocator());
 
-//		 WebApplication.get().getMarkupSettings().getMarkupFactory().getMarkupCache().shutdown();
+		// WebApplication.get().getMarkupSettings().getMarkupFactory().getMarkupCache().shutdown();
 		// getDebugSettings().setComponentUseCheck(false);
 
-		
-		//**************************
+		// **************************
 		// Это нужно для того, чтобы PropertyModel в модулях работал корректно.
-		// Иначе при ПОВТОРНОМ деплое модуля будет вылетать ошибка 
-		//    java.lang.IllegalArgumentException: Can not set java.lang.String field...
-		// Т.е. PropertyResolver кэширует объект модели и потом уже оперирует устаревшим объектом во вновь загруженном модуле.
-		PropertyResolver.setClassCache(this, new PropertyResolver.IClassCache() {
-			
-			@Override
-			public void put(Class<?> clz, Map<String, IGetAndSet> values) {
-			}
-			
-			@Override
-			public Map<String, IGetAndSet> get(Class<?> clz) {
-				return null;
-			}
-		});
-//		JavaSerializer.
-		//**************************
-		
-		
+		// Иначе при ПОВТОРНОМ деплое модуля будет вылетать ошибка
+		// java.lang.IllegalArgumentException: Can not set java.lang.String
+		// field...
+		// Т.е. PropertyResolver кэширует объект модели и потом уже оперирует
+		// устаревшим объектом во вновь загруженном модуле.
+		PropertyResolver.setClassCache(this,
+				new PropertyResolver.IClassCache() {
+
+					@Override
+					public void put(Class<?> clz, Map<String, IGetAndSet> values) {
+					}
+
+					@Override
+					public Map<String, IGetAndSet> get(Class<?> clz) {
+						return null;
+					}
+				});
+		// JavaSerializer.
+		// **************************
+
 		PortalEngine.getInstance().getExplorerEngine().initLayouts(this);
 		PortalEngine.getInstance().getExplorerEngine().initThemes(this);
 
@@ -84,27 +96,23 @@ public class PortalApplication extends AuthenticatedWebApplication {
 
 		mountPage("authenticate", AuthenticatePage.class);
 		mountPage("login", LoginPage.class);
-		
+
 		mountPage("logout", SignOutPage.class);
 		mountPage("accessdenied", AccessDeniedPage.class);
-		
-		
-//		mount(new MountedMapperWithoutPageComponentInfo("pg/${seg1}", AbstractThemePage.class));
+
+		// mount(new MountedMapperWithoutPageComponentInfo("pg/${seg1}",
+		// AbstractThemePage.class));
 		mountPage("pg/${seg1}", AbstractThemePage.class);
 
 		mountPage("admin/pages", PagesConfig.class);
 		mountPage("admin/portlets", PortletsConfig.class);
 		mountPage("admin/settings", SettingsPage.class);
 		mountPage("admin/users", UsersPage.class);
-		
-		
-	
-		//TODO  надо будет отключить при вводе в эксплуатацию, потому что это нарушает систему безопасности. Либо добавить сервисам авторизацию
-		mountResource("test","services/test", new TestService());
-		mountResource("upload","services/upload", new FileUploadService());
-		
-		
-		
+
+		// TODO надо будет отключить при вводе в эксплуатацию, потому что это
+		// нарушает систему безопасности. Либо добавить сервисам авторизацию
+		mountResource("test", "services/test", new TestService());
+		mountResource("upload", "services/upload", new FileUploadService());
 
 		System.out.println("@@@  "
 				+ getFrameworkSettings().getSerializer().getClass().getName());
@@ -113,31 +121,38 @@ public class PortalApplication extends AuthenticatedWebApplication {
 						.getName());
 
 		getApplicationSettings().setClassResolver(new PortalClassResolver());
+
 		
-		
-		
-		
-//		getFrameworkSettings().setSerializer(new JavaSerializer(getApplicationKey()){
-//
-//			
-//			@Override
-//			public byte[] serialize(Object object) {
-//				System.out.println("SERIALIZE: "+object.getClass().getName());
-//				return super.serialize(object);
-//			}
-//
-//			@Override
-//			public Object deserialize(byte[] data) {
-//				System.out.println("TRY deserialize---------");
-//				try{
-//					return super.deserialize(data);	
-//				}catch(Exception ex){
-//					ex.printStackTrace();
-//				}
-//				return null;
-//			}
-//			
-//		});
+
+		// getExceptionSettings().setAjaxErrorHandlingStrategy(errorHandlingStrategyDuringAjaxRequests)
+
+		// getFrameworkSettings().setSerializer(new
+		// JavaSerializer(getApplicationKey()){
+		//
+		//
+		// @Override
+		// public byte[] serialize(Object object) {
+		// if(object.getClass().getName().indexOf("XmlFile")!=-1){
+		// System.out.println("------------");
+		// System.out.println("SERIALIZE: "+object.getClass().getName());
+		// System.out.println("    XmlFile: "+object);
+		// }
+		//
+		// return super.serialize(object);
+		// }
+		//
+		// @Override
+		// public Object deserialize(byte[] data) {
+		// System.out.println("TRY deserialize---------");
+		// try{
+		// return super.deserialize(data);
+		// }catch(Exception ex){
+		// ex.printStackTrace();
+		// }
+		// return null;
+		// }
+		//
+		// });
 
 		// getFrameworkSettings().setSerializer(new JavaSerializer(
 		// getApplicationKey() ){
@@ -180,9 +195,7 @@ public class PortalApplication extends AuthenticatedWebApplication {
 		// });
 		// getResourceSettings().setResourceStreamLocator(new
 		// CustomResourceStreamLocator());
-		
-		
-		
+
 	}
 
 	@Override
@@ -210,15 +223,17 @@ public class PortalApplication extends AuthenticatedWebApplication {
 				return res.resolveClass(classname);
 			} catch (ClassNotFoundException ex) {
 				Class c = null;
-				
-				if(classname.startsWith("kz.tem.portal")){
-					System.out.println("!!!!! search "+classname);
+
+				if (classname.startsWith("kz.tem.portal")) {
+					System.out.println("!!!!! search " + classname);
 					c = ModuleEngine.getInstance()
-					.getClassLoader(classname.split("\\.")[3]).findClass(classname);
-					System.out.println("!!! "+(c==null?"NOT":"")+" found "+classname);
+							.getClassLoader(classname.split("\\.")[3])
+							.findClass(classname);
+					System.out.println("!!! " + (c == null ? "NOT" : "")
+							+ " found " + classname);
 				}
-				if (c == null){
-					System.out.println("$$$$: ["+classname+"]");
+				if (c == null) {
+					System.out.println("$$$$: [" + classname + "]");
 					throw new ClassNotFoundException(classname);
 				}
 				return c;
@@ -238,18 +253,18 @@ public class PortalApplication extends AuthenticatedWebApplication {
 
 	}
 
-	
-	public void mountResource(String key,String path,  final IResource resource){
-		ResourceReference ref= new ResourceReference(key){
+	public void mountResource(String key, String path, final IResource resource) {
+		ResourceReference ref = new ResourceReference(key) {
 			private static final long serialVersionUID = 1L;
 
 			@Override
 			public IResource getResource() {
 				return resource;
-			}};
+			}
+		};
 		mountResource(path, ref);
 	}
-	
+
 	public static PortalApplication get() {
 		return (PortalApplication) WebApplication.get();
 	}
@@ -276,5 +291,6 @@ public class PortalApplication extends AuthenticatedWebApplication {
 	protected Class<? extends AbstractAuthenticatedWebSession> getWebSessionClass() {
 		return PortalSession.class;
 	}
+
 	
 }

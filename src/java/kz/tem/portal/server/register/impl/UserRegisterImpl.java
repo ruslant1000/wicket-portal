@@ -55,7 +55,7 @@ public class UserRegisterImpl implements IUserRegister{
 			crt.setProjection(Projections.rowCount());
 			Long total = (Long)crt.uniqueResult();
 			if(total<1){
-				log.info("Инициализация супер пользователя");
+				log.info("пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ");
 				User user = new User();
 				user.setEmail("portal@example.com");
 				user.setLogin("admin");
@@ -66,7 +66,7 @@ public class UserRegisterImpl implements IUserRegister{
 			session.flush();
 		}catch(Exception ex){
 			session.clear();
-			log.error("Ошибка инициализации UserRegisterImpl",ex);
+			log.error("пїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ UserRegisterImpl",ex);
 		}
 	}
 	public static String encryptPassword(String password) throws NoSuchAlgorithmException{
@@ -93,7 +93,7 @@ public class UserRegisterImpl implements IUserRegister{
 			return user;
 		}catch(Exception ex){
 			session.clear();
-			throw new PortalException("Ошибка добавления нового пользователя",ex);
+			throw new PortalException("пїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ",ex);
 		}
 	}
 
@@ -102,6 +102,7 @@ public class UserRegisterImpl implements IUserRegister{
 	public void updateUser(User user) throws PortalException {
 		Session session = null;
 		try{
+			System.out.println("!!!!!!!!!!!!!!!!!!!!!!!!!!! "+user.getId()+" "+user.getLogin());
 			session = sessionFactory.getCurrentSession();
 			User mu = session.get(User.class, user.getId());
 			user.setPassword(mu.getPassword());
@@ -110,7 +111,7 @@ public class UserRegisterImpl implements IUserRegister{
 			session.evict(user);
 		}catch(Exception ex){
 			session.clear();
-			throw new PortalException("Ошибка при сохранении пользователя",ex);
+			throw new PortalException("пїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ",ex);
 		}
 		
 	}
@@ -125,7 +126,7 @@ public class UserRegisterImpl implements IUserRegister{
 			session.flush();
 		}catch(Exception ex){
 			session.clear();
-			throw new PortalException("Ошибка при удалении пользователя",ex);
+			throw new PortalException("пїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ",ex);
 		}
 		
 	}
@@ -153,7 +154,7 @@ public class UserRegisterImpl implements IUserRegister{
 			Hibernate.initialize(user.getRole());
 			return user;
 		}catch(Exception ex){
-			log.error("Ошибка аутентификации",ex);
+			log.error("пїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ",ex);
 			return null;
 		}
 		
@@ -174,7 +175,7 @@ public class UserRegisterImpl implements IUserRegister{
 			session.evict(mu);
 		}catch(Exception ex){
 			session.clear();
-			throw new PortalException("Ошибка при изменении пароля",ex);
+			throw new PortalException("пїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅ",ex);
 		}
 		
 	}
@@ -214,7 +215,7 @@ public class UserRegisterImpl implements IUserRegister{
 				}
 			};
 		}catch(Exception ex){
-			throw new PortalException("Не удалось получить список пользователей",ex);
+			throw new PortalException("пїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ",ex);
 		}
 	}
 }

@@ -20,8 +20,10 @@ import kz.tem.portal.PortalException;
 import kz.tem.portal.api.ExplorerEngine;
 import kz.tem.portal.explorer.application.PortalSession;
 import kz.tem.portal.explorer.panel.admin.pages.PagesTable;
+import kz.tem.portal.explorer.panel.common.component.popup.PopupMenu;
 import kz.tem.portal.explorer.panel.common.form.DefaultInputForm;
 import kz.tem.portal.explorer.panel.common.form.DefaultInputStatelesForm;
+import kz.tem.portal.explorer.panel.common.toolbar.IToolListener;
 import kz.tem.portal.explorer.theme.AbstractTheme;
 import kz.tem.portal.server.model.Page;
 import kz.tem.portal.server.register.IPageRegister;
@@ -55,12 +57,8 @@ public class AbstractThemePage extends WebPage{
 		
 	}
 
-
 	public AbstractThemePage(){
-		
-//		WebApplication.get().getMarkupSettings().getMarkupFactory().getMarkupCache().clear();
-		
-		
+
 		
 		String url = getRequestCycle().getRequest().getClientUrl().getPath();
 		if(url.trim().length()==0){
@@ -117,7 +115,8 @@ public class AbstractThemePage extends WebPage{
 //		add(new DefaultInputForm("form"));
 //		add(new DefaultInputStatelesForm("form2"));
 		
-		
+		//**********************
+		// модальное окно
 		WebMarkupContainer modal = new WebMarkupContainer("modal");
 		add(modal);
 		modal.setOutputMarkupId(true);
@@ -132,6 +131,14 @@ public class AbstractThemePage extends WebPage{
 			}
 		});
 		modal.add(new WebMarkupContainer("content").setOutputMarkupId(true));
+		//**********************
+		//**********************
+		// Контекстное меню
+		
+//		PopupMenu popup = new PopupMenu("popup");
+//		add(popup);
+		
+		//**********************
 //		setVersioned(false);
 	}
 	

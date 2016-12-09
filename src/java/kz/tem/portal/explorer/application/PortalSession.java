@@ -1,5 +1,7 @@
 package kz.tem.portal.explorer.application;
 
+import java.util.HashMap;
+import java.util.Map;
 import java.util.Set;
 
 import org.apache.wicket.authroles.authentication.AuthenticatedWebSession;
@@ -20,6 +22,17 @@ public class PortalSession extends AuthenticatedWebSession{
 	private User user = null;
 	private Roles roles = null;
 	
+	private Map<String, Object> objects = new HashMap<String, Object>();
+	
+	
+	public Map<String, Object> getObjects() {
+		return objects;
+	}
+
+	public void setObjects(Map<String, Object> objects) {
+		this.objects = objects;
+	}
+
 	public User getUser() {
 		return user;
 	}

@@ -42,6 +42,9 @@ public class AbstractLayout extends Panel implements IMarkupResourceStreamProvid
 	public AbstractLayout(String id, Page pageInfo) {
 		super(id);
 		MARKUP_CACHE_KEY=MARKUP_CACHE_KEY+pageInfo.getLayout();
+		
+		WebApplication.get().getMarkupSettings().getMarkupFactory().getMarkupCache().clear();
+		
 //		System.out.println("~~~ "+pageInfo.getUrl());
 //		try {
 //			Thread.sleep(5000);
@@ -50,7 +53,7 @@ public class AbstractLayout extends Panel implements IMarkupResourceStreamProvid
 //			e.printStackTrace();
 //		}
 		//**********************************
-		// Это нудно для того, чтобы kz/tem/portal/explorer/layout/AbstractLayout не подгружал один и тот же HTML-layout (первый загруженный Layout).
+		// пїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅ пїЅпїЅпїЅпїЅ, пїЅпїЅпїЅпїЅпїЅ kz/tem/portal/explorer/layout/AbstractLayout пїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅ пїЅ пїЅпїЅпїЅ пїЅпїЅ HTML-layout (пїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ Layout).
 //		WebApplication.get().getMarkupSettings().getMarkupFactory().getMarkupCache().removeMarkup(MARKUP_CACHE_KEY);
 		//**********************************
 		layoutName = pageInfo.getLayout();
