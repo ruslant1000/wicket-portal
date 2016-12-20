@@ -40,7 +40,7 @@ public class RoleRegisterImpl implements IRoleRegister{
 			return role;
 		}catch(Exception ex){
 			session.clear();
-			throw new PortalException("Ошибка добавления новой роли",ex);
+			throw new PortalException("РћС€РёР±РєР° РґРѕР±Р°РІР»РµРЅРёСЏ РЅРѕРІРѕР№ СЂРѕР»Рё",ex);
 		}
 	}
 
@@ -54,7 +54,7 @@ public class RoleRegisterImpl implements IRoleRegister{
 			session.flush();
 		}catch(Exception ex){
 			session.clear();
-			throw new PortalException("Ошибка изменения роли",ex);
+			throw new PortalException("РћС€РёР±РєР° РёР·РјРµРЅРµРЅРёСЏ СЂРѕР»Рё",ex);
 		}
 		
 	}
@@ -69,7 +69,7 @@ public class RoleRegisterImpl implements IRoleRegister{
 			session.flush();
 		}catch(Exception ex){
 			session.clear();
-			throw new PortalException("Ошибка удаления роли",ex);
+			throw new PortalException("РћС€РёР±РєР° СѓРґР°Р»РµРЅРёСЏ СЂРѕР»Рё",ex);
 		}
 		
 	}
@@ -104,7 +104,7 @@ public class RoleRegisterImpl implements IRoleRegister{
 				}
 			};
 		}catch(Exception ex){
-			throw new PortalException("Не удалось получить список ролей",ex);
+			throw new PortalException("РќРµ СѓРґР°Р»РѕСЃСЊ РїРѕР»СѓС‡РёС‚СЊ СЃРїРёСЃРѕРє СЂРѕР»РµР№",ex);
 		}
 	}
 
