@@ -45,7 +45,7 @@ public class PortletRegisterImpl implements IPortletRegister{
 			return portlet;
 		}catch(Exception ex){
 			session.clear();
-			throw new PortalException("Ошибка добавления нового портлета",ex);
+			throw new PortalException("РћС€РёР±РєР° РґРѕР±Р°РІР»РµРЅРёСЏ РЅРѕРІРѕРіРѕ РїРѕСЂС‚Р»РµС‚Р°",ex);
 		}
 	}
 
@@ -60,7 +60,7 @@ public class PortletRegisterImpl implements IPortletRegister{
 			session.evict(portlet);
 		}catch(Exception ex){
 			session.clear();
-			throw new PortalException("Ошибка при сохранении портлета",ex);
+			throw new PortalException("РћС€РёР±РєР° РїСЂРё СЃРѕС…СЂР°РЅРµРЅРёРё РїРѕСЂС‚Р»РµС‚Р°",ex);
 		}
 		
 	}
@@ -75,7 +75,7 @@ public class PortletRegisterImpl implements IPortletRegister{
 			session.flush();
 		}catch(Exception ex){
 			session.clear();
-			throw new PortalException("Ошибка при удалении портлета",ex);
+			throw new PortalException("РћС€РёР±РєР° РїСЂРё СѓРґР°Р»РµРЅРёРё РїРѕСЂС‚Р»РµС‚Р°",ex);
 		}
 		
 	}
@@ -118,7 +118,7 @@ public class PortletRegisterImpl implements IPortletRegister{
 				}
 			};
 		}catch(Exception ex){
-			throw new PortalException("Не удалось получить список портлетов",ex);
+			throw new PortalException("РќРµ СѓРґР°Р»РѕСЃСЊ РїРѕР»СѓС‡РёС‚СЊ СЃРїРёСЃРѕРє РїРѕСЂС‚Р»РµС‚РѕРІ",ex);
 		}
 	}
 	@Override
@@ -141,7 +141,7 @@ public class PortletRegisterImpl implements IPortletRegister{
 			session.evict(portlet);
 		}catch(Exception ex){
 			session.clear();
-			throw new PortalException("Ошибка при сохранении портлета",ex);
+			throw new PortalException("РћС€РёР±РєР° РїСЂРё СЃРѕС…СЂР°РЅРµРЅРёРё РїРѕСЂС‚Р»РµС‚Р°",ex);
 		}
 		
 	}
@@ -163,7 +163,7 @@ public class PortletRegisterImpl implements IPortletRegister{
 			return config;
 		}catch(Exception ex){
 			session.clear();
-			throw new PortalException("Ошибка при сохранении портлета",ex);
+			throw new PortalException("РћС€РёР±РєР° РїСЂРё СЃРѕС…СЂР°РЅРµРЅРёРё РїРѕСЂС‚Р»РµС‚Р°",ex);
 		}
 	}
 }

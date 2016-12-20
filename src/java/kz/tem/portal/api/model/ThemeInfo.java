@@ -14,44 +14,44 @@ public class ThemeInfo implements Serializable{
 	private String fileName;
 	
 	/**
-	 * Признак того, что в HTML файле есть метка wicket:id="layout"
+	 * РџСЂРёР·РЅР°Рє С‚РѕРіРѕ, С‡С‚Рѕ РІ HTML С„Р°Р№Р»Рµ РµСЃС‚СЊ РјРµС‚РєР° wicket:id="layout"
 	 */
 	private boolean layout = false;
 	/**
-	 * Признак того, что в HTML файле есть метка wicket:id="menu"
+	 * РџСЂРёР·РЅР°Рє С‚РѕРіРѕ, С‡С‚Рѕ РІ HTML С„Р°Р№Р»Рµ РµСЃС‚СЊ РјРµС‚РєР° wicket:id="menu"
 	 */
 	private boolean menu = false; 
 	/**
-	 * Признак того, что в HTML файле есть метка wicket:id="menu-link"
+	 * РџСЂРёР·РЅР°Рє С‚РѕРіРѕ, С‡С‚Рѕ РІ HTML С„Р°Р№Р»Рµ РµСЃС‚СЊ РјРµС‚РєР° wicket:id="menu-link"
 	 */
 	private boolean menuLink = false;
 	/**
-	 * Признак того, что в HTML файле есть метка wicket:id="sub-menu"
+	 * РџСЂРёР·РЅР°Рє С‚РѕРіРѕ, С‡С‚Рѕ РІ HTML С„Р°Р№Р»Рµ РµСЃС‚СЊ РјРµС‚РєР° wicket:id="sub-menu"
 	 */
 	private boolean subMenu = false;
 	/**
-	 * Признак того, что в HTML файле есть метка wicket:id="sub-menu-link"
+	 * РџСЂРёР·РЅР°Рє С‚РѕРіРѕ, С‡С‚Рѕ РІ HTML С„Р°Р№Р»Рµ РµСЃС‚СЊ РјРµС‚РєР° wicket:id="sub-menu-link"
 	 */
 	private boolean subMenuLink = false;
 	
 	/**
-	 * Признак того, что в HTML файле есть метка wicket:id="user"
+	 * РџСЂРёР·РЅР°Рє С‚РѕРіРѕ, С‡С‚Рѕ РІ HTML С„Р°Р№Р»Рµ РµСЃС‚СЊ РјРµС‚РєР° wicket:id="user"
 	 */
 	private boolean user = false;
 	/**
-	 * Признак того, что в HTML файле есть метка wicket:id="user-name"
+	 * РџСЂРёР·РЅР°Рє С‚РѕРіРѕ, С‡С‚Рѕ РІ HTML С„Р°Р№Р»Рµ РµСЃС‚СЊ РјРµС‚РєР° wicket:id="user-name"
 	 */
 	private boolean userName = false;
 	/**
-	 * Признак того, что в HTML файле есть метка wicket:id="user-logout"
+	 * РџСЂРёР·РЅР°Рє С‚РѕРіРѕ, С‡С‚Рѕ РІ HTML С„Р°Р№Р»Рµ РµСЃС‚СЊ РјРµС‚РєР° wicket:id="user-logout"
 	 */
 	private boolean userLogout = false;
 	/**
-	 * Признак того, что в HTML файле есть метка wicket:id="guest"
+	 * РџСЂРёР·РЅР°Рє С‚РѕРіРѕ, С‡С‚Рѕ РІ HTML С„Р°Р№Р»Рµ РµСЃС‚СЊ РјРµС‚РєР° wicket:id="guest"
 	 */
 	private boolean guest= false;
 	/**
-	 * Признак того, что в HTML файле есть метка wicket:id="guest-login"
+	 * РџСЂРёР·РЅР°Рє С‚РѕРіРѕ, С‡С‚Рѕ РІ HTML С„Р°Р№Р»Рµ РµСЃС‚СЊ РјРµС‚РєР° wicket:id="guest-login"
 	 */
 	private boolean guestLogin= false;
 	

@@ -1,9 +1,12 @@
 package kz.tem.portal.explorer.panel.admin.users;
 
 import org.apache.wicket.Component;
+import org.apache.wicket.ajax.AjaxRequestTarget;
 import org.apache.wicket.markup.html.basic.Label;
 import org.apache.wicket.spring.injection.annot.SpringBean;
 
+import kz.tem.portal.api.NotificationsEngine;
+import kz.tem.portal.explorer.panel.common.component.AjaxLabelLink;
 import kz.tem.portal.explorer.panel.common.table.AColumn;
 import kz.tem.portal.explorer.panel.common.table.AbstractTable;
 import kz.tem.portal.server.bean.ITable;
@@ -53,6 +56,20 @@ public class UsersTable extends AbstractTable<User>{
 					public Component cell(String id, User record)
 							throws Exception {
 						return new Label(id,record.getEmail());
+				}},
+				new AColumn<User>("test"){
+
+					@Override
+					public Component cell(String id, final User record)
+							throws Exception {
+						return new AjaxLabelLink(id,"email") {
+							
+							@Override
+							public void onClick(AjaxRequestTarget target) throws Exception {
+								NotificationsEngine.notifyUserRegistered(record);
+								
+							}
+						};
 				}}
 		};
 	}

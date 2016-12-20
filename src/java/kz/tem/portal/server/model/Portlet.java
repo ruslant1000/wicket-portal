@@ -13,6 +13,8 @@ import javax.persistence.Lob;
 import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
 import javax.persistence.Table;
+
+import org.hibernate.envers.Audited;
 /**
  * 
  * @author Ruslan Temirbulatov
@@ -21,6 +23,7 @@ import javax.persistence.Table;
 @SuppressWarnings("serial")
 @Entity
 @Table(name="PT_PORTLET")
+@Audited
 public class Portlet extends IdEntity implements Serializable{
 	
 	private Page page;

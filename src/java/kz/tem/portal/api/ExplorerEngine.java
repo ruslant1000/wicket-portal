@@ -26,7 +26,7 @@ import kz.tem.portal.server.model.Settings;
  */
 public class ExplorerEngine {
 	
-	private static Logger log = LoggerFactory.getLogger(ExplorerEngine.class);
+private static Logger log = LoggerFactory.getLogger(ExplorerEngine.class);
 	
 	public static ExplorerEngine instance = null;
 	
@@ -34,11 +34,27 @@ public class ExplorerEngine {
 	private Map<String, ThemeInfo> themes = new HashMap<String, ThemeInfo>();
 	
 	/**
-	 * Настройки портала. относительный URL страницы, которая используется в качестве главной
+	 * РќР°СЃС‚СЂРѕР№РєРё РїРѕСЂС‚Р°Р»Р°. РѕС‚РЅРѕСЃРёС‚РµР»СЊРЅС‹Р№ URL СЃС‚СЂР°РЅРёС†С‹, РєРѕС‚РѕСЂР°СЏ РёСЃРїРѕР»СЊР·СѓРµС‚СЃСЏ РІ РєР°С‡РµСЃС‚РІРµ РіР»Р°РІРЅРѕР№
 	 */
 	public static final String SETTINGS_MAIN_PAGE="Main page";
 	/**
-	 * общие настройки портала
+	 * РќР°СЃС‚СЂРѕР№РєРё РїРѕСЂС‚Р°Р»Р°. 
+	 */
+	public static final String SETTINGS_SMTP_HOST="smtp host";
+	/**
+	 * РќР°СЃС‚СЂРѕР№РєРё РїРѕСЂС‚Р°Р»Р°. 
+	 */
+	public static final String SETTINGS_SMTP_PORT="smtp port";
+	/**
+	 * РќР°СЃС‚СЂРѕР№РєРё РїРѕСЂС‚Р°Р»Р°. 
+	 */
+	public static final String SETTINGS_SMTP_USER="smtp user";
+	/**
+	 * РќР°СЃС‚СЂРѕР№РєРё РїРѕСЂС‚Р°Р»Р°. 
+	 */
+	public static final String SETTINGS_SMTP_PASSWORD="smtp password";
+	/**
+	 * РѕР±С‰РёРµ РЅР°СЃС‚СЂРѕР№РєРё РїРѕСЂС‚Р°Р»Р°
 	 */
 	private Map<String, String> settings = new HashMap<String, String>();
 	
@@ -51,6 +67,10 @@ public class ExplorerEngine {
 	private ExplorerEngine(){
 		settings.clear();
 		settings.put(SETTINGS_MAIN_PAGE, null);
+		settings.put(SETTINGS_SMTP_HOST, null);
+		settings.put(SETTINGS_SMTP_PORT, null);
+		settings.put(SETTINGS_SMTP_USER, null);
+		settings.put(SETTINGS_SMTP_PASSWORD, null);
 		loadSettings();
 	}
 	
@@ -65,7 +85,7 @@ public class ExplorerEngine {
 		return settings.get(name);
 	}
 	/**
-	 * Загрузка значений всех настроек в память, чтобы не делать вызов базы по много раз
+	 * Р—Р°РіСЂСѓР·РєР° Р·РЅР°С‡РµРЅРёР№ РІСЃРµС… РЅР°СЃС‚СЂРѕРµРє РІ РїР°РјСЏС‚СЊ, С‡С‚РѕР±С‹ РЅРµ РґРµР»Р°С‚СЊ РІС‹Р·РѕРІ Р±Р°Р·С‹ РїРѕ РјРЅРѕРіРѕ СЂР°Р·
 	 */
 	public void loadSettings(){
 		try {
@@ -80,7 +100,7 @@ public class ExplorerEngine {
 	}
 
 	//************************************
-//  Работа с Layout's
+//  Р Р°Р±РѕС‚Р° СЃ Layout's
 	public Map<String, LayoutInfo> getLayouts(){
 		return layouts;
 	}
@@ -91,18 +111,18 @@ public class ExplorerEngine {
 	}
 	
 	public void initLayouts(WebApplication application){
-		log.debug("Инициализация списка layout...");
+		log.debug("РРЅРёС†РёР°Р»РёР·Р°С†РёСЏ СЃРїРёСЃРєР° layout...");
 		layouts.clear();
 		String layoutsPath = application.getServletContext().getRealPath("layouts");
 		System.out.println("!!!!!!! layoutsPath: "+layoutsPath);
 		File dir = new File(layoutsPath);
 		if(!dir.exists())
-			throw new RuntimeException("Не найдена директория layouts");
+			throw new RuntimeException("РќРµ РЅР°Р№РґРµРЅР° РґРёСЂРµРєС‚РѕСЂРёСЏ layouts");
 		
 		File[] fls = dir.listFiles();
 		System.out.println("!!!! "+fls.length);
 		if(fls==null || fls.length==0)
-			throw new RuntimeException("Не найдено ни одного layout в директории layouts");
+			throw new RuntimeException("РќРµ РЅР°Р№РґРµРЅРѕ РЅРё РѕРґРЅРѕРіРѕ layout РІ РґРёСЂРµРєС‚РѕСЂРёРё layouts");
 		
 		boolean anyRead = false;
 		for(File f:fls){
@@ -112,19 +132,19 @@ public class ExplorerEngine {
 					anyRead = true;
 				} catch (Exception e) {
 					e.printStackTrace();
-					log.error("Ошибка при чтении layout "+f.getName());
+					log.error("РћС€РёР±РєР° РїСЂРё С‡С‚РµРЅРёРё layout "+f.getName());
 				}
 			}
 		}
 		if(!anyRead){
-			log.error("Нет ни одного валидного layout в директории layouts");
-			throw new RuntimeException("Нет ни одного валидного layout в директории layouts");
+			log.error("РќРµС‚ РЅРё РѕРґРЅРѕРіРѕ РІР°Р»РёРґРЅРѕРіРѕ layout РІ РґРёСЂРµРєС‚РѕСЂРёРё layouts");
+			throw new RuntimeException("РќРµС‚ РЅРё РѕРґРЅРѕРіРѕ РІР°Р»РёРґРЅРѕРіРѕ layout РІ РґРёСЂРµРєС‚РѕСЂРёРё layouts");
 		}
 	}
 	
 	private void readLayoutFile(File file)throws Exception{
 		System.out.println("..."+file.getAbsolutePath());
-		log.debug("Инициализация layout "+file.getAbsolutePath()+"...");
+		log.debug("РРЅРёС†РёР°Р»РёР·Р°С†РёСЏ layout "+file.getAbsolutePath()+"...");
 		FileReader fr = null;
 		BufferedReader br = null;
 		System.out.println("--------------");
@@ -186,20 +206,20 @@ public class ExplorerEngine {
 	
 	
 //************************************
-//  Работа с Theme's
+//  Р Р°Р±РѕС‚Р° СЃ Theme's
 	public void initThemes(WebApplication application){
-		log.debug("Инициализация списка theme...");
+		log.debug("РРЅРёС†РёР°Р»РёР·Р°С†РёСЏ СЃРїРёСЃРєР° theme...");
 		themes.clear();
 		String themesPath = application.getServletContext().getRealPath("themes");
 		System.out.println("!!!!!!! themesPath: "+themesPath);
 		File dir = new File(themesPath);
 		if(!dir.exists())
-			throw new RuntimeException("Не найдена директория themes");
+			throw new RuntimeException("РќРµ РЅР°Р№РґРµРЅР° РґРёСЂРµРєС‚РѕСЂРёСЏ themes");
 		
 		File[] fls = dir.listFiles();
 		System.out.println("!!!! "+fls.length);
 		if(fls==null || fls.length==0)
-			throw new RuntimeException("Не найдено ни одного theme в директории themes");
+			throw new RuntimeException("РќРµ РЅР°Р№РґРµРЅРѕ РЅРё РѕРґРЅРѕРіРѕ theme РІ РґРёСЂРµРєС‚РѕСЂРёРё themes");
 		
 		boolean anyRead = false;
 		for(File f:fls){
@@ -209,19 +229,19 @@ public class ExplorerEngine {
 					anyRead = true;
 				} catch (Exception e) {
 					e.printStackTrace();
-					log.error("Ошибка при чтении theme "+f.getName());
+					log.error("РћС€РёР±РєР° РїСЂРё С‡С‚РµРЅРёРё theme "+f.getName());
 				}
 			}
 		}
 		if(!anyRead){
-			log.error("Нет ни одного валидного theme в директории themes");
-			throw new RuntimeException("Нет ни одного валидного theme в директории themes");
+			log.error("РќРµС‚ РЅРё РѕРґРЅРѕРіРѕ РІР°Р»РёРґРЅРѕРіРѕ theme РІ РґРёСЂРµРєС‚РѕСЂРёРё themes");
+			throw new RuntimeException("РќРµС‚ РЅРё РѕРґРЅРѕРіРѕ РІР°Р»РёРґРЅРѕРіРѕ theme РІ РґРёСЂРµРєС‚РѕСЂРёРё themes");
 		}
 	}
 	
 	private void readThemeFile(File file)throws Exception{
 		System.out.println("..."+file.getAbsolutePath());
-		log.debug("Инициализация layout "+file.getAbsolutePath()+"...");
+		log.debug("РРЅРёС†РёР°Р»РёР·Р°С†РёСЏ layout "+file.getAbsolutePath()+"...");
 		FileReader fr = null;
 		BufferedReader br = null;
 		System.out.println("--------------");

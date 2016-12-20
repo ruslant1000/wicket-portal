@@ -17,7 +17,7 @@ public class UserRegisterImplTest {
 	
 	@BeforeClass
 	public static void setUpBeforeClass() throws Exception {
-		ClassPathXmlApplicationContext ctx = new ClassPathXmlApplicationContext("/kz/tem/portal/server/context/main.xml");
+		ClassPathXmlApplicationContext ctx = new ClassPathXmlApplicationContext("/kz/tem/portal/server/context/test.xml");
 		register = ctx.getBean(UserRegisterImpl.class);
 	}
  

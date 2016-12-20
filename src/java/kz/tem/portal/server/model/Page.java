@@ -19,6 +19,8 @@ import javax.persistence.OneToMany;
 import javax.persistence.Table;
 import javax.persistence.Transient;
 
+import org.hibernate.envers.Audited;
+
 
 /**
  * 
@@ -28,6 +30,7 @@ import javax.persistence.Transient;
 @SuppressWarnings("serial")
 @Table(name="PT_PAGE")
 @Entity
+@Audited
 public class Page extends IdEntity implements Serializable{
 
 	private String url;

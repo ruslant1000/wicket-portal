@@ -29,6 +29,7 @@ import org.apache.wicket.serialize.java.JavaSerializer;
 import org.apache.wicket.spring.injection.annot.SpringComponentInjector;
 import org.apache.wicket.util.IContextProvider;
 import org.apache.wicket.util.time.Duration;
+import org.infinispan.security.actions.AddCacheManagerListenerAction;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.ApplicationContext;
 
@@ -38,10 +39,12 @@ import kz.tem.portal.explorer.page.AccessDeniedPage;
 import kz.tem.portal.explorer.page.AuthenticatePage;
 import kz.tem.portal.explorer.page.LoginPage;
 import kz.tem.portal.explorer.page.SignOutPage;
+import kz.tem.portal.explorer.page.admin.emails.EmailsPage;
 import kz.tem.portal.explorer.page.admin.pages.PagesConfig;
 import kz.tem.portal.explorer.page.admin.portlets.PortletsConfig;
 import kz.tem.portal.explorer.page.admin.settings.SettingsPage;
 import kz.tem.portal.explorer.page.admin.users.UsersPage;
+import kz.tem.portal.explorer.page.login.RegistrationPage;
 import kz.tem.portal.explorer.services.FileUploadService;
 import kz.tem.portal.explorer.services.TestService;
 import kz.tem.portal.server.plugin.engine.ModuleEngine;
@@ -59,8 +62,10 @@ public class PortalApplication extends AuthenticatedWebApplication {
 	@Override
 	protected void init() {
 		super.init();
-		getComponentInstantiationListeners().add(
-				new SpringComponentInjector(this));
+		SpringComponentInjector sci = new SpringComponentInjector(this);
+		getComponentInstantiationListeners().add(sci);
+		
+		
 		getResourceSettings().setResourceStreamLocator(
 				new PortalStreamLocator());
 
@@ -96,6 +101,7 @@ public class PortalApplication extends AuthenticatedWebApplication {
 
 		mountPage("authenticate", AuthenticatePage.class);
 		mountPage("login", LoginPage.class);
+		mountPage("registration", RegistrationPage.class);
 
 		mountPage("logout", SignOutPage.class);
 		mountPage("accessdenied", AccessDeniedPage.class);
@@ -108,6 +114,7 @@ public class PortalApplication extends AuthenticatedWebApplication {
 		mountPage("admin/portlets", PortletsConfig.class);
 		mountPage("admin/settings", SettingsPage.class);
 		mountPage("admin/users", UsersPage.class);
+		mountPage("admin/emails", EmailsPage.class);
 
 		// TODO надо будет отключить при вводе в эксплуатацию, потому что это
 		// нарушает систему безопасности. Либо добавить сервисам авторизацию

@@ -12,6 +12,8 @@ import javax.persistence.JoinColumn;
 import javax.persistence.JoinTable;
 import javax.persistence.ManyToMany;
 import javax.persistence.Table;
+
+import org.hibernate.envers.Audited;
 /**
  * 
  * @author Ruslan Temirbulatov
@@ -20,6 +22,7 @@ import javax.persistence.Table;
 @SuppressWarnings("serial")
 @Entity
 @Table(name="PT_USER")
+@Audited
 public class User extends IdEntity implements Serializable{
 
 	private String email;

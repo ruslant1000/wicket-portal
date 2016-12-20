@@ -4,6 +4,7 @@ import org.apache.wicket.markup.html.panel.Panel;
 import org.apache.wicket.model.PropertyModel;
 import org.apache.wicket.spring.injection.annot.SpringBean;
 
+import kz.tem.portal.api.NotificationsEngine;
 import kz.tem.portal.explorer.panel.common.form.DefaultInputForm;
 import kz.tem.portal.server.model.User;
 import kz.tem.portal.server.register.IUserRegister;
@@ -27,7 +28,8 @@ public class UsersControlPanel extends Panel{
 			@Override
 			public void onSubmit() throws Exception {
 				super.onSubmit();
-				userRegister.addNewUser(user);
+				user = userRegister.addNewUser(user);
+				NotificationsEngine.notifyUserRegistered(user);
 			}
 			
 		};

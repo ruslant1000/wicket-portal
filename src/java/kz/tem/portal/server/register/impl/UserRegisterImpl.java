@@ -154,7 +154,7 @@ public class UserRegisterImpl implements IUserRegister{
 			Hibernate.initialize(user.getRole());
 			return user;
 		}catch(Exception ex){
-			log.error("������ ��������������",ex);
+			log.error("Ошибка аутентификации",ex);
 			return null;
 		}
 		

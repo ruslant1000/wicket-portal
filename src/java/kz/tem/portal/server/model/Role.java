@@ -9,6 +9,8 @@ import javax.persistence.Entity;
 import javax.persistence.FetchType;
 import javax.persistence.ManyToMany;
 import javax.persistence.Table;
+
+import org.hibernate.envers.Audited;
 /**
  * 
  * @author Ruslan Temirbulatov
@@ -17,6 +19,7 @@ import javax.persistence.Table;
 @SuppressWarnings("serial")
 @Entity
 @Table(name="PT_ROLE")
+@Audited
 public class Role extends IdEntity implements Serializable{
 
 	private String name;

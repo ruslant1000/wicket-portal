@@ -145,6 +145,17 @@ public class DefaultInputForm extends Panel implements IForm{
 		fld.add(fieldsBuilder.combobox("f",title, model,choices,required));
 		
 	}
+
+
+	@Override
+	public void addFieldPassword(String title, IModel<String> model,
+			boolean required) {
+		WebMarkupContainer fld = new WebMarkupContainer(fieldSet.newChildId());
+		fieldSet.add(fld);
+		fld.add(new Label("label",title));
+		fld.add(fieldsBuilder.password("f",title, model,required));
+		
+	}
 	
 	
 
