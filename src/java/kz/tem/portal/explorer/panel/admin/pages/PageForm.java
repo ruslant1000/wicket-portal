@@ -25,7 +25,11 @@ public class PageForm extends DefaultInputForm{
 	
 	private LayoutInfo layout = null;
 	private ThemeInfo theme = null;
-	private String publicPage = "Публичня";
+	
+	
+	public static final String PAGE_PUBLIC = "РџСѓР±Р»РёС‡РЅР°СЏ";
+	public static final String PAGE_PRIVATE = "РџСЂРёРІР°С‚РЅР°СЏ";
+	private String publicPage = PAGE_PUBLIC;
 	
 	private Page page;
 	public PageForm(String id) {
@@ -47,7 +51,7 @@ public class PageForm extends DefaultInputForm{
 			addCombobox("Theme", new PropertyModel<ThemeInfo>(PageForm.this, "theme"),PortalEngine.getInstance().getExplorerEngine().getThemesList(),   true);
 			addCombobox("Layout", new PropertyModel<LayoutInfo>(PageForm.this, "layout"),PortalEngine.getInstance().getExplorerEngine().getLayoutsList(),   true);
 			addCombobox("Parent page", new PropertyModel<Page>(page, "parentPage"),pageRegister.pages(0, 0).records(),   false);
-			addCombobox("Page visible", new PropertyModel<String>(PageForm.this, "publicPage"),Arrays.asList("Публичная","Приватная"),   true);
+			addCombobox("Page visible", new PropertyModel<String>(PageForm.this, "publicPage"),Arrays.asList(PAGE_PUBLIC,PAGE_PRIVATE),   true);
 		} catch (PortalException e) {
 			e.printStackTrace();
 			throw new RuntimeException();
@@ -68,12 +72,11 @@ public class PageForm extends DefaultInputForm{
 		}else
 			page.setTheme(null);
 		
-		if(publicPage!=null && publicPage.equals("Публичная"))
+		if(publicPage!=null && publicPage.equals(PAGE_PUBLIC))
 			page.setPublicPage(true);
 		else
 			page.setPublicPage(false);
 		pageRegister.addNewPage(page);
-		info("Готово!!!");
 	}
 	
 	

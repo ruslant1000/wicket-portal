@@ -11,6 +11,8 @@ import java.io.Serializable;
 @SuppressWarnings("serial")
 public class ModuleMeta implements Serializable{
 	
+	public String artifactId;
+	
 	public String moduleName;
 	public String displayName;
 	public String moduleClass;
@@ -52,6 +54,12 @@ public class ModuleMeta implements Serializable{
 	}
 	public String toString(){
 		return moduleName;
+	}
+	public String getArtifactId() {
+		return artifactId;
+	}
+	public void setArtifactId(String artifactId) {
+		this.artifactId = artifactId;
 	}
 	
 

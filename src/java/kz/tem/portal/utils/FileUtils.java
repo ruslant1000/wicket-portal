@@ -11,7 +11,7 @@ public class FileUtils {
 	public static void deleteFile(String name)throws Exception{
 		File f = new File(name);
 		if(!f.delete()){
-			throw new Exception("Не удалось удалить файл "+name);
+			throw new Exception("РћС€РёР±РєР° СѓРґР°Р»РµРЅРёСЏ "+name);
 		}
 	}
 	public static void deleteDirectory(String directory)throws Exception{
@@ -23,13 +23,13 @@ public class FileUtils {
 		File[] ff = dir.listFiles();
 		if(ff==null || ff.length==0){
 			if(!dir.delete())
-				throw new Exception("Не удалось удалить директорию "+directory);
+				throw new Exception("РћС€РёР±РєР° СѓРґР°Р»РµРЅРёСЏ "+directory);
 			return;
 		}
 		for(File f:ff){
 			deleteDirectory(f.getAbsolutePath());
 		}
 		if(!dir.delete())
-			throw new Exception("Не удалось удалить директорию "+directory);
+			throw new Exception("РћС€РёР±РєР° СѓРґР°Р»РµРЅРёСЏ "+directory);
 	}
 }

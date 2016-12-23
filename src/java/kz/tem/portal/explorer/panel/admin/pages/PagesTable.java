@@ -32,7 +32,7 @@ public class PagesTable extends AbstractTable<Page>{
 	@Override
 	public Component before(String id) {
 		SimpleToolbar tools = new SimpleToolbar(id);
-		tools.addTool("Удалить", new IToolListener() {
+		tools.addTool("РЈРґР°Р»РёС‚СЊ", new IToolListener() {
 			
 			@Override
 			public void onAction(AjaxRequestTarget target) throws Exception {
@@ -93,7 +93,7 @@ public class PagesTable extends AbstractTable<Page>{
 
 				@Override
 				public Component cell(String id,final Page record) throws Exception {
-					return new Label(id,record.getPublicPage()==true?"Публичная":"Приватная");
+					return new Label(id,record.getPublicPage()==true? PageForm.PAGE_PUBLIC:PageForm.PAGE_PRIVATE);
 				}
 			}
 		};

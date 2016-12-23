@@ -14,3 +14,12 @@
 .temportal-theme .tabber.selected{
 	color: #454545;
 }
+.temportal-theme .message{
+	
+}
+.temportal-theme .message .info-img{
+	display: inline-block;
+	width: 32px;
+	height: 32px;
+	background: url("/images/32/Info.png") no-repeat;
+}

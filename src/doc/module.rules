@@ -1,19 +1,22 @@
 Правила создания модулей
 
-1. Наименования пакетов должно быть таким:  kz.tem.portal.module.<имя модуля>
-   Например: kz.tem.portal.module.ftpclient
+1. Наименования пакетов должно быть таким:  kz.tem.portal.<имя пакета модулей>
+   Например: kz.tem.portal.ftpclient
    Это например используется при загрузке ресурсов HTML wicket-движком. Чтобы не перебирать JAR-файлы всех модулей, а только искать в библиотеках нужного модуля.
    
 2. В корне проекта должен быть файл дескриптор module.xml
 
-		<?xml version="1.0" encoding="UTF-8" standalone="yes"?> 
-		<module>
-			<module-name>ftpclient</module-name>
-			<display-name>FTP клиент</display-name>
-			<module-class>kz.tem.portal.module.ftpclient.FtpClientModule</module-class>
+		<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+		<modules>
+			<id>имя пакета модулей</id> 
+			<module>
+				<module-name>ftpclient-table</module-name>
+				<display-name>FTP клиент</display-name>
+				<module-class>kz.tem.portal.module.ftpclient.FtpClientModule</module-class>
+			</module>
 			<context-listener>kz.tem.portal.msystext.server.context.ContextListener</context-listener>
-		</module>
-2.1  Значение тега module-name ДОЛЖНО быть таким же как и наименование модуля в package. Т.е. смотрим значение тэга module-class (kz.tem.portal.module.ftpclient.FtpClientModule) и берем следующее слово после значения "kz.tem.portal.module". В данном случае получается слово ftpclient.
+		</modules>
+2.1  Значение тега id ДОЛЖНО быть таким же как и наименование модуля в package. Т.е. смотрим значение тэга module-class (kz.tem.portal.module.ftpclient.FtpClientModule) и берем следующее слово после значения "kz.tem.portal". В данном случае получается слово ftpclient.
 2.2  Тэг context-listener является необязательным. В нем указывается класс, реализующий интерфейс ModuleContextListener. Этот класс инициализируется при деплое модуля и уничтожается при выгрузке модуля. 
 
 3. Чтобы из кода вызвать диалоговое окно портала нужно:

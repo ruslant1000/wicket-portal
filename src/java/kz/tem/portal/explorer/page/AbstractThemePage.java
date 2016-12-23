@@ -13,6 +13,7 @@ import org.apache.wicket.markup.head.OnDomReadyHeaderItem;
 import org.apache.wicket.markup.html.WebMarkupContainer;
 import org.apache.wicket.markup.html.WebPage;
 import org.apache.wicket.markup.html.basic.Label;
+import org.apache.wicket.markup.repeater.RepeatingView;
 import org.apache.wicket.protocol.http.WebApplication;
 import org.apache.wicket.spring.injection.annot.SpringBean;
 
@@ -21,9 +22,11 @@ import kz.tem.portal.api.ExplorerEngine;
 import kz.tem.portal.explorer.application.PortalSession;
 import kz.tem.portal.explorer.panel.admin.pages.PagesTable;
 import kz.tem.portal.explorer.panel.common.component.popup.PopupMenu;
+import kz.tem.portal.explorer.panel.common.component.repeater.StatelessRepeater;
 import kz.tem.portal.explorer.panel.common.form.DefaultInputForm;
 import kz.tem.portal.explorer.panel.common.form.DefaultInputStatelesForm;
 import kz.tem.portal.explorer.panel.common.toolbar.IToolListener;
+import kz.tem.portal.explorer.panel.login.LoginPanel;
 import kz.tem.portal.explorer.theme.AbstractTheme;
 import kz.tem.portal.server.model.Page;
 import kz.tem.portal.server.register.IPageRegister;
@@ -59,6 +62,7 @@ public class AbstractThemePage extends WebPage{
 
 	public AbstractThemePage(){
 
+		dropOriginalDestination();
 		
 		String url = getRequestCycle().getRequest().getClientUrl().getPath();
 		if(url.trim().length()==0){
@@ -120,16 +124,16 @@ public class AbstractThemePage extends WebPage{
 		WebMarkupContainer modal = new WebMarkupContainer("modal");
 		add(modal);
 		modal.setOutputMarkupId(true);
-		modal.add(new AjaxLink<Void>("close") {
-
-			@Override
-			public void onClick(AjaxRequestTarget target) {
-				AbstractThemePage.this.get("modal").add(new AttributeModifier("style", "display:none"));
-				AbstractThemePage.this.get("modal").get("content").replaceWith(new WebMarkupContainer("content").setOutputMarkupId(true));
-				target.add(AbstractThemePage.this.get("modal"));
-				
-			}
-		});
+//		modal.add(new AjaxLink<Void>("close") {
+//
+//			@Override
+//			public void onClick(AjaxRequestTarget target) {
+//				AbstractThemePage.this.get("modal").add(new AttributeModifier("style", "display:none"));
+//				AbstractThemePage.this.get("modal").get("content").replaceWith(new WebMarkupContainer("content").setOutputMarkupId(true));
+//				target.add(AbstractThemePage.this.get("modal"));
+//				
+//			}
+//		});
 		modal.add(new WebMarkupContainer("content").setOutputMarkupId(true));
 		//**********************
 		//**********************
@@ -140,6 +144,8 @@ public class AbstractThemePage extends WebPage{
 		
 		//**********************
 //		setVersioned(false);
+		
+		
 	}
 	
 	public void showModal(String title,AjaxRequestTarget target, IComponentCreator creator){
@@ -170,5 +176,9 @@ public class AbstractThemePage extends WebPage{
 	}
 	
 	
+	
+	public void dropOriginalDestination(){
+		clearOriginalDestination();
+	}
 	
 }

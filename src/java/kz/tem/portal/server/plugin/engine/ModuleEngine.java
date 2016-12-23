@@ -3,9 +3,11 @@ package kz.tem.portal.server.plugin.engine;
 import java.io.File;
 import java.io.FileInputStream;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
@@ -14,6 +16,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
+import org.w3c.dom.NodeList;
 
 import kz.tem.portal.context.listener.ModuleContextListener;
 import kz.tem.portal.server.plugin.Module;
@@ -58,10 +61,10 @@ public class ModuleEngine {
 	 * @throws Exception
 	 */
 	public Module init(String id, ModuleMeta meta, ModuleConfig config)throws Exception{
-		if(!loaders.containsKey(meta.getModuleName())){
-			throw new Exception("не найден JarClassLoader: "+meta.getModuleName());
+		if(!loaders.containsKey(meta.getArtifactId())){
+			throw new Exception("не найден JarClassLoader: "+meta.getArtifactId());
 		}
-		Class cls = loaders.get(meta.getModuleName()).loadClass(meta.getModuleClass());
+		Class cls = loaders.get(meta.getArtifactId()).loadClass(meta.getModuleClass());
 		Module module = (Module)cls.getConstructor(new Class[]{String.class,ModuleConfig.class}).newInstance(new Object[]{id,config});
 		return module;
 	}
@@ -80,7 +83,11 @@ public class ModuleEngine {
 			throw new Exception("Не удалось загрузить модуль: "+modulesPath);
 		for(File module:modulesDir.listFiles()){
 			if(module.isDirectory()){
-				load(module.getAbsolutePath());
+				try{
+					loadArtifact(module.getAbsolutePath());
+				}catch(Exception ex){
+					ex.printStackTrace();
+				}
 			}
 		}
 		log.info("Загрузка модулей завершена");
@@ -91,15 +98,15 @@ public class ModuleEngine {
 	 * @return
 	 * @throws Exception
 	 */
-	public ModuleMeta load(String modulePath)throws Exception{
-		log.info("Загрузка модуля "+modulePath+"...");
-		ModuleMeta meta = new ModuleMeta();
+	public void loadArtifact(String modulePath)throws Exception{
+		log.info("Load modules artifact "+modulePath+"...");
+		
 		File moduleDir = new File(modulePath);
 		if(!moduleDir.exists())
-			throw new Exception("�� ������� ���������� "+modulePath);
+			throw new Exception("Filed loading "+modulePath);
 		File moduleXml = new File(moduleDir,"module.xml");
 		if(!moduleXml.exists())
-			throw new Exception("�� ������ ���������� ������ "+modulePath);
+			throw new Exception("Filed loading "+modulePath);
 		
 		DocumentBuilderFactory dbf = null;
 		DocumentBuilder db = null;
@@ -110,46 +117,64 @@ public class ModuleEngine {
 			xml = db.parse(new FileInputStream(moduleXml));
 			
 			xml.getDocumentElement().normalize();
-			Element module = (Element)xml.getElementsByTagName("module").item(0);
-			Element moduleE = (Element)module;
-			String moduleName = ((Element)moduleE.getElementsByTagName("module-name").item(0)).getTextContent();
-			String displayName = ((Element)moduleE.getElementsByTagName("display-name").item(0)).getTextContent();
-			String moduleClass = ((Element)moduleE.getElementsByTagName("module-class").item(0)).getTextContent();
+			Element modules = (Element)xml.getElementsByTagName("modules").item(0);
+			String id = modules.getElementsByTagName("id").item(0).getTextContent();
+			
+			NodeList nlist = modules.getElementsByTagName("module");
+			if(nlist!=null)
+				for(int i=0;i<nlist.getLength();i++){
+					ModuleMeta meta = new ModuleMeta();
+					Element moduleE = (Element)nlist.item(i);
+					String moduleName = ((Element)moduleE.getElementsByTagName("module-name").item(0)).getTextContent();
+					String displayName = ((Element)moduleE.getElementsByTagName("display-name").item(0)).getTextContent();
+					String moduleClass = ((Element)moduleE.getElementsByTagName("module-class").item(0)).getTextContent();
+					
+					meta.setArtifactId(id);
+					meta.setDisplayName(displayName);
+					meta.setModuleClass(moduleClass);
+					meta.setModuleName(moduleName);
+					meta.setModuleDirectoryPath(modulePath);
+					
+					moduleMap.put(meta.getModuleName(), meta);
+					log.info("\tloaded module "+meta.getModuleName());
+				}
+			
+//			Element module = (Element)xml.getElementsByTagName("module").item(0);
+//			Element moduleE = (Element)module;
+//			String moduleName = ((Element)moduleE.getElementsByTagName("module-name").item(0)).getTextContent();
+//			String displayName = ((Element)moduleE.getElementsByTagName("display-name").item(0)).getTextContent();
+//			String moduleClass = ((Element)moduleE.getElementsByTagName("module-class").item(0)).getTextContent();
 			
 			
 					
-			meta.setDisplayName(displayName);
-			meta.setModuleClass(moduleClass);
-			meta.setModuleName(moduleName);
-			meta.setModuleDirectoryPath(modulePath);
 			
-			if(loaders.containsKey(moduleName)){
-				return moduleMap.get(moduleName);
-			}
+			
+//			if(loaders.containsKey(moduleName)){
+//				return moduleMap.get(moduleName);
+//			}
 			
 			JarClassLoader jcl = new JarClassLoader(new File(moduleDir,"lib").getPath());
 			
 			String contextListener = null;
 			
-			if(moduleE.getElementsByTagName("context-listener").getLength()>0){
-				contextListener = ((Element)moduleE.getElementsByTagName("context-listener").item(0)).getTextContent();
+			if(modules.getElementsByTagName("context-listener").getLength()>0){
+				contextListener = ((Element)modules.getElementsByTagName("context-listener").item(0)).getTextContent();
 				ModuleContextListener mcl = (ModuleContextListener)
 						jcl.loadClass(contextListener).newInstance();
 				mcl.initialize();
-				moduleContextListeners.put(moduleName, mcl);
+				moduleContextListeners.put(id, mcl);
 			}
 			
 			
-			if(loaders.containsKey(moduleName)){
-				throw new Exception("Error loading mocule "+moduleName+"");
+			if(loaders.containsKey(id)){
+				throw new Exception("Error loading mocules artifact "+id+"");
 			}
-			loaders.put(moduleName, jcl);
+			loaders.put(id, jcl);
 		}finally{
 			  
 		}
-		moduleMap.put(meta.getModuleName(), meta);
-		log.info("�������� ������ "+modulePath+" ���������");
-		return meta;
+		
+		log.info("Load modules artifact "+modulePath+" complete");
 	}
 	
 	public List<ModuleMeta> getModulesList(){
@@ -164,38 +189,55 @@ public class ModuleEngine {
 		this.moduleMap = moduleMap;
 	} 
 	
-	public JarClassLoader getClassLoader(String moduleName){
-		if(loaders.containsKey(moduleName))
-			return loaders.get(moduleName);
+	public JarClassLoader getClassLoader(String artifactId){
+		if(loaders.containsKey(artifactId))
+			return loaders.get(artifactId);
 		return null;
 	}
 	/**
 	 * Выгрузка модуля из JVM
-	 * @param moduleName
+	 * @param artifactId
 	 */
-	public void undeploy(String moduleName){
-		String mp = new String(moduleMap.get(moduleName).getModuleDirectoryPath());
+	public void undeploy(String artifactId){
+		System.out.println("********************************************");
+		String mp = null;
 		
-		if(moduleContextListeners.containsKey(moduleName)){
+		if(moduleContextListeners.containsKey(artifactId)){
 			try {
-				moduleContextListeners.get(moduleName).destroy();
+				moduleContextListeners.get(artifactId).destroy();
 			} catch (Exception e) {
 				e.printStackTrace();
 			}
 		}
 		
-		moduleMap.remove(moduleName);
-		loaders.get(moduleName).destroy();
-		loaders.remove(moduleName);
+		Set<String> rems = new HashSet<String>();
+		
+		for(String moduleName:moduleMap.keySet()){
+			
+			if(moduleMap.get(moduleName).getArtifactId().equals(artifactId)){
+				mp = new String(moduleMap.get(moduleName).getModuleDirectoryPath());
+				rems.add(moduleName);
+				
+			}
+		}
+		for(String rem:rems)
+			moduleMap.remove(rem);
+		
+		if(loaders.containsKey(artifactId)){
+			loaders.get(artifactId).destroy();
+			loaders.remove(artifactId);
+		}
 		
 		
         
 		
 		try {
 			System.gc();
-			FileUtils.deleteFile(mp+".zip");
-			Thread.sleep(1000);
-			FileUtils.deleteDirectory(mp);
+			if(mp!=null){
+				FileUtils.deleteFile(mp+".zip");
+				Thread.sleep(1000);
+				FileUtils.deleteDirectory(mp);
+			}
 			
 		} catch (Exception e) {
 			e.printStackTrace();

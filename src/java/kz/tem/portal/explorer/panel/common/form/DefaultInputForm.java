@@ -4,6 +4,7 @@ import java.util.List;
 
 import org.apache.wicket.AttributeModifier;
 import org.apache.wicket.Component;
+import org.apache.wicket.NonResettingRestartException;
 import org.apache.wicket.feedback.ExactLevelFeedbackMessageFilter;
 import org.apache.wicket.feedback.FeedbackMessage;
 import org.apache.wicket.markup.Markup;
@@ -17,6 +18,7 @@ import org.apache.wicket.markup.html.panel.FeedbackPanel;
 import org.apache.wicket.markup.html.panel.Panel;
 import org.apache.wicket.markup.repeater.RepeatingView;
 import org.apache.wicket.model.IModel;
+import org.apache.wicket.request.flow.RedirectToUrlException;
 
 import kz.tem.portal.utils.ExceptionUtils;
 /**
@@ -39,14 +41,7 @@ public class DefaultInputForm extends Panel implements IForm{
 			@Override
 			protected void onSubmit() {
 				super.onSubmit();
-				try {
-					if(fieldsBuilder.checkFields(DefaultInputForm.this))
-						DefaultInputForm.this.onSubmit();
-				} catch (Exception e) {
-					e.printStackTrace();
-					error(ExceptionUtils.fullError(e));
-//					throw new RuntimeException();
-				}
+				
 				
 			}
 			
@@ -68,6 +63,8 @@ public class DefaultInputForm extends Panel implements IForm{
 		add(new FeedbackPanel("success", new ExactLevelFeedbackMessageFilter(FeedbackMessage.SUCCESS)));
 		
 	}
+	
+	
 	
 	
 	public void createButtons(){
@@ -95,6 +92,10 @@ public class DefaultInputForm extends Panel implements IForm{
 				try {
 					listener.onSubmit();
 				} catch (Exception e) {
+					if(e instanceof RedirectToUrlException)
+						throw (RedirectToUrlException)e;
+					if(e instanceof NonResettingRestartException)
+						throw (NonResettingRestartException)e;
 					e.printStackTrace();
 					throw new RuntimeException(e);
 				}
@@ -112,12 +113,19 @@ public class DefaultInputForm extends Panel implements IForm{
 			@Override
 			public void onSubmit() {
 				super.onSubmit();
+				
 				try {
-					listener.onSubmit();
+					if(fieldsBuilder.checkFields(DefaultInputForm.this)){
+						DefaultInputForm.this.onSubmit();
+						listener.onSubmit();
+					}
 				} catch (Exception e) {
 					e.printStackTrace();
-					throw new RuntimeException(e);
+					error(ExceptionUtils.fullError(e));
+//					throw new RuntimeException();
 				}
+				
+				
 			}
 			
 		};

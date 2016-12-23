@@ -99,8 +99,8 @@ public class PortalApplication extends AuthenticatedWebApplication {
 
 		// getPageSettings().setRecreateBookmarkablePagesAfterExpiry(true);
 
-		mountPage("authenticate", AuthenticatePage.class);
-		mountPage("login", LoginPage.class);
+		mountPage("pg/login", AuthenticatePage.class);
+//		mountPage("login", LoginPage.class);
 		mountPage("registration", RegistrationPage.class);
 
 		mountPage("logout", SignOutPage.class);

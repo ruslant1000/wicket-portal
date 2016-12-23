@@ -15,6 +15,7 @@ public class FPasswordField extends Panel{
 		super(id);
 		
 		PasswordTextField field = new PasswordTextField("field",model);
+		field.setRequired(false);
 		
 //		TextField<String> field = new TextField<String>("field",model);
 		add(field);

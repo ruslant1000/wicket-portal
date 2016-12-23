@@ -33,9 +33,12 @@ public class RegistrationPanel extends Panel{
 					
 					@Override
 					public void onSubmit() throws Exception {
-						if(!password2.equals(user.getPassword()))
-							error("Пароли не совпадают");
+						System.out.println("Зарегистрировать");
+						if(password2!=null && user.getPassword()!=null && !password2.equals(user.getPassword()))
+							throw new Exception("Пароли не совпадают");
+						
 						RegisterEngine.getInstance().getUserRegister().addNewUser(user);
+						
 					}
 				});
 			}

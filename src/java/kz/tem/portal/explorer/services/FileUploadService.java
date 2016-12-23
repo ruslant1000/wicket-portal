@@ -37,7 +37,7 @@ public class FileUploadService extends AbstractResource {
 				Writer writer = new OutputStreamWriter(outputStream);
 				
 				String filename = request.getHeader("filename");
-				String moduleName = request.getHeader("modulename");
+				String artifactId = request.getHeader("artifactId");
 				
 				System.out.println("filename "+filename);
 				
@@ -45,10 +45,9 @@ public class FileUploadService extends AbstractResource {
 				InputStream ins = null;
 				try {
 					
-					ModuleEngine.getInstance().undeploy(moduleName);
+					ModuleEngine.getInstance().undeploy(artifactId);
 					
 					System.out.println("!!!! module undeployed");
-					Thread.sleep(1000);
 					
 					ins = request.getInputStream();
 

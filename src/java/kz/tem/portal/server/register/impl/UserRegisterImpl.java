@@ -55,7 +55,6 @@ public class UserRegisterImpl implements IUserRegister{
 			crt.setProjection(Projections.rowCount());
 			Long total = (Long)crt.uniqueResult();
 			if(total<1){
-				log.info("������������� ����� ������������");
 				User user = new User();
 				user.setEmail("portal@example.com");
 				user.setLogin("admin");
@@ -66,7 +65,7 @@ public class UserRegisterImpl implements IUserRegister{
 			session.flush();
 		}catch(Exception ex){
 			session.clear();
-			log.error("������ ������������� UserRegisterImpl",ex);
+			log.error("Ошибка инициализации UserRegisterImpl",ex);
 		}
 	}
 	public static String encryptPassword(String password) throws NoSuchAlgorithmException{
@@ -93,7 +92,7 @@ public class UserRegisterImpl implements IUserRegister{
 			return user;
 		}catch(Exception ex){
 			session.clear();
-			throw new PortalException("������ ���������� ������ ������������",ex);
+			throw new PortalException("Не удалось добавить пользователя",ex);
 		}
 	}
 
@@ -111,7 +110,7 @@ public class UserRegisterImpl implements IUserRegister{
 			session.evict(user);
 		}catch(Exception ex){
 			session.clear();
-			throw new PortalException("������ ��� ���������� ������������",ex);
+			throw new PortalException("Не удалось сохранить изменения",ex);
 		}
 		
 	}
@@ -126,7 +125,7 @@ public class UserRegisterImpl implements IUserRegister{
 			session.flush();
 		}catch(Exception ex){
 			session.clear();
-			throw new PortalException("������ ��� �������� ������������",ex);
+			throw new PortalException("Не удалось удалить запись",ex);
 		}
 		
 	}

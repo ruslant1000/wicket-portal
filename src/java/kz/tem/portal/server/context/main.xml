@@ -8,7 +8,7 @@
 
 <import resource="datasource.xml"/>
 <import resource="server.xml"/>
-<import resource="jobs.xml"/>
+<!-- <import resource="jobs.xml"/> -->
 
 <bean id="placeholderConfig"
 		class="org.springframework.beans.factory.config.PropertyPlaceholderConfigurer">

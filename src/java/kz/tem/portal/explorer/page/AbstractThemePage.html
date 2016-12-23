@@ -80,11 +80,10 @@
 
 
 </style>
-
 	<div class="temportal-theme" wicket:id="theme"></div>
 	<div wicket:id="modal" class="modal-window">
 		<div class="modal-content">
-			<a wicket:id="close" class="close">x</a>
+			<a class="close" onclick="$(this).closest('.modal-window').hide();">x</a>
 			<div wicket:id="content"></div>
 		</div>
 	</div>

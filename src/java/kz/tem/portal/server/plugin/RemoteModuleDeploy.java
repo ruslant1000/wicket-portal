@@ -13,12 +13,13 @@ import javax.net.ssl.HttpsURLConnection;
 
 public class RemoteModuleDeploy {
 	
-	public static void deploy(String fileName,String moduleName, String portalUrl)throws Exception{
+	public static void deploy(String fileName,String artifactId, String portalUrl)throws Exception{
+//		fileName=fileName.replaceAll("\\", "/");
 		System.out.println("Deploying module "+fileName+"...");
 		System.out.println("   portalUrl: "+portalUrl);
 		
 		String USER_AGENT = "Mozilla/5.0";
-		String url = portalUrl+"/services/upload";
+		String url = portalUrl+(portalUrl.endsWith("/")?"":"/")+"services/upload";
 		URL obj = new URL(url);
 		HttpURLConnection con = (HttpURLConnection) obj.openConnection();
 
@@ -28,7 +29,7 @@ public class RemoteModuleDeploy {
 		con.setRequestProperty("User-Agent", USER_AGENT);
 		con.setRequestProperty("Accept-Language", "en-US,en;q=0.5");
 		
-		con.setRequestProperty("modulename",moduleName);
+		con.setRequestProperty("artifactId",artifactId);
 		con.setUseCaches(false);
 		con.setDoOutput(true);
 		con.setRequestProperty(
@@ -80,9 +81,17 @@ public class RemoteModuleDeploy {
 	
 	public static void main(String[] args) throws Exception {
 		System.out.println("RemoteModuleDeploy...");
-		deploy("G:\\projects\\tem-portal\\msys-text\\msystext\\target\\msystext-0.0.1-bundle.zip",
-				"msystext",
-				"http://localhost:8081");
+		deploy(args[0],
+				args[1],
+				args[2]);
+		
+//		deploy("G:\\projects\\tem-portal-modules\\user\\target\\user-0.0.1-bundle.zip",
+//				"user",
+//				"http://localhost:8081");
+		
+//		deploy("G:\\projects\\tem-portal\\msys-text\\msystext\\target\\msystext-0.0.1-bundle.zip",
+//				"msystext",
+//				"http://localhost:8081");
 	}
 
 }

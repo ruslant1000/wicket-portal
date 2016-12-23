@@ -8,6 +8,7 @@ import org.apache.wicket.markup.html.WebMarkupContainer;
 import org.apache.wicket.markup.html.basic.Label;
 import org.apache.wicket.markup.html.panel.Panel;
 
+import kz.tem.portal.explorer.application.PortalSession;
 import kz.tem.portal.explorer.page.AbstractThemePage;
 import kz.tem.portal.explorer.page.IComponentCreator;
 import kz.tem.portal.server.model.Portlet;
@@ -36,21 +37,30 @@ public class PortletContainer extends Panel {
 
 			final Module module = ModuleEngine.getInstance().init("module",
 					meta, config);
-			add(new AjaxLink<Void>("config") {
-				@Override
-				public void onClick(AjaxRequestTarget target) {
-					((AbstractThemePage) getWebPage()).showModal(
-							"modal window", target, new IComponentCreator() {
-
-								@Override
-								public Component create(String id)
-										throws Exception {
-									return new PortletSettingsPanel(id, module,
-											portlet);
-								}
-							});
-				}
-			});
+			
+			
+			if(PortalSession.get().isSignedIn()){
+			
+				add(new AjaxLink<Void>("config") {
+					@Override
+					public void onClick(AjaxRequestTarget target) {
+						((AbstractThemePage) getWebPage()).showModal(
+								"modal window", target, new IComponentCreator() {
+	
+									@Override
+									public Component create(String id)
+											throws Exception {
+										return new PortletSettingsPanel(id, module,
+												portlet);
+									}
+								});
+					}
+				});
+			}else{
+				add(new WebMarkupContainer("config").setVisible(false));
+			}
+			
+			
 			try { 
 
 				module.create();

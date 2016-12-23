@@ -53,6 +53,7 @@ private static Logger log = LoggerFactory.getLogger(ExplorerEngine.class);
 	 * Настройки портала. 
 	 */
 	public static final String SETTINGS_SMTP_PASSWORD="smtp password";
+	
 	/**
 	 * общие настройки портала
 	 */

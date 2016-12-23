@@ -45,7 +45,7 @@ public class SettingsRegisterImpl implements ISettingsRegister{
 			return settings;
 		}catch(Exception ex){
 			session.clear();
-			throw new PortalException("Ошибка добавления новой настройки",ex);
+			throw new PortalException("РћС€РёР±РєР° РґРѕР±Р°РІР»РµРЅРёСЏ РЅРѕРІРѕР№ РЅР°СЃС‚СЂРѕР№РєРё",ex);
 		}
 	}
 
@@ -59,7 +59,7 @@ public class SettingsRegisterImpl implements ISettingsRegister{
 			session.flush();
 		}catch(Exception ex){
 			session.clear();
-			throw new PortalException("Ошибка изменения настройки",ex);
+			throw new PortalException("РћС€РёР±РєР° РёР·РјРµРЅРµРЅРёСЏ РЅР°СЃС‚СЂРѕР№РєРё",ex);
 		}
 		
 	}
@@ -74,7 +74,7 @@ public class SettingsRegisterImpl implements ISettingsRegister{
 			session.flush();
 		}catch(Exception ex){
 			session.clear();
-			throw new PortalException("Ошибка удаления настройки",ex);
+			throw new PortalException("РћС€РёР±РєР° СѓРґР°Р»РµРЅРёСЏ РЅР°СЃС‚СЂРѕР№РєРё",ex);
 		}
 		
 	}
@@ -109,7 +109,7 @@ public class SettingsRegisterImpl implements ISettingsRegister{
 				}
 			};
 		}catch(Exception ex){
-			throw new PortalException("Не удалось получить список настроек",ex);
+			throw new PortalException("РќРµ СѓРґР°Р»РѕСЃСЊ РїРѕР»СѓС‡РёС‚СЊ СЃРїРёСЃРѕРє РЅР°СЃС‚СЂРѕРµРє",ex);
 		}
 	}
 	@Override
@@ -139,7 +139,7 @@ public class SettingsRegisterImpl implements ISettingsRegister{
 			session.flush();
 		}catch(Exception ex){
 			session.clear();
-			throw new PortalException("Ошибка сохранения настроек",ex);
+			throw new PortalException("РћС€РёР±РєР° СЃРѕС…СЂР°РЅРµРЅРёСЏ РЅР°СЃС‚СЂРѕРµРє",ex);
 		}
 		
 	}
