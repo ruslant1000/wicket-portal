@@ -3,14 +3,17 @@ package kz.tem.portal.explorer.panel.common.table;
 import java.util.LinkedList;
 import java.util.List;
 
+import org.apache.wicket.AttributeModifier;
 import org.apache.wicket.Component;
 import org.apache.wicket.ajax.AjaxRequestTarget;
+import org.apache.wicket.behavior.AttributeAppender;
 import org.apache.wicket.markup.html.WebMarkupContainer;
 import org.apache.wicket.markup.html.basic.Label;
 import org.apache.wicket.markup.html.panel.Panel;
 import org.apache.wicket.markup.repeater.RepeatingView;
 import org.apache.wicket.model.Model;
 
+import kz.tem.portal.explorer.panel.common.component.AjaxLabelLink;
 import kz.tem.portal.explorer.panel.common.form.field.FAjaxCheckboxField;
 import kz.tem.portal.server.bean.ITable;
 /**
@@ -26,7 +29,9 @@ public abstract class AbstractTable<T> extends Panel{
 	private AColumn[] cols = null;
 	private ITable<T> records = null;
 	private int first=0;
-	private int count=0;
+	private int count=10;
+	private int total = 0;
+	
 	private WebMarkupContainer table = null;
 	
 	private boolean withCheckboxColumn;
@@ -65,16 +70,20 @@ public abstract class AbstractTable<T> extends Panel{
 			if(AbstractTable.this.get("table")!=null){
 				AbstractTable.this.remove("table");
 			}
+			if(AbstractTable.this.get("digits")!=null){
+				AbstractTable.this.remove("digits");
+			}
 			table = new WebMarkupContainer("table");
 			table.setOutputMarkupId(true);
 			add(table);
 			
 			cols = columns();
-			records = data(first, count);
+			records = data(first, count);	
+			total=records.total().intValue();
 			
 			buildColumns();
 			buildData();
-			
+			buildPaginator();
 		} catch (Exception e) {
 			e.printStackTrace();
 			throw new RuntimeException(e);
@@ -111,6 +120,8 @@ public abstract class AbstractTable<T> extends Panel{
 	
 	private void buildData()throws Exception{
 		rowsCheckboxes.clear();
+		System.out.println("get data "+first);
+		
 		
 		RepeatingView tr = new RepeatingView("row");
 		table.add(tr);
@@ -137,6 +148,69 @@ public abstract class AbstractTable<T> extends Panel{
 			}
 		}
 	}
+	
+	
+	public void buildPaginator(){
+		RepeatingView digits = new RepeatingView("digits");
+		add(digits);
+		
+		AjaxLabelLink firstD = new AjaxLabelLink(digits.newChildId(),"Первая") {
+			
+			@Override
+			public void onClick(AjaxRequestTarget target) throws Exception {
+				first=0;
+				build();
+				target.add(AbstractTable.this);
+			}
+		};
+		digits.add(firstD);
+		firstD.add(new AttributeAppender("class", " page-first"));
+		
+		AjaxLabelLink prevD = new AjaxLabelLink(digits.newChildId(),"Назад") {
+			
+			@Override
+			public void onClick(AjaxRequestTarget target) throws Exception {
+				first = first - count;
+				if(first<0)first =0;
+				build();
+				target.add(AbstractTable.this);
+			}
+		};
+		digits.add(prevD);
+		prevD.add(new AttributeAppender("class", " page-prev"));
+		
+		AjaxLabelLink nextD = new AjaxLabelLink(digits.newChildId(),"Вперед") {
+			
+			@Override
+			public void onClick(AjaxRequestTarget target) throws Exception {
+				if((first+count)<total)
+					first = first + count;
+				System.out.println("first = "+first);
+				build();
+				target.add(AbstractTable.this);
+			}
+		};
+		digits.add(nextD);
+		nextD.add(new AttributeAppender("class", " page-next"));
+		
+		AjaxLabelLink lastD = new AjaxLabelLink(digits.newChildId(),"Последняя") {
+			
+			@Override
+			public void onClick(AjaxRequestTarget target) throws Exception {
+				first = (int) ((total/count)*count);
+				if(first==total)
+					first = first - count;
+				if(first<0)first=0;
+				System.out.println("first = "+first);
+				build();
+				target.add(AbstractTable.this);
+			}
+		};
+		digits.add(lastD);
+		lastD.add(new AttributeAppender("class", " page-last"));
+	}
+	
+	
 	
 	public List<T> getSelectedRows(){
 		List<T> list = new LinkedList<T>();

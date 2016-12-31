@@ -6,6 +6,13 @@ import org.apache.wicket.markup.html.panel.Panel;
 
 @SuppressWarnings("serial")
 public class AbstractMessage extends Panel{
+	
+	public static AbstractMessage info(String id, String message){
+		return new AbstractMessage(id, message, "info-img");
+	}
+	public static AbstractMessage error(String id, String message){
+		return new AbstractMessage(id, message, "error-img");
+	}
 
 	public AbstractMessage(String id, String message, String iconCss) {
 		super(id);

@@ -17,6 +17,7 @@ import org.springframework.transaction.annotation.Transactional;
 import kz.tem.portal.PortalException;
 import kz.tem.portal.server.bean.ITable;
 import kz.tem.portal.server.model.Page;
+import kz.tem.portal.server.model.enums.EnumPageType;
 import kz.tem.portal.server.register.IPageRegister;
 /**
  * 
@@ -24,42 +25,24 @@ import kz.tem.portal.server.register.IPageRegister;
  *
  */
 @SuppressWarnings("serial")
-public class PageRegisterImpl implements IPageRegister{
+@Transactional
+public class PageRegisterImpl extends AbstractRegister implements IPageRegister{
 
-	@Autowired
-	private SessionFactory sessionFactory;
-	
-	public SessionFactory getSessionFactory() {
-		return sessionFactory;
-	}
-	public void setSessionFactory(SessionFactory sessionFactory) {
-		this.sessionFactory = sessionFactory;
-	}
-
-	private HibernateTemplate ht;
-	
-	public HibernateTemplate getHt() {
-		return ht;
-	}
-	public void setHt(HibernateTemplate ht) {
-		this.ht = ht;
-	}
 
 	@Override
-	@Transactional(rollbackFor={ConstraintViolationException.class})
 	public Page addNewPage(Page page) throws PortalException {
-		Session session = null;
 		try{
-			session = sessionFactory.getCurrentSession();
+			if(page.getPageType()==null)
+				page.setPageType(EnumPageType.ADDED);
 //			if(page.getParentPage()!=null)
 //				page.setParentPageId(page.getParentPage().getId());
 //			else
 //				page.setParentPageId(null);
-			session.persist(page);
-			session.flush();
+			ht.persist(page);
+			ht.flush();
 			return page;
 		}catch(Exception ex){
-			session.clear();
+			ht.clear();
 			ex.printStackTrace();
 			throw new PortalException("Не удалось добавить новую страницу",ex);
 		}
@@ -67,114 +50,79 @@ public class PageRegisterImpl implements IPageRegister{
 		
 	}
 	@Override
-	@Transactional(rollbackFor=Exception.class)
 	public void savePage(Page page) throws PortalException {
-		Session session = null;
 		try{
-			session = sessionFactory.getCurrentSession();
 //			if(page.getParentPage()!=null)
 //				page.setParentPageId(page.getParentPage().getId());
 //			else
 //				page.setParentPageId(null);
-			session.merge(page);
-			session.flush();
+			ht.merge(page);
+			ht.flush();
 //			session.evict(page);
 		}catch(Exception ex){
-			session.clear();
+			ht.clear();
 			throw new PortalException("Не удалось сохранить страницу",ex);
 		}
 		
 	}
 	@Override
-	@Transactional(readOnly=true)
 	public Page getPage(Long id) throws PortalException {
-		Session session = null;
 		try{
-			session = sessionFactory.getCurrentSession();
-			Page page = session.get(Page.class, id);
-//			if(page!=null){
-//				session.evict(page);
-//			}
+			Page page = ht.get(Page.class, id);
 			return page;
 		}catch(Exception ex){
 			throw new PortalException("Не удалось получить данные страницы",ex);
 		}
 	}
 	@Override
-	@Transactional(readOnly=true)
 	public Page getPage(String url) throws PortalException {
-		Session session = null;
 		try{
-			session = sessionFactory.getCurrentSession();
-			Criteria criteria = session.createCriteria(Page.class);
+			Criteria criteria = ht.getSessionFactory().getCurrentSession().createCriteria(Page.class);
 			criteria.add(Restrictions.eq("url", url));
 			Page page = (Page) criteria.uniqueResult();
+			if(page==null)
+				throw new PortalException(PortalException.NOT_FOUND,"Page not found");
 			Hibernate.initialize(page.getRole());
-//			if(page!=null){
-//				session.evict(page);
-//			}
 			return page;
+		}catch(PortalException ex){
+			throw ex;
 		}catch(Exception ex){
-			throw new PortalException("Не удалось получить данные страницы",ex);
+			ex.printStackTrace();
+			throw new PortalException("Could not get page",ex);
 		}
 	}
 
 	@Override
-	@Transactional
 	public void deletePage(Long id) throws PortalException {
-		Session session = null;
 		try{
-			session = sessionFactory.getCurrentSession();
-			session.delete(session.get(Page.class, id));
-			session.flush();
+			ht.delete(ht.get(Page.class, id));
+			ht.flush();
 		}catch(Exception ex){
-			session.clear();
+			ht.clear();
 			throw new PortalException("Не удалось удалить страницу",ex);
 		}
 		
 	}
 	@Override
-	@Transactional(readOnly=true)
 	public ITable<Page> pages(int first, int count) throws PortalException {
-		Session session = null;
-		try{
-			session = sessionFactory.getCurrentSession();
-			Criteria criteria = session.createCriteria(Page.class);
-			if(count>0){
-				criteria.setFirstResult(first);
-				criteria.setMaxResults(count);
-			}
-			final List<Page> list = criteria.list();
-			if(list!=null && list.size()>0)
-				for(Page p:list)
-					Hibernate.initialize(p.getRole());
-			Criteria crit2 = session.createCriteria(Page.class);
-			crit2.setProjection(Projections.rowCount());
-			final long total = (Long) crit2.uniqueResult();
-			return new ITable<Page>() {
-				private static final long serialVersionUID = 1L;
+		
+		return getTable(Page.class, first, count,null,null,true, new InSessionAction<Page>() {
 
-				@Override
-				public Long total() {
-					return total;
-				}
-				
-				@Override
-				public List<Page> records() {
-					return list;
-				}
-			};
-		}catch(Exception ex){
-			throw new PortalException("Не удалось получить таблицу страниц",ex);
-		}
+			@Override
+			public void action(Page entity) throws Exception {
+				Hibernate.initialize(entity.getRole());
+			}
+		});
+		
+		
+		
 	}
 	@Override
-	@Transactional(readOnly=true)
 	public List<Page> pagesTree() throws PortalException {
 		Session session = null;
 		try{
 			List<Page> tree = new LinkedList<Page>();
-			session = sessionFactory.getCurrentSession();
+			session = ht.getSessionFactory().getCurrentSession();
 			Criteria criteria = session.createCriteria(Page.class);
 			List<Page> list = criteria.list();
 			

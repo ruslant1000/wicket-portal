@@ -25,7 +25,7 @@ public class UserRegisterImplTest {
 	public void test() {
 		
 		register.defaults();
-		User user = UserRegisterImpl.instance.authenticateByLogin("admin", "admin");
+		User user = register.authenticateByLogin("admin", "admin");
 //		User user = register.authenticateByLogin("admin", "admin");
 		System.out.println(user);
 //		User user = new User();

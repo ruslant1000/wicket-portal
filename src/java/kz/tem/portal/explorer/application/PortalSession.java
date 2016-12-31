@@ -49,6 +49,9 @@ public class PortalSession extends AuthenticatedWebSession{
 		return (PortalSession)AuthenticatedWebSession.get();
 	}
 
+	public static boolean isAdmin(){
+		return get().getUser()!=null && get().getUser().getLogin().equals("admin");
+	}
 	@Override
 	protected boolean authenticate(String username, String password) {
 		user = RegisterEngine.getInstance().getUserRegister().authenticateByLogin(username, password);

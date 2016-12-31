@@ -10,6 +10,8 @@ import java.util.Set;
 import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.EnumType;
+import javax.persistence.Enumerated;
 import javax.persistence.FetchType;
 import javax.persistence.JoinColumn;
 import javax.persistence.JoinTable;
@@ -18,6 +20,8 @@ import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
 import javax.persistence.Table;
 import javax.persistence.Transient;
+
+import kz.tem.portal.server.model.enums.EnumPageType;
 
 import org.hibernate.envers.Audited;
 
@@ -51,7 +55,11 @@ public class Page extends IdEntity implements Serializable{
 	
 	private boolean publicPage =false;
 	
+	private boolean menu = true;
+	
 	private Set<Role> role = new HashSet<Role>();
+	
+	private EnumPageType pageType = null; 
 	
 	@Column(unique=true, nullable=false)
 	public String getUrl() {
@@ -124,6 +132,15 @@ public class Page extends IdEntity implements Serializable{
 		this.publicPage = publicPage;
 	}
 	
+	
+	public boolean getMenu() {
+		return menu;
+	}
+
+	public void setMenu(boolean menu) {
+		this.menu = menu;
+	}
+
 	@ManyToMany(fetch=FetchType.LAZY, cascade=CascadeType.ALL)
 	@JoinTable(name="PT_PAGE_ROLE", joinColumns={@JoinColumn( name="PAGE_ID",nullable=false) }, 
 	inverseJoinColumns={@JoinColumn(name="ROLE_ID", nullable=false)}
@@ -134,6 +151,16 @@ public class Page extends IdEntity implements Serializable{
 	public void setRole(Set<Role> role) {
 		this.role = role;
 	}
+	@Enumerated(EnumType.STRING)
+	@Column(nullable=false)
+	public EnumPageType getPageType() {
+		return pageType;
+	}
+
+	public void setPageType(EnumPageType pageType) {
+		this.pageType = pageType;
+	}
+	
 	
 //	public Long getParentPageId() {
 //		return parentPageId;

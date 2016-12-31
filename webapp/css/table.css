@@ -1,14 +1,34 @@
 .abstract-table{
 	border: 3px solid red;
+	display: inline-block;
+	font-family: Helvetica,Arial,sans-serif;
 }
-.abstract-table tr:nth-child(odd){
+.abstract-table table tr:nth-child(odd){
 	background: #cce6ff;
 }
 
-.abstract-table tr:nth-child(even){
+.abstract-table table tr:nth-child(even){
 	background: #ffffff;
 }
-.abstract-table td{
+.abstract-table table td{
 	line-height:28px;
 	padding-left: 5px;
+}
+.table-paginator{
+	padding: 10px;
+}
+
+.table-paginator .digit a{
+	margin-top: 5px;
+	margin-bottom: 5px;
+	margin-left: 5px;
+	margin-right: 5px;
+	text-decoration: none;
+	color: black;
+	text-transform: uppercase;
+	font-size: 0.8em;
+	font-family: Helvetica,Arial,sans-serif;
+}
+.table-paginator .digit a:HOVER{
+	text-decoration: underline;
 }

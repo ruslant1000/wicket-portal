@@ -33,6 +33,7 @@ public class NotificationsJob {
 	
 	public static void sendEmails()throws Exception{
 		System.out.println("send emails...");
+		
 		ITable<Email> emails = RegisterEngine.getInstance().getEmailRegister().tableEmails(0, 10, "created", true, EnumEmailStatus.CREATED);
 		for(Email email:emails.records()){
 			sendEmail(email);

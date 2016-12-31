@@ -5,6 +5,7 @@ import org.apache.wicket.markup.html.basic.Label;
 import org.apache.wicket.spring.injection.annot.SpringBean;
 
 import kz.tem.portal.PortalException;
+import kz.tem.portal.api.RegisterEngine;
 import kz.tem.portal.explorer.panel.admin.common.RolesPanel;
 import kz.tem.portal.explorer.panel.common.table.AColumn;
 import kz.tem.portal.explorer.panel.common.table.AbstractTable;
@@ -20,8 +21,6 @@ import kz.tem.portal.server.register.IPageRegister;
 @SuppressWarnings("serial")
 public class PageRoleTable extends AbstractTable<Page>{
 
-	@SpringBean
-	private IPageRegister pageRegister;
 	
 	public PageRoleTable(String id) {
 		super(id, true);
@@ -36,7 +35,7 @@ public class PageRoleTable extends AbstractTable<Page>{
 
 	@Override
 	public ITable<Page> data(int first, int count) throws Exception {
-		return pageRegister.pages(first, count);
+		return RegisterEngine.getInstance().getPageRegister().pages(first, count);
 	}
 
 	@Override
@@ -61,7 +60,7 @@ public class PageRoleTable extends AbstractTable<Page>{
 								super.roleDeleted(role);
 								record.getRole().remove(role);
 								try {
-									pageRegister.savePage(record);
+									RegisterEngine.getInstance().getPageRegister().savePage(record);
 								} catch (PortalException e) {
 									e.printStackTrace();
 									throw new RuntimeException(e);

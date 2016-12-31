@@ -23,3 +23,9 @@
 	height: 32px;
 	background: url("/images/32/Info.png") no-repeat;
 }
+.temportal-theme .message .error-img{
+	display: inline-block;
+	width: 32px;
+	height: 32px;
+	background: url("/images/32/Error.png") no-repeat;
+}

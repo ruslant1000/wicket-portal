@@ -2,7 +2,9 @@ package kz.tem.portal.server.register.impl;
 
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
+import java.util.Date;
 import java.util.List;
+import java.util.Random;
 
 import org.hibernate.Criteria;
 import org.hibernate.Hibernate;
@@ -18,6 +20,7 @@ import org.springframework.transaction.annotation.Transactional;
 import kz.tem.portal.PortalException;
 import kz.tem.portal.server.bean.ITable;
 import kz.tem.portal.server.model.User;
+import kz.tem.portal.server.model.UserSecretKey;
 import kz.tem.portal.server.register.IUserRegister;
 /**
  * 
@@ -25,32 +28,17 @@ import kz.tem.portal.server.register.IUserRegister;
  *
  */
 @SuppressWarnings("serial")
-public class UserRegisterImpl implements IUserRegister{
-	
-	public static UserRegisterImpl instance = null;
+@Transactional
+public class UserRegisterImpl extends AbstractRegister implements IUserRegister{
 	
 	private static Logger log = LoggerFactory.getLogger(UserRegisterImpl.class); 
 
-	@Autowired
-	private SessionFactory sessionFactory;
-	
-	public SessionFactory getSessionFactory() {
-		return sessionFactory;
-	}
-	public void setSessionFactory(SessionFactory sessionFactory) {
-		this.sessionFactory = sessionFactory;
-	}
-	
-	public void inits(){
-		instance=this;
-		
-	}
 	@Override
-	@Transactional
 	public void defaults(){
 		Session session = null;
 		try{
-			session = sessionFactory.getCurrentSession();
+			session = ht.getSessionFactory().openSession();
+			session.beginTransaction();
 			Criteria crt = session.createCriteria(User.class);
 			crt.setProjection(Projections.rowCount());
 			Long total = (Long)crt.uniqueResult();
@@ -63,9 +51,12 @@ public class UserRegisterImpl implements IUserRegister{
 				session.persist(user);
 			}
 			session.flush();
+			session.getTransaction().commit();
 		}catch(Exception ex){
-			session.clear();
+			ex.printStackTrace();
 			log.error("Ошибка инициализации UserRegisterImpl",ex);
+		}finally{
+			try{session.clear();}catch(Exception ex2){}
 		}
 	}
 	public static String encryptPassword(String password) throws NoSuchAlgorithmException{
@@ -81,50 +72,39 @@ public class UserRegisterImpl implements IUserRegister{
 	}
 	
 	@Override
-	@Transactional
 	public User addNewUser(User user) throws PortalException {
-		Session session = null;
 		try{
-			session = sessionFactory.getCurrentSession();
+			ht.persist(user);
 			user.setPassword(encryptPassword(user.getPassword()));
-			session.persist(user);
-			session.flush();
+			ht.flush();
 			return user;
 		}catch(Exception ex){
-			session.clear();
+			ht.clear();
 			throw new PortalException("Не удалось добавить пользователя",ex);
 		}
 	}
 
 	@Override
-	@Transactional
 	public void updateUser(User user) throws PortalException {
-		Session session = null;
 		try{
-			System.out.println("!!!!!!!!!!!!!!!!!!!!!!!!!!! "+user.getId()+" "+user.getLogin());
-			session = sessionFactory.getCurrentSession();
-			User mu = session.get(User.class, user.getId());
+			User mu =  ht.get(User.class, user.getId());
 			user.setPassword(mu.getPassword());
-			session.merge(user);
-			session.flush();
-			session.evict(user);
+			ht.merge(user);
+			ht.flush();
 		}catch(Exception ex){
-			session.clear();
+			ht.clear();
 			throw new PortalException("Не удалось сохранить изменения",ex);
 		}
 		
 	}
 
 	@Override
-	@Transactional
 	public void deleteUser(Long userId) throws PortalException {
-		Session session = null;
 		try{
-			session = sessionFactory.getCurrentSession();
-			session.delete(session.get(User.class, userId));
-			session.flush();
+			ht.delete(ht.get(User.class, userId));
+			ht.flush();
 		}catch(Exception ex){
-			session.clear();
+			ht.clear();
 			throw new PortalException("Не удалось удалить запись",ex);
 		}
 		
@@ -133,12 +113,10 @@ public class UserRegisterImpl implements IUserRegister{
 	
 
 	@Override
-	@Transactional(readOnly=true)
 	public User authenticateByLogin(String login, String password){
-		System.out.println("============= "+login+"   "+password+"  "+(sessionFactory==null));
 		Session session = null;
 		try{
-			session = sessionFactory.getCurrentSession();
+			session = ht.getSessionFactory().getCurrentSession();
 			Criteria criteria = session.createCriteria(User.class);
 			criteria.add(Restrictions.eq("login", login));
 			User user = (User)criteria.uniqueResult();
@@ -153,6 +131,7 @@ public class UserRegisterImpl implements IUserRegister{
 			Hibernate.initialize(user.getRole());
 			return user;
 		}catch(Exception ex){
+			session.clear();
 			log.error("Ошибка аутентификации",ex);
 			return null;
 		}
@@ -160,61 +139,117 @@ public class UserRegisterImpl implements IUserRegister{
 	}
 
 	@Override
-	@Transactional
 	public void updateUserPassword(Long userId, String oldPassword,
 			String newPassword) throws PortalException {
-		Session session = null;
 		try{
-			session = sessionFactory.getCurrentSession();
-			User mu = session.get(User.class, userId);
+			User mu = ht.get(User.class, userId);
 			if(encryptPassword(oldPassword).equals(mu.getPassword()))
 				mu.setPassword(encryptPassword(newPassword));
-			session.merge(mu);
-			session.flush();
-			session.evict(mu);
+			ht.merge(mu);
+			ht.flush();
 		}catch(Exception ex){
-			session.clear();
-			throw new PortalException("������ ��� ��������� ������",ex);
+			ht.clear();
+			throw new PortalException("Ошибка",ex);
 		}
 		
 	}
 	@Override
-	@Transactional(readOnly=true)
 	public ITable<User> table(int first, int count) throws PortalException {
-		Session session = null;
-		try{
-			session = sessionFactory.getCurrentSession();
-			Criteria criteria = session.createCriteria(User.class);
-			
-			if(count>0){
-				criteria.setFirstResult(first);
-				criteria.setMaxResults(count);
-			}
-			final List<User> list = criteria.list();
-			if(list!=null && list.size()>0){
-				for(User u:list){
-					Hibernate.initialize(u.getRole());
-				}
-			}
-			Criteria crit2 = session.createCriteria(User.class);
-			crit2.setProjection(Projections.rowCount());
-			final long total = (Long) crit2.uniqueResult();
-			
-			return new ITable<User>() {
-				private static final long serialVersionUID = 1L;
+		return getTable(User.class, first, count,null,null,true, new InSessionAction<User>() {
 
-				@Override
-				public Long total() {
-					return total;
-				}
+			@Override
+			public void action(User entity) throws Exception {
+				Hibernate.initialize(entity.getRole());
 				
-				@Override
-				public List<User> records() {
-					return list;
-				}
-			};
+			}
+		});
+	}
+	@Override
+	public UserSecretKey createSecretKey(User user, String key)
+			throws PortalException {
+		try{
+			UserSecretKey usk = new UserSecretKey();
+			usk.setName(key);
+			usk.setCreated(new Date());
+			usk.setUser(user);
+			usk.setValue(""+new Random().nextLong());
+			ht.persist(usk);
+			ht.flush();
+			return usk;
 		}catch(Exception ex){
-			throw new PortalException("�� ������� �������� ������ �������������",ex);
+			ht.clear();
+			ex.printStackTrace();
+			throw new PortalException("Could not create UserSecretKey",ex);
+		}
+	}
+	@Override
+	public boolean checkSecretKey(User user, String key, String value)
+			throws PortalException {
+		try{
+			Criteria crit = ht.getSessionFactory().getCurrentSession().createCriteria(UserSecretKey.class);
+			crit.add(Restrictions.eq("user.id", user.getId()));
+			crit.add(Restrictions.eq("name", key));
+			crit.add(Restrictions.eq("value", value));
+			Object o= crit.uniqueResult();
+			log.info("checkSecretKey object: "+o);
+			return o!=null;
+		}catch(Exception ex){
+			ex.printStackTrace();
+			throw new PortalException("Could not check UserSecretKey",ex);
+		}
+	}
+	@Override
+	public void deleteSecretKey(UserSecretKey key) throws PortalException {
+		try{
+			ht.delete(key);
+			ht.flush();
+		}catch(Exception ex){
+			ht.clear();
+			ex.printStackTrace();
+			throw new PortalException("Could not delete UserSecretKey",ex);
+		}
+		
+	}
+	@Override
+	public void deleteSecretKeyIfExists(User user, String key)
+			throws PortalException {
+		try{
+			Criteria crit = ht.getSessionFactory().getCurrentSession().createCriteria(UserSecretKey.class);
+			crit.add(Restrictions.eq("user.id", user.getId()));
+			crit.add(Restrictions.eq("name", key));
+			Object usk = crit.uniqueResult();
+			if(usk!=null)
+				ht.delete(usk);
+			ht.flush();
+		}catch(Exception ex){
+			ht.clear();
+			ex.printStackTrace();
+			throw new PortalException("Could not delete UserSecretKey",ex);
+		}
+		
+	}
+	@Override
+	public User getUserById(Long userid) throws PortalException {
+		try{
+			User user = ht.get(User.class, userid);
+			return user;
+		}catch(Exception ex){
+			ex.printStackTrace();
+			throw new PortalException("Could not get User by id: "+userid,ex);
+		}
+	}
+	@Override
+	public User getUserByEmail(String email) throws PortalException {
+		
+		try{
+			User user = null;
+			List<User> users = (List<User>) ht.find("from User where email=?", email);
+			if(users!=null && users.size()>0)
+				user = users.get(0);
+			return user;
+		}catch(Exception ex){
+			ex.printStackTrace();
+			throw new PortalException("Could not get User by email: "+email,ex);
 		}
 	}
 }

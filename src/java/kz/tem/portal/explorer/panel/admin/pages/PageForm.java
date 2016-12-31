@@ -76,7 +76,10 @@ public class PageForm extends DefaultInputForm{
 			page.setPublicPage(true);
 		else
 			page.setPublicPage(false);
-		pageRegister.addNewPage(page);
+		if(page.getId()==null)
+			pageRegister.addNewPage(page);
+		else
+			pageRegister.savePage(page);
 	}
 	
 	

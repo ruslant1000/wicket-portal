@@ -57,6 +57,8 @@ public class AbstractTheme extends Panel implements IMarkupResourceStreamProvide
 				for(Page p1:tree){
 					if(!p1.getPublicPage() && !PortalSession.get().access(p1.getRole()))
 						continue;
+					if(!p1.getMenu())
+						continue;
 					Component m1 = new WebMarkupContainer(menu.newChildId());
 					Label ln = null;
 					if(theme.isMenuLink()){
@@ -73,6 +75,8 @@ public class AbstractTheme extends Panel implements IMarkupResourceStreamProvide
 						((WebMarkupContainer)m1).add(submemu);
 						for(Page p2:p1.getChilds()){
 							if(!p1.getPublicPage() && !PortalSession.get().access(p2.getRole()))
+								continue;
+							if(!p2.getMenu())
 								continue;
 							
 							WebMarkupContainer m2 =new WebMarkupContainer(submemu.newChildId());
@@ -111,7 +115,7 @@ public class AbstractTheme extends Panel implements IMarkupResourceStreamProvide
 				guest.setVisible(!PortalSession.get().isSignedIn());
 				WebMarkupContainer login = new WebMarkupContainer("guest-login");
 				
-				login.add(new AttributeModifier("href", RequestCycle.get().getRequest().getContextPath()+"/login"));
+				login.add(new AttributeModifier("href", RequestCycle.get().getRequest().getContextPath()+"/pg/login"));
 				guest.add(login);
 			}
 		} catch (Exception e) {

@@ -8,6 +8,7 @@ package kz.tem.portal;
 public class PortalException extends Exception{
 	
 	public static final String KEY_LOGIN_ERROR="LOGIN_ERROR";
+	public static final String NOT_FOUND="NOT_FOUND";
 
 	private String key;
 
@@ -41,6 +42,14 @@ public class PortalException extends Exception{
 	public PortalException(Throwable cause) {
 		super(cause);
 		// TODO Auto-generated constructor stub
+	}
+
+	public String getKey() {
+		return key;
+	}
+
+	public void setKey(String key) {
+		this.key = key;
 	}
 	
 	

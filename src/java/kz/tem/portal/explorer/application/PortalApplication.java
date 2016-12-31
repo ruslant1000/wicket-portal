@@ -1,43 +1,31 @@
 package kz.tem.portal.explorer.application;
 
+import java.io.ByteArrayInputStream;
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.InvalidObjectException;
+import java.io.ObjectInputStream;
+import java.io.ObjectInputValidation;
+import java.io.ObjectOutputStream;
+import java.io.ObjectStreamClass;
+import java.io.OutputStream;
 import java.net.URL;
 import java.util.Iterator;
 import java.util.Map;
 
-import org.apache.wicket.Component;
-import org.apache.wicket.Page;
-import org.apache.wicket.ajax.AbstractDefaultAjaxBehavior;
-import org.apache.wicket.ajax.AjaxRequestHandler;
-import org.apache.wicket.ajax.AjaxRequestTarget;
-import org.apache.wicket.ajax.AjaxRequestTarget.IJavaScriptResponse;
-import org.apache.wicket.ajax.attributes.AjaxRequestAttributes;
-import org.apache.wicket.application.AbstractClassResolver;
-import org.apache.wicket.application.IClassResolver;
-import org.apache.wicket.authroles.authentication.AbstractAuthenticatedWebSession;
-import org.apache.wicket.authroles.authentication.AuthenticatedWebApplication;
-import org.apache.wicket.core.util.lang.PropertyResolver;
-import org.apache.wicket.core.util.lang.PropertyResolver.IGetAndSet;
-import org.apache.wicket.markup.html.WebPage;
-import org.apache.wicket.protocol.http.WebApplication;
-import org.apache.wicket.request.IRequestHandler;
-import org.apache.wicket.request.Url;
-import org.apache.wicket.request.cycle.IRequestCycleListener;
-import org.apache.wicket.request.cycle.RequestCycle;
-import org.apache.wicket.request.resource.IResource;
-import org.apache.wicket.request.resource.ResourceReference;
-import org.apache.wicket.serialize.java.JavaSerializer;
-import org.apache.wicket.spring.injection.annot.SpringComponentInjector;
-import org.apache.wicket.util.IContextProvider;
-import org.apache.wicket.util.time.Duration;
-import org.infinispan.security.actions.AddCacheManagerListenerAction;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.context.ApplicationContext;
-
+import kz.tem.portal.PortalException;
 import kz.tem.portal.api.PortalEngine;
+import kz.tem.portal.api.RegisterEngine;
 import kz.tem.portal.explorer.page.AbstractThemePage;
 import kz.tem.portal.explorer.page.AccessDeniedPage;
 import kz.tem.portal.explorer.page.AuthenticatePage;
-import kz.tem.portal.explorer.page.LoginPage;
+import kz.tem.portal.explorer.page.NewPasswordErrorPage;
+import kz.tem.portal.explorer.page.NewPasswordPage;
+import kz.tem.portal.explorer.page.NewPasswordSuccessPage;
+import kz.tem.portal.explorer.page.RegistrationConfirmationErrorPage;
+import kz.tem.portal.explorer.page.RegistrationConfirmationPage;
+import kz.tem.portal.explorer.page.RegistrationConfirmationSuccessPage;
+import kz.tem.portal.explorer.page.RememberPasswordPage;
 import kz.tem.portal.explorer.page.SignOutPage;
 import kz.tem.portal.explorer.page.admin.emails.EmailsPage;
 import kz.tem.portal.explorer.page.admin.pages.PagesConfig;
@@ -47,7 +35,30 @@ import kz.tem.portal.explorer.page.admin.users.UsersPage;
 import kz.tem.portal.explorer.page.login.RegistrationPage;
 import kz.tem.portal.explorer.services.FileUploadService;
 import kz.tem.portal.explorer.services.TestService;
+import kz.tem.portal.server.model.enums.EnumPageType;
+import kz.tem.portal.server.plugin.engine.JarClassLoader;
 import kz.tem.portal.server.plugin.engine.ModuleEngine;
+
+import org.apache.wicket.Application;
+import org.apache.wicket.Page;
+import org.apache.wicket.ThreadContext;
+import org.apache.wicket.application.AbstractClassResolver;
+import org.apache.wicket.application.IClassResolver;
+import org.apache.wicket.authroles.authentication.AbstractAuthenticatedWebSession;
+import org.apache.wicket.authroles.authentication.AuthenticatedWebApplication;
+import org.apache.wicket.core.util.lang.PropertyResolver;
+import org.apache.wicket.core.util.lang.PropertyResolver.IGetAndSet;
+import org.apache.wicket.markup.html.WebPage;
+import org.apache.wicket.pageStore.AbstractPageStore;
+import org.apache.wicket.protocol.http.WebApplication;
+import org.apache.wicket.request.cycle.RequestCycle;
+import org.apache.wicket.request.resource.IResource;
+import org.apache.wicket.request.resource.ResourceReference;
+import org.apache.wicket.serialize.java.JavaSerializer;
+import org.apache.wicket.spring.injection.annot.SpringComponentInjector;
+import org.apache.wicket.util.io.IOUtils;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.ApplicationContext;
 
 /**
  * 
@@ -99,9 +110,19 @@ public class PortalApplication extends AuthenticatedWebApplication {
 
 		// getPageSettings().setRecreateBookmarkablePagesAfterExpiry(true);
 
-		mountPage("pg/login", AuthenticatePage.class);
+//		mountPage("login", AuthenticatePage.class);
+		mountSystemPage("login","Аутентификация", AuthenticatePage.class);
 //		mountPage("login", LoginPage.class);
-		mountPage("registration", RegistrationPage.class);
+		mountSystemPage("registration","Регистрация", RegistrationPage.class);
+		
+		mountSystemPage(RegistrationConfirmationSuccessPage.PAGE_RESPONCE_SUCCESS_URL,"Успешное подтверждение регистрации", RegistrationConfirmationSuccessPage.class);
+		mountSystemPage(RegistrationConfirmationErrorPage.PAGE_RESPONCE_ERROR_URL, "Ошибка подтверждения регистрации",RegistrationConfirmationErrorPage.class);
+		mountSystemPage(RememberPasswordPage.REMEMBER_PASSWORD_PAGE_URL, "Восстановление пароля",RememberPasswordPage.class);
+		mountSystemPage(NewPasswordSuccessPage.NEW_PASSWORD_SUCCESS_PAGE_URL, "Восстановление пароля",NewPasswordSuccessPage.class);
+		mountSystemPage(NewPasswordErrorPage.NEW_PASSWORD_ERROR_PAGE_URL, "Ошибка при восстановлении пароля",NewPasswordErrorPage.class);
+		
+		mountPage(RegistrationConfirmationPage.PAGE_REQUEST_URL, RegistrationConfirmationPage.class);
+		mountPage(NewPasswordPage.NEW_PASSWORD_PAGE_URL, NewPasswordPage.class);
 
 		mountPage("logout", SignOutPage.class);
 		mountPage("accessdenied", AccessDeniedPage.class);
@@ -160,7 +181,7 @@ public class PortalApplication extends AuthenticatedWebApplication {
 		// }
 		//
 		// });
-
+		getFrameworkSettings().setSerializer(new MJS(getApplicationKey()));
 		// getFrameworkSettings().setSerializer(new JavaSerializer(
 		// getApplicationKey() ){
 		//
@@ -218,6 +239,7 @@ public class PortalApplication extends AuthenticatedWebApplication {
 			public ClassLoader getClassLoader() {
 				ClassLoader loader = Thread.currentThread()
 						.getContextClassLoader();
+				
 				return loader;
 			}
 		};
@@ -225,17 +247,23 @@ public class PortalApplication extends AuthenticatedWebApplication {
 		@Override
 		public Class<?> resolveClass(String classname)
 				throws ClassNotFoundException {
-
+			
+			
 			try {
 				return res.resolveClass(classname);
+				
 			} catch (ClassNotFoundException ex) {
 				Class c = null;
-
+				
 				if (classname.startsWith("kz.tem.portal")) {
 					System.out.println("!!!!! search " + classname);
-					c = ModuleEngine.getInstance()
-							.getClassLoader(classname.split("\\.")[3])
-							.findClass(classname);
+					JarClassLoader jcl = ModuleEngine.getInstance()
+							.getClassLoader(classname.split("\\.")[3]);
+					if(jcl==null){
+						throw new ClassNotFoundException("Not found JarClassLoader for module id:"+classname.split("\\.")[3]);
+					}
+						
+					c=jcl.findClass(classname);
 					System.out.println("!!! " + (c == null ? "NOT" : "")
 							+ " found " + classname);
 				}
@@ -248,6 +276,7 @@ public class PortalApplication extends AuthenticatedWebApplication {
 			}
 		}
 
+		
 		@Override
 		public Iterator<URL> getResources(String name) {
 			return res.getResources(name);
@@ -299,5 +328,92 @@ public class PortalApplication extends AuthenticatedWebApplication {
 		return PortalSession.class;
 	}
 
+	public void mountSystemPage(String path, String title, Class pageClass){
+		mountPage(path, pageClass);
+		try{
+			RegisterEngine.getInstance().getPageRegister().getPage(path);
+		}catch(PortalException ex){
+			if(ex.getKey()!=null && ex.getKey().equals(PortalException.NOT_FOUND)){
+				kz.tem.portal.server.model.Page page = new kz.tem.portal.server.model.Page();
+				page.setPageType(EnumPageType.SYSTEM);
+				page.setPublicPage(true);
+				page.setUrl(path);
+				page.setTitle(title);
+				page.setLayout("DefaultLayout.html");
+				page.setTheme("DefaultTheme.html");
+				try {
+					RegisterEngine.getInstance().getPageRegister().addNewPage(page);
+				} catch (PortalException e) {
+					e.printStackTrace();
+					throw new RuntimeException(e);
+				}
+			}else
+				throw new RuntimeException(ex);
+				
+		}
+		
+	}
+	
+}
+
+class MJS extends JavaSerializer{
+
+	public MJS(String applicationKey) {
+		super(applicationKey);
+	}
+
+
+
+	@Override
+	public Object deserialize(byte[] data) {
+		ThreadContext old = ThreadContext.get(false);
+		final ByteArrayInputStream in = new ByteArrayInputStream(data);
+		ObjectInputStream ois = null;
+		try
+		{
+			Application oldApplication = ThreadContext.getApplication();
+			try
+			{
+				System.out.println("\tTRY deserialize");
+				ois = newObjectInputStream(in);
+				
+				
+				String applicationName = (String)ois.readObject();
+				if (applicationName != null)
+				{
+					Application app = Application.get(applicationName);
+					if (app != null)
+					{
+						ThreadContext.setApplication(app);
+					}
+				}
+				return ois.readObject();
+			}
+			finally
+			{
+				try
+				{
+					ThreadContext.setApplication(oldApplication);
+					IOUtils.close(ois);
+				}
+				finally
+				{
+					in.close();
+				}
+			}
+		}
+		catch (ClassNotFoundException | IOException cnfx)
+		{
+			throw new RuntimeException("Could not deserialize object from byte[]", cnfx);
+		}
+		finally
+		{
+			ThreadContext.restore(old);
+		}
+	}
+
+	
+	
+	
 	
 }

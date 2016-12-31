@@ -6,6 +6,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import kz.tem.portal.server.register.IEmailRegister;
+import kz.tem.portal.server.register.IPageRegister;
 import kz.tem.portal.server.register.ISettingsRegister;
 import kz.tem.portal.server.register.IUserRegister;
 /**
@@ -22,7 +23,8 @@ public class RegisterEngine implements Serializable{
 	
 	private IUserRegister userRegister;
 	private ISettingsRegister settingsRegister;
-//	private IEmailRegister emailRegister;
+	private IEmailRegister emailRegister;
+	private IPageRegister pageRegister;
 	
 	private RegisterEngine(){
 		instance = this;
@@ -52,11 +54,19 @@ public class RegisterEngine implements Serializable{
 	}
 
 	public IEmailRegister getEmailRegister() {
-		return null;//emailRegister;
+		return emailRegister;
 	}
 
 	public void setEmailRegister(IEmailRegister emailRegister) {
-//		this.emailRegister = emailRegister;
+		this.emailRegister = emailRegister;
+	}
+
+	public IPageRegister getPageRegister() {
+		return pageRegister;
+	}
+
+	public void setPageRegister(IPageRegister pageRegister) {
+		this.pageRegister = pageRegister;
 	}
 	
 	

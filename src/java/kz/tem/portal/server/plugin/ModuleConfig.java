@@ -17,7 +17,7 @@ import org.w3c.dom.NodeList;
 /**
  * 
  * @author Ruslan Temirbulatov
- * Конфигурация конктетного экземпляра модуля.
+ * РљРѕРЅС„РёРіСѓСЂР°С†РёСЏ РєРѕРЅРєС‚РµС‚РЅРѕРіРѕ СЌРєР·РµРјРїР»СЏСЂР° РјРѕРґСѓР»СЏ.
  */
 @SuppressWarnings("serial")
 public class ModuleConfig implements Serializable{
@@ -49,7 +49,7 @@ public class ModuleConfig implements Serializable{
 	
 	public void addDefaultConfig(String name, String value)throws Exception{
 		if(names.contains(name))
-			throw new Exception("Конфигурация '"+name+"' не может быть добавлена дважды");
+			throw new Exception("РљРѕРЅС„РёРіСѓСЂР°С†РёСЏ '"+name+"' РЅРµ РјРѕР¶РµС‚ Р±С‹С‚СЊ РґРѕР±Р°РІР»РµРЅР° РґРІР°Р¶РґС‹");
 		names.add(name);
 		values.put(name, value);
 	}
@@ -99,7 +99,7 @@ public class ModuleConfig implements Serializable{
 	public static void main(String[] args) throws Exception {
 		ModuleConfig config = new ModuleConfig();
 		config.addDefaultConfig("param1", "value1");
-		config.addDefaultConfig("param2", "");
+		config.addDefaultConfig("param2", "С‹РІР° РІС‹Р°С‹РІР°СЂС‹  fsdf sdfsdРІ !");
 		config.addDefaultConfig("param3", null);
 		
 		System.out.println(config.toXML());
