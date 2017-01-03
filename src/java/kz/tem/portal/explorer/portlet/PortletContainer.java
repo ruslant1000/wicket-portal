@@ -1,9 +1,12 @@
 package kz.tem.portal.explorer.portlet;
 
+import java.io.IOException;
+import java.io.ObjectInputStream;
+import java.io.ObjectOutputStream;
+
 import org.apache.wicket.Component;
 import org.apache.wicket.ajax.AjaxRequestTarget;
 import org.apache.wicket.ajax.markup.html.AjaxLink;
-import org.apache.wicket.extensions.ajax.markup.html.modal.ModalWindow;
 import org.apache.wicket.markup.html.WebMarkupContainer;
 import org.apache.wicket.markup.html.basic.Label;
 import org.apache.wicket.markup.html.panel.Panel;
@@ -25,17 +28,30 @@ import kz.tem.portal.server.plugin.engine.ModuleEngine;
 @SuppressWarnings("serial")
 public class PortletContainer extends Panel {
 
+	private Module module;
+	private String moduleName;
+	private ModuleConfig config;
+	private Portlet portlet;
+	
 	public PortletContainer(String id, String moduleName, ModuleConfig config,
 			final Portlet portlet) {
 		super(id);
-		try {
+		this.moduleName=moduleName;
+		this.config=config;
+		this.portlet=portlet;
+		create();
+
+	}
+
+	private void create(){
+try {
 			
 			if(!ModuleEngine.getInstance().getModuleMap().containsKey(moduleName))
 				throw new Exception("Модуль не найден: "+moduleName);
 			ModuleMeta meta = ModuleEngine.getInstance().getModuleMap()
 					.get(moduleName);
 
-			final Module module = ModuleEngine.getInstance().init("module",
+			module = ModuleEngine.getInstance().init("module",
 					meta, config);
 			
 			
@@ -83,7 +99,20 @@ public class PortletContainer extends Panel {
 				add(new WebMarkupContainer("config"));
 			}
 		}
-
 	}
-
+//	private void writeObject(ObjectOutputStream o) throws IOException {
+//		System.out.println("write");
+//		o.writeObject(moduleName);
+//		o.writeObject(config);
+//		o.writeObject(portlet);
+//	}
+//
+//	private void readObject(ObjectInputStream o) throws IOException, ClassNotFoundException {
+//		System.out.println("read");
+//		moduleName = (String) o.readObject();
+//		config = (ModuleConfig) o.readObject();
+//		portlet = (Portlet) o.readObject();
+//		create();
+//	}
+	
 }

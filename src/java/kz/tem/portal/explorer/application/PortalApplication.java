@@ -40,6 +40,7 @@ import kz.tem.portal.server.plugin.engine.JarClassLoader;
 import kz.tem.portal.server.plugin.engine.ModuleEngine;
 
 import org.apache.wicket.Application;
+import org.apache.wicket.DefaultPageManagerProvider;
 import org.apache.wicket.Page;
 import org.apache.wicket.ThreadContext;
 import org.apache.wicket.application.AbstractClassResolver;
@@ -50,13 +51,20 @@ import org.apache.wicket.core.util.lang.PropertyResolver;
 import org.apache.wicket.core.util.lang.PropertyResolver.IGetAndSet;
 import org.apache.wicket.markup.html.WebPage;
 import org.apache.wicket.pageStore.AbstractPageStore;
+import org.apache.wicket.pageStore.DefaultPageStore;
+import org.apache.wicket.pageStore.IDataStore;
+import org.apache.wicket.pageStore.memory.HttpSessionDataStore;
+import org.apache.wicket.pageStore.memory.PageNumberEvictionStrategy;
 import org.apache.wicket.protocol.http.WebApplication;
 import org.apache.wicket.request.cycle.RequestCycle;
 import org.apache.wicket.request.resource.IResource;
 import org.apache.wicket.request.resource.ResourceReference;
+import org.apache.wicket.serialize.ISerializer;
 import org.apache.wicket.serialize.java.JavaSerializer;
 import org.apache.wicket.spring.injection.annot.SpringComponentInjector;
 import org.apache.wicket.util.io.IOUtils;
+import org.apache.wicket.util.lang.Bytes;
+import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.ApplicationContext;
 
@@ -148,9 +156,23 @@ public class PortalApplication extends AuthenticatedWebApplication {
 				+ getApplicationSettings().getClassResolver().getClass()
 						.getName());
 
+		
 		getApplicationSettings().setClassResolver(new PortalClassResolver());
 
 		
+//		setPageManagerProvider(new DefaultPageManagerProvider(this){
+//
+//			@Override
+//			protected IDataStore newDataStore() {
+//				return  new HttpSessionDataStore(getPageManagerContext(), new PageNumberEvictionStrategy(20));
+//			}
+//			
+//		});
+//		getStoreSettings().setMaxSizePerSession(Bytes.kilobytes(1024));
+//		getStoreSettings().setInmemoryCacheSize(0);
+		
+		setPageManagerProvider(new VoidPageManagerProvider(this));
+//		
 
 		// getExceptionSettings().setAjaxErrorHandlingStrategy(errorHandlingStrategyDuringAjaxRequests)
 
@@ -181,7 +203,7 @@ public class PortalApplication extends AuthenticatedWebApplication {
 		// }
 		//
 		// });
-		getFrameworkSettings().setSerializer(new MJS(getApplicationKey()));
+//		getFrameworkSettings().setSerializer(new MJS(getApplicationKey()));
 		// getFrameworkSettings().setSerializer(new JavaSerializer(
 		// getApplicationKey() ){
 		//
@@ -233,6 +255,8 @@ public class PortalApplication extends AuthenticatedWebApplication {
 
 	private class PortalClassResolver implements IClassResolver {
 
+		private JarClassLoader jcl = null;
+		
 		private AbstractClassResolver res = new AbstractClassResolver() {
 
 			@Override
@@ -254,10 +278,10 @@ public class PortalApplication extends AuthenticatedWebApplication {
 				
 			} catch (ClassNotFoundException ex) {
 				Class c = null;
-				
+				System.out.println("!!!!! search " + classname+"  "+jcl);
 				if (classname.startsWith("kz.tem.portal")) {
-					System.out.println("!!!!! search " + classname);
-					JarClassLoader jcl = ModuleEngine.getInstance()
+					
+					jcl = ModuleEngine.getInstance()
 							.getClassLoader(classname.split("\\.")[3]);
 					if(jcl==null){
 						throw new ClassNotFoundException("Not found JarClassLoader for module id:"+classname.split("\\.")[3]);
@@ -266,6 +290,10 @@ public class PortalApplication extends AuthenticatedWebApplication {
 					c=jcl.findClass(classname);
 					System.out.println("!!! " + (c == null ? "NOT" : "")
 							+ " found " + classname);
+				}else if(jcl!=null){
+					
+					c=jcl.findClass(classname);
+					System.out.println("finded C "+c);
 				}
 				if (c == null) {
 					System.out.println("$$$$: [" + classname + "]");
@@ -360,7 +388,17 @@ class MJS extends JavaSerializer{
 
 	public MJS(String applicationKey) {
 		super(applicationKey);
+		
 	}
+
+
+	
+
+	@Override
+	public byte[] serialize(Object object) {
+		return super.serialize(object);
+	}
+
 
 
 
@@ -414,6 +452,5 @@ class MJS extends JavaSerializer{
 
 	
 	
-	
-	
+
 }

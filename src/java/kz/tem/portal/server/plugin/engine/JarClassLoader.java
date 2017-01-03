@@ -67,10 +67,6 @@ public class JarClassLoader extends ClassLoader {
 	public Class findClass(String className) {
 		
 		
-		if(className.indexOf("CategoryRegisterImpl")!=-1)
-			System.out.println("\t jar: "+className);
-		
-		
 //		System.out.println("find " + className);
 		byte classByte[];
 		Class result = null;
@@ -193,69 +189,7 @@ public class JarClassLoader extends ClassLoader {
 		JarClassLoader j = new JarClassLoader(
 				"G:\\projects\\tem-portal\\apache-tomcat-7.0.37\\webapps\\portal\\modules\\msystext-0.0.1-bundle\\lib");
 		
-		
-		
-//		InputStream ins = j.getResourceAsStream("kz/tem/portal/msystext/server/context/main.xml");
-//		System.out.println(ins.available());
-////		
-////		
-//		
-//		GenericApplicationContext context = new GenericApplicationContext(); 
-////
-//		  XmlBeanDefinitionReader reader = new XmlBeanDefinitionReader(context);
-//		  reader.setValidationMode(XmlBeanDefinitionReader.VALIDATION_XSD);
-//		  
-////		  //get the classloader
-////		  
-////		  
-////		  ClassLoader loader = Thread.currentThread().getContextClassLoader();
-////		  //set the loader
-//		  reader.setBeanClassLoader(j);
-//		  reader.setResourceLoader(new DefaultResourceLoader(j));
-////		  //get the bean definitions
-////		  j.getResource("kz/tem/portal/msystext/server/context/main.xml")
-//		  reader.loadBeanDefinitions(new InputStreamResource(ins));
-////		  //init
-//		  context.refresh();
-//		
-//		  
-//		  
-//		  
-//		  context.start();
-//		  
-//		  
-//		  SessionFactory sess = (SessionFactory)context.getBean("mySessionFactory");
-		
-//		ApplicationContext context = 
-//	             new ClassPathXmlApplicationContext("kz/tem/portal/msystext/server/context/main.xml");
-		
-		
-//		ModuleEngine.initializeSpringContext(j, "kz/tem/portal/msystext/server/context/main.xml");
-//		Class s = j.loadClass("kz.tem.portal.msystext.server.context.ContextListener");
-//		s.getConstructor(new Class[]{String.class}).newInstance("classpath:main.xml");
-//		ModuleContextListener mcl = (ModuleContextListener)s.newInstance();
-//		mcl.initialize();
-//		URL url = j
-//				.getResource("kz/tem/portal/module/ftpclient/FtpClientModule.html");
-//		System.out.println(url);
-//		Class s = j.loadClass("kz.tem.portal.module.ftpclient.BeanX");
-//		Object o = s.getConstructor(new Class[]{String.class}).newInstance(new Object[]{"s"});
-		
-//		j.destroy();
-//		j=null;
-		
-//		File pathDir = new File("G:\\projects\\tem-portal\\apache-tomcat-7.0.37\\webapps\\portal\\modules\\ftp-client-0.0.1-bundle\\lib\\ftp-client-0.0.1.jar");
-//		JarFile jar = new JarFile(pathDir);
-//		JarEntry entry = jar.getJarEntry("kz/tem/portal/module/ftpclient/BeanX.class");
-//		
-//		InputStream is = jar.getInputStream(entry);
-//		is.close();
-//		jar.close();
-		
-//		FileUtils.deleteDirectory("G:\\projects\\tem-portal\\apache-tomcat-7.0.37\\webapps\\portal\\modules\\ftp-client-0.0.1-bundle");
-//		File f = new File("G:\\projects\\tem-portal\\apache-tomcat-7.0.37\\webapps\\portal\\modules\\ftp-client-0.0.1-bundle");
-//		boolean b = f.delete();
-//		System.out.println(b);
+	
 	}
 
 }

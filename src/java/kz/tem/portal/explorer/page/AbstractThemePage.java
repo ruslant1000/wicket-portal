@@ -18,6 +18,7 @@ import org.apache.wicket.markup.head.IHeaderResponse;
 import org.apache.wicket.markup.head.OnDomReadyHeaderItem;
 import org.apache.wicket.markup.html.WebMarkupContainer;
 import org.apache.wicket.markup.html.WebPage;
+import org.apache.wicket.request.http.WebResponse;
 import org.apache.wicket.spring.injection.annot.SpringBean;
 
 /**
@@ -47,6 +48,10 @@ public class AbstractThemePage extends WebPage{
 		
 	}
 
+
+	
+	
+	
 	public AbstractThemePage(){
 
 		dropOriginalDestination();
@@ -168,5 +173,11 @@ public class AbstractThemePage extends WebPage{
 	public void dropOriginalDestination(){
 		clearOriginalDestination();
 	}
+
+
+
+
+
+	
 	
 }
