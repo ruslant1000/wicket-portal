@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<wicket:panel>
+<style type="text/css">
+.ftpclientuploadform .feedbackPanel .feedbackPanelINFO{
+	color: green;
+}
+.ftpclientuploadform .feedbackPanel .feedbackPanelERROR{
+	color:red;
+}
+</style>
+	<form wicket:id="form">
+		<fieldset>
+			<legend>Upload form</legend>
+			<p>
+			<div wicket:id="file" class="mfuex" />
+			</p>
+			<input type="submit" value="Upload!" />
+		</fieldset>
+	</form>
+
+	<div class="ftpclientuploadform">
+		<span wicket:id="feeds" />
+	</div>
+</wicket:panel>

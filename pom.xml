@@ -43,7 +43,7 @@
 				<artifactId>tomcat7-maven-plugin</artifactId>
 				<version>2.2</version>
 				<configuration>
-					<url>http://localhost:8080/manager/text</url>
+					<url>http://localhost:8081/manager/text</url>
 					<server>Tomcat7Server</server>
 					<path>/</path>
 				</configuration>
@@ -240,6 +240,19 @@
 			<version>1.7.2</version>
 			<scope>runtime</scope>
 		</dependency>
+		
+		<!-- socket-server -->
+		<dependency>
+			<groupId>kz.tem</groupId>
+			<artifactId>socket-server</artifactId>
+			<version>0.0.1</version>
+		</dependency>
+		<dependency>
+			<groupId>commons-net</groupId>
+			<artifactId>commons-net</artifactId>
+			<version>3.5</version>
+		</dependency>
+		<!-- socket-server -->
 	</dependencies>
 	
 </project>

@@ -44,7 +44,7 @@ public class AbstractThemePage extends WebPage{
 	@Override
 	protected void onConfigure() {
 		super.onConfigure();
-		userRegister.defaults();
+//		userRegister.defaults();
 		
 	}
 
@@ -105,6 +105,7 @@ public class AbstractThemePage extends WebPage{
 		// модальное окно
 		WebMarkupContainer modal = new WebMarkupContainer("modal");
 		add(modal);
+		modal.add(new AttributeModifier("style", "display:none;"));
 		modal.setOutputMarkupId(true);
 		modal.add(new WebMarkupContainer("content").setOutputMarkupId(true));
 		//**********************
@@ -124,18 +125,18 @@ public class AbstractThemePage extends WebPage{
 			adminPage.setVisible(false);
 		}
 		add(adminPage);
+		
+		
+		
 	}
 	
 	
 	
 	public void closeModal(){
-		WebMarkupContainer modal = new WebMarkupContainer("modal");
-		add(modal);
-		modal.setOutputMarkupId(true);
-		AbstractThemePage.this.get("modal").replaceWith(modal);
-		modal.setVisible(false);
-		
-		
+		WebMarkupContainer wmc = new WebMarkupContainer("content");
+		wmc.setOutputMarkupId(true);
+		AbstractThemePage.this.get("modal").get("content").replaceWith(wmc);
+		AbstractThemePage.this.get("modal").add(new AttributeModifier("style", "display:none;"));
 	}
 	public void closeModal(AjaxRequestTarget target){
 		closeModal();
@@ -147,9 +148,8 @@ public class AbstractThemePage extends WebPage{
 	public void showModal(String title,AjaxRequestTarget target, IComponentCreator creator){
 		
 		try {
-			AbstractThemePage.this.get("modal").add(new AttributeModifier("style", "display:block"));
+			AbstractThemePage.this.get("modal").add(new AttributeModifier("style", "display:block;"));
 			AbstractThemePage.this.get("modal").get("content").replaceWith(creator.create("content").setOutputMarkupId(true));
-			
 			target.add(AbstractThemePage.this.get("modal"));
 		} catch (Exception e) {
 			e.printStackTrace();

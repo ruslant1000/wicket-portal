@@ -102,10 +102,8 @@ public class PortletRegisterImpl extends AbstractRegister implements IPortletReg
 			
 			
 			if(settings!=null){
-				System.out.println("++++++++++++");
-				System.out.println(new String(settings));
-				System.out.println("++++++++++++");
 				config = ModuleConfig.parse(new String(settings));
+				
 			}
 			return config;
 		}catch(Exception ex){

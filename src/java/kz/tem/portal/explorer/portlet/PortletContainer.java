@@ -39,9 +39,19 @@ public class PortletContainer extends Panel {
 		this.moduleName=moduleName;
 		this.config=config;
 		this.portlet=portlet;
-		create();
+		
 
 	}
+	
+	
+
+	@Override
+	protected void onInitialize() {
+		super.onInitialize();
+		create();
+	}
+
+
 
 	private void create(){
 try {
@@ -78,27 +88,33 @@ try {
 			
 			
 			try { 
-
+				
+				
 				module.create();
 //				add(new Label("module", "OK"));
 				add(module);
 			} catch (NoClassDefFoundError e) {
-				e.printStackTrace();
-				add(new Label("module", "модуль недоступен. Не найден класс " + e.getMessage()));
+				moduleError(e);
 			} catch (RuntimeException e) {
-				e.printStackTrace();
-				add(new Label("module", "модуль недоступен. " + e.getMessage()));
+				moduleError(e);
 			} catch (Exception e) {
-				e.printStackTrace();
-				add(new Label("module", "модуль недоступен. " + e.getMessage()));
+				moduleError(e);
+			}  catch (Throwable e) {
+				moduleError(e);
 			}
 		} catch (Exception ex) {
-			ex.printStackTrace();
-			add(new Label("module", "модуль недоступен. " + ex.getMessage()));
+			moduleError(ex);
 			if(PortletContainer.this.get("config")==null){
 				add(new WebMarkupContainer("config"));
 			}
 		}
+	}
+	
+	public void moduleError(Throwable ex){
+		if(PortletContainer.this.get("module")!=null){
+			PortletContainer.this.remove("module");
+		}
+		add(new Label("module", "модуль недоступен. " + ex.getMessage()));
 	}
 //	private void writeObject(ObjectOutputStream o) throws IOException {
 //		System.out.println("write");

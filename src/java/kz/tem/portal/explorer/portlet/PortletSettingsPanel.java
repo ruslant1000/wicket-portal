@@ -1,5 +1,8 @@
 package kz.tem.portal.explorer.portlet;
 
+import java.util.Arrays;
+import java.util.List;
+
 import kz.tem.portal.PortalException;
 import kz.tem.portal.explorer.panel.common.form.DefaultInputForm;
 import kz.tem.portal.server.model.Portlet;
@@ -18,6 +21,8 @@ public class PortletSettingsPanel extends Panel{
 	@SpringBean
 	private IPortletRegister portletRegister;
 
+	private List<String> booleanChoices = Arrays.asList("Yes","No");
+	
 	public PortletSettingsPanel(String id,final Module module,final Portlet portlet) {
 		super(id);
 		add(new Label("name","Configurations of "+portlet.getModuleName()));
@@ -34,24 +39,50 @@ public class PortletSettingsPanel extends Panel{
 			};
 			add(form);
 			for(final String name:module.getModuleConfig().getNames()){
-				form.addFieldString(name, new IModel<String>() {
-					
-					@Override
-					public void detach() {
+				if(module.getModuleConfig().getValues().containsKey(name)){
+					form.addFieldString(name, new IModel<String>() {
 						
-					}
-					
-					@Override
-					public void setObject(String object) {
-						module.getModuleConfig().getValues().put(name, object);
+						@Override
+						public void detach() {
+							
+						}
 						
-					}
-					
-					@Override
-					public String getObject() {
-						return module.getModuleConfig().getValues().get(name);
-					}
-				}, false);
+						@Override
+						public void setObject(String object) {
+							module.getModuleConfig().getValues().put(name, object);
+							
+						}
+						
+						@Override
+						public String getObject() {
+							return module.getModuleConfig().getValues().get(name);
+						}
+					}, false);
+				}else if(module.getModuleConfig().getBooles().containsKey(name)){
+					form.addCombobox(name, new IModel<String>() {
+
+						@Override
+						public void detach() {
+							// TODO Auto-generated method stub
+							
+						}
+
+						@Override
+						public String getObject() {
+							if(module.getModuleConfig().getBooles().get(name).equals("true"))
+								return booleanChoices.get(0);
+							else
+								return booleanChoices.get(1);
+						}
+
+						@Override
+						public void setObject(String object) {
+							boolean val = (object!=null && object.equals(booleanChoices.get(0)));
+							module.getModuleConfig().getBooles().put(name, ""+val);
+							
+						}
+					}, booleanChoices, false);
+				}
 			}
 		} catch (Exception e) {
 			e.printStackTrace();

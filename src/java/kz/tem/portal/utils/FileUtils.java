@@ -1,6 +1,8 @@
 package kz.tem.portal.utils;
 
 import java.io.File;
+import java.text.SimpleDateFormat;
+import java.util.Date;
 /**
  * 
  * @author Ruslan Temirbulatov
@@ -31,5 +33,20 @@ public class FileUtils {
 		}
 		if(!dir.delete())
 			throw new Exception("Ошибка удаления "+directory);
+	}
+	
+	public static String getTempDir()throws Exception{
+		File f = new File(System.getProperty("java.io.tmpdir"),new SimpleDateFormat("yyyy-MM/dd/HH/mm").format(new Date()));
+		if(!f.exists()){
+			if(!f.mkdirs()){
+				throw new Exception("Cannot create temp path: "+f.getAbsolutePath());
+			}
+		}
+		return f.getAbsolutePath();
+	}
+	
+	public static String getTempFileFullName(String name)throws Exception{
+		File f = new File(getTempDir(),name);
+		return f.getAbsolutePath();
 	}
 }

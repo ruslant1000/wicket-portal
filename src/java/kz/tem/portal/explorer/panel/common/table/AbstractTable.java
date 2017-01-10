@@ -32,6 +32,8 @@ public abstract class AbstractTable<T> extends Panel{
 	private int count=10;
 	private int total = 0;
 	
+	private int[] pageSizes = new int[]{10,50,100};
+	
 	private WebMarkupContainer table = null;
 	
 	private boolean withCheckboxColumn;
@@ -73,6 +75,12 @@ public abstract class AbstractTable<T> extends Panel{
 			if(AbstractTable.this.get("digits")!=null){
 				AbstractTable.this.remove("digits");
 			}
+			if(AbstractTable.this.get("sizes")!=null){
+				AbstractTable.this.remove("sizes");
+			}
+			if(AbstractTable.this.get("total")!=null){
+				AbstractTable.this.remove("total");
+			}
 			table = new WebMarkupContainer("table");
 			table.setOutputMarkupId(true);
 			add(table);
@@ -86,7 +94,7 @@ public abstract class AbstractTable<T> extends Panel{
 			buildPaginator();
 		} catch (Exception e) {
 			e.printStackTrace();
-			throw new RuntimeException(e);
+			throw new RuntimeException("Error in AbstractTable build method",e);
 		}
 	}
 	
@@ -109,6 +117,7 @@ public abstract class AbstractTable<T> extends Panel{
 				
 			};
 			view.add(chk);
+			chk.add(new AttributeModifier("style", "width:30px;"));
 		}
 		
 		for(AColumn<T> col:cols){
@@ -120,7 +129,6 @@ public abstract class AbstractTable<T> extends Panel{
 	
 	private void buildData()throws Exception{
 		rowsCheckboxes.clear();
-		System.out.println("get data "+first);
 		
 		
 		RepeatingView tr = new RepeatingView("row");
@@ -179,6 +187,68 @@ public abstract class AbstractTable<T> extends Panel{
 		digits.add(prevD);
 		prevD.add(new AttributeAppender("class", " page-prev"));
 		
+		
+		int selectedDigit = (first + count)/count;
+		int maxDigit = (int) Math.ceil(  (double)total / (double)count );
+		
+		if(selectedDigit>2){
+			AjaxLabelLink nm = new AjaxLabelLink(digits.newChildId(),"...") {
+				
+				@Override
+				public void onClick(AjaxRequestTarget target) throws Exception {
+					first = first - count - count;
+					build();
+					target.add(AbstractTable.this);
+				}
+			};
+			digits.add(nm);
+		}
+		if(selectedDigit>1){
+			AjaxLabelLink nm = new AjaxLabelLink(digits.newChildId(),""+(selectedDigit-1)) {
+				
+				@Override
+				public void onClick(AjaxRequestTarget target) throws Exception {
+					first = first - count;
+					build();
+					target.add(AbstractTable.this);
+				}
+			};
+			digits.add(nm);
+		}
+		if(true){
+			AjaxLabelLink nm = new AjaxLabelLink(digits.newChildId(),""+(selectedDigit)) {
+				
+				@Override
+				public void onClick(AjaxRequestTarget target) throws Exception {
+				}
+			};
+			nm.add(new AttributeAppender("class", " selected"));
+			digits.add(nm);
+		}
+		if(selectedDigit<maxDigit){
+			AjaxLabelLink nm = new AjaxLabelLink(digits.newChildId(),""+(selectedDigit+1)) {
+				
+				@Override
+				public void onClick(AjaxRequestTarget target) throws Exception {
+					first = first + count;
+					build();
+					target.add(AbstractTable.this);
+				}
+			};
+			digits.add(nm);
+		}
+		if((selectedDigit+1)<maxDigit){
+			AjaxLabelLink nm = new AjaxLabelLink(digits.newChildId(),"...") {
+				
+				@Override
+				public void onClick(AjaxRequestTarget target) throws Exception {
+					first = first + count + count;
+					build();
+					target.add(AbstractTable.this);
+				}
+			};
+			digits.add(nm);
+		}
 		AjaxLabelLink nextD = new AjaxLabelLink(digits.newChildId(),"Вперед") {
 			
 			@Override
@@ -208,6 +278,29 @@ public abstract class AbstractTable<T> extends Panel{
 		};
 		digits.add(lastD);
 		lastD.add(new AttributeAppender("class", " page-last"));
+		
+		
+		
+		RepeatingView sizes = new RepeatingView("sizes");
+		add(sizes);
+		
+		for(final int size:pageSizes){
+			AjaxLabelLink sz = new AjaxLabelLink(sizes.newChildId(),size+"") {
+				
+				@Override
+				public void onClick(AjaxRequestTarget target) throws Exception {
+					count = size;
+					first = 0;
+					build();
+					target.add(AbstractTable.this);
+				}
+			};
+			if(count==size){
+				sz.add(new AttributeAppender("class", " selected"));
+			}
+			sizes.add(sz);
+		}
+		add(new Label("total",total+""));
 	}
 	
 	
@@ -224,5 +317,32 @@ public abstract class AbstractTable<T> extends Panel{
 	public abstract ITable<T> data(int first,int count)throws Exception;
 	
 	public abstract AColumn[] columns()throws Exception;
+
+
+
+	public int getFirst() {
+		return first;
+	}
+
+
+
+	public void setFirst(int first) {
+		this.first = first;
+	}
+
+
+
+	public int getCount() {
+		return count;
+	}
+
+
+
+	public void setCount(int count) {
+		this.count = count;
+	}
+	
+	
+	
 
 }

@@ -24,7 +24,12 @@ public abstract class AjaxLabelLink extends Panel{
 			}
 		};
 		add(link);
+		onAjaxLink(link);
 		link.add(new Label("label",label));
+	}
+	
+	public void onAjaxLink(AjaxLink<Void> link){
+		
 	}
 
 	public abstract void onClick(AjaxRequestTarget target)throws Exception;

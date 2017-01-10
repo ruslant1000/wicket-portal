@@ -1,7 +1,9 @@
 .abstract-table{
 	border: 3px solid red;
-	display: inline-block;
 	font-family: Helvetica,Arial,sans-serif;
+}
+.abstract-table table{
+	width: 100%;
 }
 .abstract-table table tr:nth-child(odd){
 	background: #cce6ff;
@@ -18,6 +20,11 @@
 	padding: 10px;
 }
 
+.table-paginator .devider{
+	margin-left: 10px;
+	margin-right: 10px;
+}
+
 .table-paginator .digit a{
 	margin-top: 5px;
 	margin-bottom: 5px;
@@ -29,6 +36,29 @@
 	font-size: 0.8em;
 	font-family: Helvetica,Arial,sans-serif;
 }
+
 .table-paginator .digit a:HOVER{
 	text-decoration: underline;
+}
+.table-paginator .digit.selected{
+	font-weight: bold;
+}
+
+.table-paginator .page-size a{
+	text-decoration: none;
+	color: black;
+	font-size: 0.8em;
+	font-family: Helvetica,Arial,sans-serif;
+}
+.table-paginator .page-size a:HOVER{
+	text-decoration: underline;
+}
+.table-paginator .page-size.selected{
+	font-weight: bold;
+}
+.table-paginator .total-size{
+	color: black;
+	font-size: 0.8em;
+	font-family: Helvetica,Arial,sans-serif;
+	font-weight: bold;
 }

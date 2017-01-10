@@ -17,9 +17,8 @@ public class Module extends Panel {
 		try {
 			initDefaultConfigs(Module.this.config);
 			if(config!=null){
-				for(String key:config.getValues().keySet()){
-					Module.this.config.getValues().put(key, config.getValues().get(key));
-				}
+				Module.this.config.copyFrom(config);
+				
 			}
 		} catch (Exception e) {
 			e.printStackTrace();

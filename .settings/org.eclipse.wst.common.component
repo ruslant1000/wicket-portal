@@ -4,6 +4,9 @@
         <wb-resource deploy-path="/" source-path="/webapp" tag="defaultRootSource"/>
         <wb-resource deploy-path="/WEB-INF/classes" source-path="/src/java"/>
         <wb-resource deploy-path="/WEB-INF/classes" source-path="/src/test"/>
+        <dependent-module archiveName="utils-0.0.1.jar" deploy-path="/WEB-INF/lib" handle="module:/resource/utils/utils">
+            <dependency-type>uses</dependency-type>
+        </dependent-module>
         <property name="context-root" value="portal"/>
         <property name="java-output-path" value="/portal/build/classes"/>
     </wb-module>

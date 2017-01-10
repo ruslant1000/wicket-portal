@@ -38,6 +38,7 @@ import kz.tem.portal.explorer.services.TestService;
 import kz.tem.portal.server.model.enums.EnumPageType;
 import kz.tem.portal.server.plugin.engine.JarClassLoader;
 import kz.tem.portal.server.plugin.engine.ModuleEngine;
+import kz.tem.portal.utils.ClassUtils;
 
 import org.apache.wicket.Application;
 import org.apache.wicket.DefaultPageManagerProvider;
@@ -83,8 +84,7 @@ public class PortalApplication extends AuthenticatedWebApplication {
 		super.init();
 		SpringComponentInjector sci = new SpringComponentInjector(this);
 		getComponentInstantiationListeners().add(sci);
-		
-		
+
 		getResourceSettings().setResourceStreamLocator(
 				new PortalStreamLocator());
 
@@ -118,18 +118,28 @@ public class PortalApplication extends AuthenticatedWebApplication {
 
 		// getPageSettings().setRecreateBookmarkablePagesAfterExpiry(true);
 
-//		mountPage("login", AuthenticatePage.class);
-		mountSystemPage("login","Аутентификация", AuthenticatePage.class);
-//		mountPage("login", LoginPage.class);
-		mountSystemPage("registration","Регистрация", RegistrationPage.class);
-		
-		mountSystemPage(RegistrationConfirmationSuccessPage.PAGE_RESPONCE_SUCCESS_URL,"Успешное подтверждение регистрации", RegistrationConfirmationSuccessPage.class);
-		mountSystemPage(RegistrationConfirmationErrorPage.PAGE_RESPONCE_ERROR_URL, "Ошибка подтверждения регистрации",RegistrationConfirmationErrorPage.class);
-		mountSystemPage(RememberPasswordPage.REMEMBER_PASSWORD_PAGE_URL, "Восстановление пароля",RememberPasswordPage.class);
-		mountSystemPage(NewPasswordSuccessPage.NEW_PASSWORD_SUCCESS_PAGE_URL, "Восстановление пароля",NewPasswordSuccessPage.class);
-		mountSystemPage(NewPasswordErrorPage.NEW_PASSWORD_ERROR_PAGE_URL, "Ошибка при восстановлении пароля",NewPasswordErrorPage.class);
-		
-		mountPage(RegistrationConfirmationPage.PAGE_REQUEST_URL, RegistrationConfirmationPage.class);
+		// mountPage("login", AuthenticatePage.class);
+		mountSystemPage("login", "Аутентификация", AuthenticatePage.class);
+		// mountPage("login", LoginPage.class);
+		mountSystemPage("registration", "Регистрация", RegistrationPage.class);
+
+		mountSystemPage(
+				RegistrationConfirmationSuccessPage.PAGE_RESPONCE_SUCCESS_URL,
+				"Успешное подтверждение регистрации",
+				RegistrationConfirmationSuccessPage.class);
+		mountSystemPage(
+				RegistrationConfirmationErrorPage.PAGE_RESPONCE_ERROR_URL,
+				"Ошибка подтверждения регистрации",
+				RegistrationConfirmationErrorPage.class);
+		mountSystemPage(RememberPasswordPage.REMEMBER_PASSWORD_PAGE_URL,
+				"Восстановление пароля", RememberPasswordPage.class);
+		mountSystemPage(NewPasswordSuccessPage.NEW_PASSWORD_SUCCESS_PAGE_URL,
+				"Восстановление пароля", NewPasswordSuccessPage.class);
+		mountSystemPage(NewPasswordErrorPage.NEW_PASSWORD_ERROR_PAGE_URL,
+				"Ошибка при восстановлении пароля", NewPasswordErrorPage.class);
+
+		mountPage(RegistrationConfirmationPage.PAGE_REQUEST_URL,
+				RegistrationConfirmationPage.class);
 		mountPage(NewPasswordPage.NEW_PASSWORD_PAGE_URL, NewPasswordPage.class);
 
 		mountPage("logout", SignOutPage.class);
@@ -156,23 +166,28 @@ public class PortalApplication extends AuthenticatedWebApplication {
 				+ getApplicationSettings().getClassResolver().getClass()
 						.getName());
 
-		
 		getApplicationSettings().setClassResolver(new PortalClassResolver());
 
-		
-//		setPageManagerProvider(new DefaultPageManagerProvider(this){
-//
-//			@Override
-//			protected IDataStore newDataStore() {
-//				return  new HttpSessionDataStore(getPageManagerContext(), new PageNumberEvictionStrategy(20));
-//			}
-//			
-//		});
-//		getStoreSettings().setMaxSizePerSession(Bytes.kilobytes(1024));
-//		getStoreSettings().setInmemoryCacheSize(0);
-		
-		setPageManagerProvider(new VoidPageManagerProvider(this));
-//		
+		// setPageManagerProvider(new DefaultPageManagerProvider(this){
+		//
+		// @Override
+		// protected IDataStore newDataStore() {
+		// return new HttpSessionDataStore(getPageManagerContext(), new
+		// PageNumberEvictionStrategy(20));
+		// }
+		//
+		// });
+		// getStoreSettings().setMaxSizePerSession(Bytes.kilobytes(1024));
+		// getStoreSettings().setInmemoryCacheSize(0);
+
+		// *************************************
+		/**
+		 * 
+		 * Этот кусок кода полностью отменяет версионность страниц.
+		 * 
+		 */
+		// setPageManagerProvider(new VoidPageManagerProvider(this));
+		// *************************************
 
 		// getExceptionSettings().setAjaxErrorHandlingStrategy(errorHandlingStrategyDuringAjaxRequests)
 
@@ -203,7 +218,7 @@ public class PortalApplication extends AuthenticatedWebApplication {
 		// }
 		//
 		// });
-//		getFrameworkSettings().setSerializer(new MJS(getApplicationKey()));
+		// getFrameworkSettings().setSerializer(new MJS(getApplicationKey()));
 		// getFrameworkSettings().setSerializer(new JavaSerializer(
 		// getApplicationKey() ){
 		//
@@ -252,48 +267,62 @@ public class PortalApplication extends AuthenticatedWebApplication {
 	public Class<? extends Page> getHomePage() {
 		return AbstractThemePage.class;
 	}
+	
+	
 
 	private class PortalClassResolver implements IClassResolver {
 
 		private JarClassLoader jcl = null;
-		
+
 		private AbstractClassResolver res = new AbstractClassResolver() {
 
 			@Override
 			public ClassLoader getClassLoader() {
 				ClassLoader loader = Thread.currentThread()
 						.getContextClassLoader();
-				
+
 				return loader;
 			}
 		};
 
+		/**
+		 * Тут кроется такая засада. Каждый модуль тянет свой набор классов из
+		 * своего JarClassLoader'а. Так же может случится ситуация, когда из
+		 * двух разных модулей, примененных на одной общей странице,
+		 * используется класс с одим названием, но разными версиями. Но так как
+		 * механизм десериализации Java исключает повтовную загрузку уже
+		 * загруженного класса, то будет загружен класс из первого модуля, в то
+		 * время как второй получит неверную версию класса.
+		 */
 		@Override
 		public Class<?> resolveClass(String classname)
 				throws ClassNotFoundException {
-			
-			
+
 			try {
 				return res.resolveClass(classname);
-				
+
 			} catch (ClassNotFoundException ex) {
 				Class c = null;
-				System.out.println("!!!!! search " + classname+"  "+jcl);
+				System.out.println("!!!!! search " + classname + "  " + jcl);
 				if (classname.startsWith("kz.tem.portal")) {
-					
-					jcl = ModuleEngine.getInstance()
-							.getClassLoader(classname.split("\\.")[3]);
-					if(jcl==null){
-						throw new ClassNotFoundException("Not found JarClassLoader for module id:"+classname.split("\\.")[3]);
+
+					jcl = ModuleEngine.getInstance().getClassLoader(
+							classname.split("\\.")[3]);
+					if (jcl == null) {
+						throw new ClassNotFoundException(
+								"Not found JarClassLoader for module id:"
+										+ classname.split("\\.")[3]);
 					}
-						
-					c=jcl.findClass(classname);
+
+					c = jcl.findClass(classname);
 					System.out.println("!!! " + (c == null ? "NOT" : "")
 							+ " found " + classname);
-				}else if(jcl!=null){
-					
-					c=jcl.findClass(classname);
-					System.out.println("finded C "+c);
+				} else if (jcl != null) {
+
+					c = ClassUtils.resolveClassName(classname, jcl);
+
+					// c=jcl.findClass(classname);
+					System.out.println("finded C " + c);
 				}
 				if (c == null) {
 					System.out.println("$$$$: [" + classname + "]");
@@ -304,7 +333,6 @@ public class PortalApplication extends AuthenticatedWebApplication {
 			}
 		}
 
-		
 		@Override
 		public Iterator<URL> getResources(String name) {
 			return res.getResources(name);
@@ -356,12 +384,13 @@ public class PortalApplication extends AuthenticatedWebApplication {
 		return PortalSession.class;
 	}
 
-	public void mountSystemPage(String path, String title, Class pageClass){
+	public void mountSystemPage(String path, String title, Class pageClass) {
 		mountPage(path, pageClass);
-		try{
+		try {
 			RegisterEngine.getInstance().getPageRegister().getPage(path);
-		}catch(PortalException ex){
-			if(ex.getKey()!=null && ex.getKey().equals(PortalException.NOT_FOUND)){
+		} catch (PortalException ex) {
+			if (ex.getKey() != null
+					&& ex.getKey().equals(PortalException.NOT_FOUND)) {
 				kz.tem.portal.server.model.Page page = new kz.tem.portal.server.model.Page();
 				page.setPageType(EnumPageType.SYSTEM);
 				page.setPublicPage(true);
@@ -370,87 +399,66 @@ public class PortalApplication extends AuthenticatedWebApplication {
 				page.setLayout("DefaultLayout.html");
 				page.setTheme("DefaultTheme.html");
 				try {
-					RegisterEngine.getInstance().getPageRegister().addNewPage(page);
+					RegisterEngine.getInstance().getPageRegister()
+							.addNewPage(page);
 				} catch (PortalException e) {
 					e.printStackTrace();
 					throw new RuntimeException(e);
 				}
-			}else
+			} else
 				throw new RuntimeException(ex);
-				
+
 		}
-		
+
 	}
-	
+
 }
 
-class MJS extends JavaSerializer{
+class MJS extends JavaSerializer {
 
 	public MJS(String applicationKey) {
 		super(applicationKey);
-		
+
 	}
-
-
-	
 
 	@Override
 	public byte[] serialize(Object object) {
 		return super.serialize(object);
 	}
 
-
-
-
 	@Override
 	public Object deserialize(byte[] data) {
 		ThreadContext old = ThreadContext.get(false);
 		final ByteArrayInputStream in = new ByteArrayInputStream(data);
 		ObjectInputStream ois = null;
-		try
-		{
+		try {
 			Application oldApplication = ThreadContext.getApplication();
-			try
-			{
+			try {
 				System.out.println("\tTRY deserialize");
 				ois = newObjectInputStream(in);
-				
-				
-				String applicationName = (String)ois.readObject();
-				if (applicationName != null)
-				{
+
+				String applicationName = (String) ois.readObject();
+				if (applicationName != null) {
 					Application app = Application.get(applicationName);
-					if (app != null)
-					{
+					if (app != null) {
 						ThreadContext.setApplication(app);
 					}
 				}
 				return ois.readObject();
-			}
-			finally
-			{
-				try
-				{
+			} finally {
+				try {
 					ThreadContext.setApplication(oldApplication);
 					IOUtils.close(ois);
-				}
-				finally
-				{
+				} finally {
 					in.close();
 				}
 			}
-		}
-		catch (ClassNotFoundException | IOException cnfx)
-		{
-			throw new RuntimeException("Could not deserialize object from byte[]", cnfx);
-		}
-		finally
-		{
+		} catch (ClassNotFoundException | IOException cnfx) {
+			throw new RuntimeException(
+					"Could not deserialize object from byte[]", cnfx);
+		} finally {
 			ThreadContext.restore(old);
 		}
 	}
-
-	
-	
 
 }

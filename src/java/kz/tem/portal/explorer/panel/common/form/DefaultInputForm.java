@@ -34,6 +34,8 @@ public class DefaultInputForm extends Panel implements IForm{
 	
 	private RepeatingView buttons=null;
 
+	private IFormSubmitButtonListener listener = null;
+	
 	public DefaultInputForm(String id) {
 		super(id);
 		Form<Void> form = new Form<Void>("form"){
@@ -41,7 +43,20 @@ public class DefaultInputForm extends Panel implements IForm{
 			@Override
 			protected void onSubmit() {
 				super.onSubmit();
-				
+				try {
+					if(fieldsBuilder.checkFields(DefaultInputForm.this)){
+						DefaultInputForm.this.onSubmit();
+						if(listener!=null)listener.onSubmit();
+						listener=null;
+					}
+				} catch (Exception e) {
+					if(e instanceof RedirectToUrlException)
+						throw (RedirectToUrlException)e;
+					if(e instanceof NonResettingRestartException)
+						throw (NonResettingRestartException)e;
+					e.printStackTrace();
+					error(ExceptionUtils.fullError(e));
+				}
 				
 			}
 			
@@ -68,12 +83,16 @@ public class DefaultInputForm extends Panel implements IForm{
 	
 	
 	public void createButtons(){
-		addSubmitButton("Сохранить ",new IFormSubmitButtonListener() {
+		addSubmitButton(submitButtonName(),new IFormSubmitButtonListener() {
 			@Override
 			public void onSubmit() throws Exception {
 				System.out.println("simple submit");
 			}
 		});
+	}
+	
+	public String submitButtonName(){
+		return "Сохранить";
 	}
 	public FormFieldsBuilder fields(){
 		return fieldsBuilder;
@@ -113,17 +132,7 @@ public class DefaultInputForm extends Panel implements IForm{
 			@Override
 			public void onSubmit() {
 				super.onSubmit();
-				
-				try {
-					if(fieldsBuilder.checkFields(DefaultInputForm.this)){
-						DefaultInputForm.this.onSubmit();
-						listener.onSubmit();
-					}
-				} catch (Exception e) {
-					e.printStackTrace();
-					error(ExceptionUtils.fullError(e));
-//					throw new RuntimeException();
-				}
+				DefaultInputForm.this.listener = listener;
 				
 				
 			}
