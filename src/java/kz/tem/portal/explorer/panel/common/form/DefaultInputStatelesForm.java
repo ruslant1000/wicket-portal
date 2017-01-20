@@ -1,8 +1,10 @@
 package kz.tem.portal.explorer.panel.common.form;
 
+import java.util.Date;
 import java.util.LinkedList;
 import java.util.List;
 
+import kz.tem.portal.explorer.panel.common.table.AColumn;
 import kz.tem.portal.utils.ExceptionUtils;
 
 import org.apache.wicket.AttributeModifier;
@@ -169,6 +171,33 @@ public class DefaultInputStatelesForm extends Panel implements IForm{
 		fieldSet.add(fld);
 		fld.add(new Label("label",title));
 		fld.add(fieldsBuilder.password("f",title, model,required));
+		
+	}
+
+	@Override
+	public void addLabel(String title, String text) {
+		// TODO Auto-generated method stub
+		
+	}
+
+	@Override
+	public void addReadOnlyComponent(AColumn column, Object record)
+			throws Exception {
+		// TODO Auto-generated method stub
+		
+	}
+
+	@Override
+	public void addFieldArea(String title, IModel<String> model,
+			boolean required) {
+		// TODO Auto-generated method stub
+		
+	}
+
+	@Override
+	public void addFieldDate(String title, IModel<Date> model, String pattern,
+			boolean required) {
+		// TODO Auto-generated method stub
 		
 	}
 }

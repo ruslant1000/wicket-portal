@@ -4,8 +4,10 @@ import java.io.Serializable;
 import java.util.LinkedList;
 import java.util.List;
 
+import kz.tem.portal.PortalException;
 import kz.tem.portal.server.bean.ITable;
 
+import org.apache.log4j.Logger;
 import org.hibernate.Criteria;
 import org.hibernate.Session;
 import org.hibernate.criterion.Criterion;
@@ -17,6 +19,8 @@ import org.springframework.orm.hibernate5.HibernateTemplate;
 
 @SuppressWarnings("serial")
 public abstract class AbstractRegister implements Serializable{
+	
+	private static Logger log = Logger.getLogger(AbstractRegister.class);
 
 	public transient HibernateTemplate ht;
 
@@ -30,13 +34,13 @@ public abstract class AbstractRegister implements Serializable{
 	
 	
 	
-	public <T>ITable getTable(Class entity,int first, int count){
+	public <T>ITable getTable(Class entity,int first, int count)throws PortalException{
 		return getTable(entity, first, count, null, null, true,null);
 	}
-	public <T>ITable getTable(Class entity,int first, int count, List<Criterion> restrictions,String sort, boolean asc){
+	public <T>ITable getTable(Class entity,int first, int count, List<Criterion> restrictions,String sort, boolean asc)throws PortalException{
 		return getTable(entity, first, count, restrictions, sort, asc, null);
 	}
-	public <T>ITable getTable(Class entity,int first, int count, List<Criterion> restrictions,String sort, boolean asc, InSessionAction<T> action){
+	public <T>ITable getTable(Class entity,int first, int count, List<Criterion> restrictions,String sort, boolean asc, InSessionAction<T> action)throws PortalException{
 		Session sss = null;
 		try {
 			sss = getHt().getSessionFactory().openSession();
@@ -100,8 +104,8 @@ public abstract class AbstractRegister implements Serializable{
 
 			};			
 		} catch (Exception ex) {
-//			log.error("Error getting table "+entity.getName() , ex);
-			throw new RuntimeException(
+			log.error("Error getting table "+entity.getName(), ex);
+			throw new PortalException(
 					"Error getting table "+entity.getName(), ex);
 		} finally {
 			if(sss!=null)try{sss.close();}catch(Exception ex){}

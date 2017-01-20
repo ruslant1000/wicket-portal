@@ -5,4 +5,19 @@
 
 .default-form fieldset{
 	border: none;
+	display: table;
+}
+.default-form fieldset .field{
+	display: table-row;
+	line-height: 50px;
+}
+.default-form fieldset .field .field-label{
+	display: table-cell;
+	padding-right: 10px;
+	vertical-align: middle;
+}
+
+.default-form fieldset .field .field-input{
+	display: table-cell;
+	vertical-align: middle;
 }

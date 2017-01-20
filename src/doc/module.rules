@@ -8,7 +8,8 @@
 
 		<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
 		<modules>
-			<id>имя пакета модулей</id> 
+			<id>имя пакета модулей</id>
+			<spring>kz/tem/portal/amscrm/server/context/spring.xml</spring> 
 			<module>
 				<module-name>ftpclient-table</module-name>
 				<display-name>FTP клиент</display-name>
@@ -18,7 +19,7 @@
 		</modules>
 2.1  Значение тега id ДОЛЖНО быть таким же как и наименование модуля в package. Т.е. смотрим значение тэга module-class (kz.tem.portal.module.ftpclient.FtpClientModule) и берем следующее слово после значения "kz.tem.portal". В данном случае получается слово ftpclient.
 2.2  Тэг context-listener является необязательным. В нем указывается класс, реализующий интерфейс ModuleContextListener. Этот класс инициализируется при деплое модуля и уничтожается при выгрузке модуля. 
-
+2.3  Тэг spring является необязательным. В нем указывается XML-файл сприга, если таковой имеется.
 3. Чтобы из кода вызвать диалоговое окно портала нужно:
 		((AbstractThemePage) getWebPage()).showModal("Набор ключевых слов", target, new IComponentCreator() {
 			
@@ -29,4 +30,8 @@
 		});
 		
 		
-4. 		
+4. Проблемы десериализации
+4.1 При десереализации Wicket-страниц в тех модулях где используются объекты созданные через spring могут быть проблемы. Это изза того что spring создает proxy-объекты вместо самих объектов. 
+Например если в модуле указать переменную так: [private IRegister register;] - будет ошибка десериализации;
+   		 если в модуле указать переменную так: [private transient IRegister register;] - ошибка десериализации не возникнет, однако после десериализации это значение будет пустым (Null);
+   		 если в модуле указать переменную так: [private static IRegister register;] - будет все ОК.

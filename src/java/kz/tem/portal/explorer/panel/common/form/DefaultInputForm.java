@@ -1,5 +1,6 @@
 package kz.tem.portal.explorer.panel.common.form;
 
+import java.util.Date;
 import java.util.List;
 
 import org.apache.wicket.AttributeModifier;
@@ -20,6 +21,7 @@ import org.apache.wicket.markup.repeater.RepeatingView;
 import org.apache.wicket.model.IModel;
 import org.apache.wicket.request.flow.RedirectToUrlException;
 
+import kz.tem.portal.explorer.panel.common.table.AColumn;
 import kz.tem.portal.utils.ExceptionUtils;
 /**
  * 
@@ -38,6 +40,11 @@ public class DefaultInputForm extends Panel implements IForm{
 	
 	public DefaultInputForm(String id) {
 		super(id);
+		
+	}
+	
+	public void build()throws Exception{
+		DefaultInputForm.this.removeAll();
 		Form<Void> form = new Form<Void>("form"){
 
 			@Override
@@ -55,7 +62,7 @@ public class DefaultInputForm extends Panel implements IForm{
 					if(e instanceof NonResettingRestartException)
 						throw (NonResettingRestartException)e;
 					e.printStackTrace();
-					error(ExceptionUtils.fullError(e));
+					error("Err "+ExceptionUtils.fullError(e));
 				}
 				
 			}
@@ -78,10 +85,21 @@ public class DefaultInputForm extends Panel implements IForm{
 		add(new FeedbackPanel("success", new ExactLevelFeedbackMessageFilter(FeedbackMessage.SUCCESS)));
 		
 	}
-	
-	
-	
-	
+	@Override
+	protected void onInitialize() {
+		super.onInitialize();
+		try {
+			build();
+		} catch (Exception e) {
+			e.printStackTrace();
+			throw new RuntimeException("Error in DefaultInputForm.build() method",e);
+		}
+		
+	}
+
+
+
+
 	public void createButtons(){
 		addSubmitButton(submitButtonName(),new IFormSubmitButtonListener() {
 			@Override
@@ -152,7 +170,16 @@ public class DefaultInputForm extends Panel implements IForm{
 		fld.add(new Label("label",title));
 		fld.add(fieldsBuilder.string("f",title, model,required));
 	}
-
+	@Override
+	public void addFieldArea(String title, IModel<String> model,
+			boolean required) {
+		WebMarkupContainer fld = new WebMarkupContainer(fieldSet.newChildId());
+		fieldSet.add(fld);
+		fld.add(new Label("label",title));
+		fld.add(fieldsBuilder.area("f",title, model,required));
+		
+	}
+	
 	@Override
 	public void addCombobox(String title, IModel model, List choices,
 			boolean required) {
@@ -173,6 +200,43 @@ public class DefaultInputForm extends Panel implements IForm{
 		fld.add(fieldsBuilder.password("f",title, model,required));
 		
 	}
+
+
+
+
+	@Override
+	public void addLabel(String title, String text) {
+		WebMarkupContainer fld = new WebMarkupContainer(fieldSet.newChildId());
+		fieldSet.add(fld);
+		fld.add(new Label("label",title));
+		fld.add(new Label("f",text));
+	}
+
+
+
+
+	@Override
+	public void addReadOnlyComponent(AColumn column, Object record) throws Exception {
+		WebMarkupContainer fld = new WebMarkupContainer(fieldSet.newChildId());
+		fieldSet.add(fld);
+		fld.add(new Label("label",column.getTitle()));
+		fld.add(column.cell("f", record));
+		
+	}
+
+	@Override
+	public void addFieldDate(String title, IModel<Date> model, String pattern,
+			boolean required) {
+		WebMarkupContainer fld = new WebMarkupContainer(fieldSet.newChildId());
+		fieldSet.add(fld);
+		fld.add(new Label("label",title));
+		fld.add(fieldsBuilder.date("f",title, model,pattern,required));
+		
+	}
+
+
+
+
 	
 	
 

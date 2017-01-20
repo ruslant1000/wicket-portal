@@ -1,9 +1,14 @@
 .abstract-table{
 	border: 3px solid red;
 	font-family: Helvetica,Arial,sans-serif;
+	overflow: auto;
+}
+.abstract-table .scroller{
+	overflow: auto;
 }
 .abstract-table table{
-	width: 100%;
+	width: 400px;
+	table-layout: fixed;
 }
 .abstract-table table tr:nth-child(odd){
 	background: #cce6ff;
@@ -12,9 +17,21 @@
 .abstract-table table tr:nth-child(even){
 	background: #ffffff;
 }
+.abstract-table table th{
+	line-height:28px;
+	padding-left: 5px;
+	white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  font-size: 14px;
+}
+
 .abstract-table table td{
 	line-height:28px;
 	padding-left: 5px;
+	white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
 }
 .table-paginator{
 	padding: 10px;

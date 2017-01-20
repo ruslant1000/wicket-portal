@@ -4,15 +4,17 @@
 
 <div class="abstract-table" align="left">
 	<div wicket:id="before"/>
-	<table wicket:id="table">
-		<tr>
-			<th wicket:id="th"/>
-		</tr>
-		<tr wicket:id="row">
-			
-			<td wicket:id="cell"></td>
-		</tr>
-	</table>
+	<div class="scroller">
+		<table wicket:id="table" class="resizable">
+			<tr>
+				<th wicket:id="th"/>
+			</tr>
+			<tr wicket:id="row">
+				
+				<td wicket:id="cell"></td>
+			</tr>
+		</table>
+	</div>
 	<div align="center" class="table-paginator">
 		<span class="digit" wicket:id="digits"/>
 		<span class="devider">|</span>

@@ -1,15 +1,19 @@
 package kz.tem.portal.explorer.panel.common.ftp;
 
+import java.io.File;
+import java.io.InputStream;
 import java.text.SimpleDateFormat;
 import java.util.LinkedList;
 import java.util.List;
 
+import kz.msystem.commons.socket.client.java.ServerSocketException;
 import kz.msystem.commons.socket.processor.java.ftp.FileRecord;
 import kz.msystem.commons.socket.processor.java.ftp.FtpMethods;
 import kz.tem.portal.explorer.page.AbstractThemePage;
 import kz.tem.portal.explorer.page.IComponentCreator;
 import kz.tem.portal.explorer.panel.common.component.AjaxLabelLink;
 import kz.tem.portal.explorer.panel.common.component.link.DownloadLink;
+import kz.tem.portal.explorer.panel.common.component.link.InputStreamDownloadLink;
 import kz.tem.portal.explorer.panel.common.dialog.ConfirmationDialog;
 import kz.tem.portal.explorer.panel.common.table.AColumn;
 import kz.tem.portal.explorer.panel.common.table.AbstractTable;
@@ -23,6 +27,9 @@ import org.apache.wicket.Component;
 import org.apache.wicket.ajax.AjaxRequestTarget;
 import org.apache.wicket.ajax.markup.html.AjaxLink;
 import org.apache.wicket.markup.html.basic.Label;
+import org.apache.wicket.model.AbstractReadOnlyModel;
+import org.apache.wicket.model.Model;
+import org.apache.wicket.util.time.Duration;
 
 @SuppressWarnings("serial")
 public class FtpTable extends AbstractTable<FileRecord> {
@@ -281,6 +288,37 @@ public class FtpTable extends AbstractTable<FileRecord> {
 					};
 					return ll;
 				} else {
+					
+					
+//					org.apache.wicket.markup.html.link.DownloadLink dl = new org.apache.wicket.markup.html.link.DownloadLink(id, new AbstractReadOnlyModel<File>() {
+//
+//						@Override
+//						public File getObject() {
+//							FtpMethods ftp = new FtpMethods();
+//							try {
+//								ftp.downloadFtpFile(host, port, user, password, (record.getPath()+"/"+record.getName()).replaceAll("//", "/"), "C:/tmp");
+//							} catch (ServerSocketException e) {
+//								e.printStackTrace();
+//							}
+//							File f = new File("C:/tmp", record.getName());
+//							return f;
+//						}
+//					},record.getName());
+//					dl.setBody(Model.of(""+record.getName()));
+//					dl.setCacheDuration(Duration.ONE_SECOND);
+//					dl.setOutputMarkupPlaceholderTag(true); 
+//					InputStreamDownloadLink dl = new InputStreamDownloadLink(id, new AbstractReadOnlyModel<InputStream>(){
+//
+//						@Override
+//						public InputStream getObject() {
+//							FtpMethods ftp = new FtpMethods();
+//							try {
+//								return ftp.getInputStream(host, port, user, password, (record.getPath()+"/"+record.getName()).replaceAll("//", "/"));
+//							} catch (ServerSocketException e) {
+//								e.printStackTrace();
+//								throw new RuntimeException(e);
+//							}
+//						}}, Model.of(record.getName()));
 					DownloadLink dl = new DownloadLink(id,
 							host, port, user, password,
 							record);

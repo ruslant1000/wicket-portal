@@ -13,6 +13,7 @@ import java.net.URL;
 import java.util.Iterator;
 import java.util.Map;
 
+import kz.msystem.commons.socket.processor.java.ftp.FileRecord;
 import kz.tem.portal.PortalException;
 import kz.tem.portal.api.PortalEngine;
 import kz.tem.portal.api.RegisterEngine;
@@ -33,6 +34,7 @@ import kz.tem.portal.explorer.page.admin.portlets.PortletsConfig;
 import kz.tem.portal.explorer.page.admin.settings.SettingsPage;
 import kz.tem.portal.explorer.page.admin.users.UsersPage;
 import kz.tem.portal.explorer.page.login.RegistrationPage;
+import kz.tem.portal.explorer.panel.common.ftp.DocFileResource;
 import kz.tem.portal.explorer.services.FileUploadService;
 import kz.tem.portal.explorer.services.TestService;
 import kz.tem.portal.server.model.enums.EnumPageType;
@@ -159,6 +161,8 @@ public class PortalApplication extends AuthenticatedWebApplication {
 		// нарушает систему безопасности. Либо добавить сервисам авторизацию
 		mountResource("test", "services/test", new TestService());
 		mountResource("upload", "services/upload", new FileUploadService());
+		mountResource("download","download", new DocFileResource());
+		
 
 		System.out.println("@@@  "
 				+ getFrameworkSettings().getSerializer().getClass().getName());

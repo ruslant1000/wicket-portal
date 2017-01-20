@@ -5,8 +5,12 @@ import java.util.List;
 
 import org.apache.wicket.AttributeModifier;
 import org.apache.wicket.Component;
+import org.apache.wicket.MarkupContainer;
 import org.apache.wicket.ajax.AjaxRequestTarget;
 import org.apache.wicket.behavior.AttributeAppender;
+import org.apache.wicket.markup.head.IHeaderResponse;
+import org.apache.wicket.markup.head.JavaScriptHeaderItem;
+import org.apache.wicket.markup.head.OnDomReadyHeaderItem;
 import org.apache.wicket.markup.html.WebMarkupContainer;
 import org.apache.wicket.markup.html.basic.Label;
 import org.apache.wicket.markup.html.panel.Panel;
@@ -67,6 +71,13 @@ public abstract class AbstractTable<T> extends Panel{
 		return cmp;
 	}
 	
+	private String getUniqueMarkupId(MarkupContainer container){
+		if(container==null)
+			return "";
+		
+		return container.getId()+container.getClass().getCanonicalName();
+	}
+	
 	public void build(){
 		try {
 			if(AbstractTable.this.get("table")!=null){
@@ -84,6 +95,8 @@ public abstract class AbstractTable<T> extends Panel{
 			table = new WebMarkupContainer("table");
 			table.setOutputMarkupId(true);
 			add(table);
+			table.setMarkupId(getUniqueMarkupId(this));
+			
 			
 			cols = columns();
 			records = data(first, count);	
@@ -341,8 +354,17 @@ public abstract class AbstractTable<T> extends Panel{
 	public void setCount(int count) {
 		this.count = count;
 	}
+
+
+
+	@Override
+	public void renderHead(IHeaderResponse response) {
+		super.renderHead(response);
+		response.render(OnDomReadyHeaderItem.forScript("ResizableColumns('"+table.getMarkupId()+"');"));
+	}
 	
 	
+
 	
 
 }

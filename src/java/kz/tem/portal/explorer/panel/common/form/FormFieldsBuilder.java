@@ -11,7 +11,9 @@ import java.util.function.BiConsumer;
 import org.apache.wicket.Component;
 import org.apache.wicket.model.IModel;
 
+import kz.tem.portal.explorer.panel.common.form.field.FAreaStringField;
 import kz.tem.portal.explorer.panel.common.form.field.FComboboxField;
+import kz.tem.portal.explorer.panel.common.form.field.FDatePickerField;
 import kz.tem.portal.explorer.panel.common.form.field.FPasswordField;
 import kz.tem.portal.explorer.panel.common.form.field.FTextStringField;
 /**
@@ -40,6 +42,16 @@ public class FormFieldsBuilder implements Serializable{
 			requiredFieldNames.add(title);
 		}
 		return field;
+	}
+	
+	public FAreaStringField area(String id, String title, IModel<String> model, boolean required){
+		
+		FAreaStringField field = new FAreaStringField(id, model);
+		if(required){
+			requireds.put(title, model);
+			requiredFieldNames.add(title);
+		}
+		return field;
 	} 
 	/**
 	 * Поле для ввода пароля
@@ -61,6 +73,15 @@ public class FormFieldsBuilder implements Serializable{
 	
 	public FComboboxField combobox(String id, String title, IModel model,List choices, boolean required){
 		FComboboxField field = new FComboboxField(id, model, choices);
+		if(required){
+			requireds.put(title, model);
+			requiredFieldNames.add(title);
+		}
+		return field;
+	}
+	
+	public FDatePickerField date(String id, String title, IModel model,String pattern, boolean required){
+		FDatePickerField field = new FDatePickerField(id, model, pattern);
 		if(required){
 			requireds.put(title, model);
 			requiredFieldNames.add(title);
