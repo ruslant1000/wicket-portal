@@ -9,6 +9,7 @@ import javax.persistence.Entity;
 import javax.persistence.FetchType;
 import javax.persistence.ManyToMany;
 import javax.persistence.Table;
+import javax.persistence.Transient;
 
 import org.hibernate.envers.Audited;
 /**
@@ -53,7 +54,7 @@ public class Role extends IdEntity implements Serializable{
 	public void setPage(Set<Page> page) {
 		this.page = page;
 	}
-
+	@Transient
 	public String toString(){
 		return name;
 	} 

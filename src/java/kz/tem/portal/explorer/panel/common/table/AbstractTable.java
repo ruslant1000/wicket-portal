@@ -70,8 +70,12 @@ public abstract class AbstractTable<T> extends Panel{
 		cmp.setVisible(false);
 		return cmp;
 	}
-	
-	private String getUniqueMarkupId(MarkupContainer container){
+	/**
+	 * Этот параметр используется в механизме ColumnResize. По нему делается запись значений ширин колонок в КЭШ, а так же запись значений из КЭШа.
+	 * @param container
+	 * @return
+	 */
+	public String getUniqueMarkupId(MarkupContainer container){
 		if(container==null)
 			return "";
 		
@@ -131,10 +135,12 @@ public abstract class AbstractTable<T> extends Panel{
 			};
 			view.add(chk);
 			chk.add(new AttributeModifier("style", "width:30px;"));
+			chk.add(new AttributeModifier("resizable", "off"));
 		}
 		
 		for(AColumn<T> col:cols){
-			view.add(new Label(view.newChildId(),col.getTitle()));
+			if(col!=null)
+				view.add(new Label(view.newChildId(),col.getTitle()));
 		}
 	}
 	
@@ -161,11 +167,15 @@ public abstract class AbstractTable<T> extends Panel{
 			}
 			
 			for(AColumn<T> col:cols){
-				
+				if(col==null)
+					continue;
 				
 				
 				String cid = td.newChildId();
-				td.add(col.cell(cid, t));
+				Component cell = col.cell(cid, t); 
+				td.add(cell);
+				if(col.getWidth()>0)
+					cell.add(new AttributeModifier("width", col.getWidth()+"px"));
 			}
 		}
 	}
@@ -359,8 +369,11 @@ public abstract class AbstractTable<T> extends Panel{
 
 	@Override
 	public void renderHead(IHeaderResponse response) {
+		
+		
 		super.renderHead(response);
 		response.render(OnDomReadyHeaderItem.forScript("ResizableColumns('"+table.getMarkupId()+"');"));
+//		response.render(OnDomReadyHeaderItem.forScript("alert('aaa');"));
 	}
 	
 	

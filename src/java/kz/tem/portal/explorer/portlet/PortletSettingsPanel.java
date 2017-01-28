@@ -35,55 +35,61 @@ public class PortletSettingsPanel extends Panel{
 					super.onSubmit();
 					portletRegister.updatePortletSettings(portlet.getId(), module.getModuleConfig());
 				}
+
+				@Override
+				public void build() throws Exception {
+					super.build();
+					for(final String name:module.getModuleConfig().getNames()){
+						if(module.getModuleConfig().getValues().containsKey(name)){
+							addFieldString(name, new IModel<String>() {
+								
+								@Override
+								public void detach() {
+									
+								}
+								
+								@Override
+								public void setObject(String object) {
+									module.getModuleConfig().getValues().put(name, object);
+									
+								}
+								
+								@Override
+								public String getObject() {
+									return module.getModuleConfig().getValues().get(name);
+								}
+							}, false);
+						}else if(module.getModuleConfig().getBooles().containsKey(name)){
+							addCombobox(name, new IModel<String>() {
+
+								@Override
+								public void detach() {
+									// TODO Auto-generated method stub
+									
+								}
+
+								@Override
+								public String getObject() {
+									if(module.getModuleConfig().getBooles().get(name).equals("true"))
+										return booleanChoices.get(0);
+									else
+										return booleanChoices.get(1);
+								}
+
+								@Override
+								public void setObject(String object) {
+									boolean val = (object!=null && object.equals(booleanChoices.get(0)));
+									module.getModuleConfig().getBooles().put(name, ""+val);
+									
+								}
+							}, booleanChoices, false);
+						}
+					}
+				}
 				
 			};
 			add(form);
-			for(final String name:module.getModuleConfig().getNames()){
-				if(module.getModuleConfig().getValues().containsKey(name)){
-					form.addFieldString(name, new IModel<String>() {
-						
-						@Override
-						public void detach() {
-							
-						}
-						
-						@Override
-						public void setObject(String object) {
-							module.getModuleConfig().getValues().put(name, object);
-							
-						}
-						
-						@Override
-						public String getObject() {
-							return module.getModuleConfig().getValues().get(name);
-						}
-					}, false);
-				}else if(module.getModuleConfig().getBooles().containsKey(name)){
-					form.addCombobox(name, new IModel<String>() {
-
-						@Override
-						public void detach() {
-							// TODO Auto-generated method stub
-							
-						}
-
-						@Override
-						public String getObject() {
-							if(module.getModuleConfig().getBooles().get(name).equals("true"))
-								return booleanChoices.get(0);
-							else
-								return booleanChoices.get(1);
-						}
-
-						@Override
-						public void setObject(String object) {
-							boolean val = (object!=null && object.equals(booleanChoices.get(0)));
-							module.getModuleConfig().getBooles().put(name, ""+val);
-							
-						}
-					}, booleanChoices, false);
-				}
-			}
+			
 		} catch (Exception e) {
 			e.printStackTrace();
 			throw new RuntimeException(e);

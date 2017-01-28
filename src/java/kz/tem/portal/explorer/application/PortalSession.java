@@ -1,6 +1,8 @@
 package kz.tem.portal.explorer.application;
 
 import java.util.HashMap;
+import java.util.LinkedList;
+import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
@@ -23,6 +25,8 @@ public class PortalSession extends AuthenticatedWebSession{
 	private Roles roles = null;
 	
 	private Map<String, Object> objects = new HashMap<String, Object>();
+	
+	private Map<String, PortalSessionListener> listeners = new HashMap<String, PortalSessionListener>();
 	
 	
 	public Map<String, Object> getObjects() {
@@ -62,6 +66,31 @@ public class PortalSession extends AuthenticatedWebSession{
 		} 
 		return user!=null;
 		
+	}
+
+
+	public Map<String, PortalSessionListener> getListeners() {
+		return listeners;
+	}
+
+	public void setListeners(Map<String, PortalSessionListener> listeners) {
+		this.listeners = listeners;
+	}
+
+	@Override
+	public void signOut() {
+		super.signOut();
+		System.out.println("PortalSession signOut");
+		for(PortalSessionListener psl:listeners.values())
+			psl.onLogout();
+	}
+
+	@Override
+	public void invalidate() {
+		super.invalidate();
+		System.out.println("PortalSession invalidate");
+		listeners.clear();
+		objects.clear();
 	}
 
 	@Override

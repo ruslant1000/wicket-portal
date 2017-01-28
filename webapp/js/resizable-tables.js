@@ -191,20 +191,22 @@ function ColumnResize(table) {
 	// prepare table header to be draggable
 	// it runs during class creation
 	for (var i=0; i<dragColumns.length; i++) {
-		dragColumns[i].innerHTML = "<div style='position:relative;height:100%;width:100%'>"+
-			"<div style='"+
-			"position:absolute;height:100%;width:5px;margin-right:-5px;"+
-			"left:100%;top:0px;cursor:w-resize;z-index:10;'>"+
-			"</div>"+
-			dragColumns[i].innerHTML+
-			"</div>";
-			// BUGBUG: calculate real border width instead of 5px!!!
-			dragColumns[i].firstChild.firstChild.onmousedown = this.startColumnDrag;
-			if(tw!=null)
-				try{
-				dragColumns[i].width=tws[i]+"px";
-				}catch(e){}
+		if(dragColumns[i].getAttribute('resizable')!='off'){
+			dragColumns[i].innerHTML = "<div style='position:relative;height:100%;width:100%'>"+
+				"<div style='"+
+				"position:absolute;height:100%;width:5px;margin-right:-5px;"+
+				"left:100%;top:0px;cursor:w-resize;z-index:10;'>"+
+				"</div>"+
+				dragColumns[i].innerHTML+
+				"</div>";
+				// BUGBUG: calculate real border width instead of 5px!!!
+				dragColumns[i].firstChild.firstChild.onmousedown = this.startColumnDrag;
+				if(tw!=null)
+					try{
+					dragColumns[i].width=tws[i]+"px";
+					}catch(e){}
 		}
+	}
 }
 
 

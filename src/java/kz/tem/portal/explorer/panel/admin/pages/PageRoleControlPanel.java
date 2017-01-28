@@ -36,16 +36,19 @@ public class PageRoleControlPanel extends Panel{
 				page.getRole().add(role);
 				pageRegister.savePage(page);
 			}
+
+			@Override
+			public void build() throws Exception {
+				super.build();
+				addCombobox("Page", new PropertyModel<Page>(PageRoleControlPanel.this, "page"), pageRegister.pages(0, 0).records(), true);
+				addCombobox("Role", new PropertyModel<Role>(PageRoleControlPanel.this, "role"), roleRegister.table(0, 0).records(), true);
+			}
+			
+			
 			
 		};
 		add(form);
-		try {
-			form.addCombobox("Page", new PropertyModel<Page>(PageRoleControlPanel.this, "page"), pageRegister.pages(0, 0).records(), true);
-			form.addCombobox("Role", new PropertyModel<Role>(PageRoleControlPanel.this, "role"), roleRegister.table(0, 0).records(), true);
-		} catch (PortalException e) {
-			e.printStackTrace();
-			throw new RuntimeException(e);
-		}
+
 	}
 	
 	

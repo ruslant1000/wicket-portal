@@ -45,17 +45,20 @@ public class PageForm extends DefaultInputForm{
 		
 
 		
-		try {
+		
+	}
+
+	
+	@Override
+	public void build() throws Exception {
+		super.build();
 			addFieldString("Title", new PropertyModel<String>(page, "title"), true);
 			addFieldString("URL", new PropertyModel<String>(page, "url"), true);
 			addCombobox("Theme", new PropertyModel<ThemeInfo>(PageForm.this, "theme"),PortalEngine.getInstance().getExplorerEngine().getThemesList(),   true);
 			addCombobox("Layout", new PropertyModel<LayoutInfo>(PageForm.this, "layout"),PortalEngine.getInstance().getExplorerEngine().getLayoutsList(),   true);
 			addCombobox("Parent page", new PropertyModel<Page>(page, "parentPage"),pageRegister.pages(0, 0).records(),   false);
 			addCombobox("Page visible", new PropertyModel<String>(PageForm.this, "publicPage"),Arrays.asList(PAGE_PUBLIC,PAGE_PRIVATE),   true);
-		} catch (PortalException e) {
-			e.printStackTrace();
-			throw new RuntimeException();
-		}
+		
 	}
 
 	@Override

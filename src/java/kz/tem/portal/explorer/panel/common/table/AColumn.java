@@ -30,7 +30,16 @@ public abstract class AColumn<T> implements Serializable{
 	 */
 	private AColumnEditType editType = AColumnEditType.UNCKNOWN;
 	private boolean required;
+	private int width = 0;
 	
+	public AColumn(String title, String name, AColumnEditType editType, boolean required, int width) {
+		super();
+		this.title = title;
+		this.name = name;
+		this.editType=editType;
+		this.required=required;
+		this.width=width;
+	}
 	public AColumn(String title, String name, AColumnEditType editType, boolean required) {
 		super();
 		this.title = title;
@@ -52,6 +61,11 @@ public abstract class AColumn<T> implements Serializable{
 	public AColumn(String title) {
 		super();
 		this.title = title;
+	}
+	public AColumn(String title, int width) {
+		super();
+		this.title = title;
+		this.width=width;
 	}
 	
 	public abstract Component cell(String id, T record)throws Exception;
@@ -81,6 +95,12 @@ public abstract class AColumn<T> implements Serializable{
 		this.required = required;
 	}
 	
+	public int getWidth() {
+		return width;
+	}
+	public void setWidth(int width) {
+		this.width = width;
+	}
 	public void addReadField(IForm form, T entity){
 		try{
 			form.addReadOnlyComponent(this, entity);
@@ -127,4 +147,5 @@ public abstract class AColumn<T> implements Serializable{
 		return AColumn.this;
 	}
 
+	
 }
