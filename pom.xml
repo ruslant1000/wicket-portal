@@ -16,6 +16,10 @@
 				<directory>src/java</directory>
 				<includes>
 					<include>**/*.html</include>
+					<include>**/*.xml</include>
+					<include>**/*.log</include>
+					<include>**/*.properties</include>
+					
 				</includes>
 			</resource>
 		</resources>
@@ -44,7 +48,7 @@
 				<version>2.2</version>
 				<configuration>
 					<url>http://localhost:8081/manager/text</url>
-					<!-- <url>http://192.168.0.18:8081/manager/text</url> -->
+<!-- 					<url>http://192.168.0.18:8081/manager/text</url> --> 
 					<server>Tomcat7Server</server>
 					<path>/</path>
 				</configuration>
@@ -242,7 +246,7 @@
 			<artifactId>jsoup</artifactId>
 			<version>1.7.2</version>
 			<scope>runtime</scope>
-		</dependency>
+		</dependency> 
 
 		<!-- socket-server -->
 		<dependency>
@@ -256,6 +260,32 @@
 			<version>3.5</version>
 		</dependency>
 		<!-- socket-server -->
+		<dependency>
+			<groupId>org.apache.lucene</groupId>
+			<artifactId>lucene-core</artifactId>
+			<version>6.4.0</version>
+			<scope>runtime</scope>
+		</dependency>
+		<dependency>
+			<groupId>org.apache.lucene</groupId>
+			<artifactId>lucene-queryparser</artifactId>
+			<version>6.4.0</version>
+			<scope>runtime</scope>
+		</dependency>
+		<dependency>
+			<groupId>org.apache.lucene</groupId>
+			<artifactId>lucene-highlighter</artifactId>
+			<version>6.4.0</version>
+			<scope>runtime</scope>
+		</dependency>
+		<dependency>
+			<groupId>org.apache.lucene</groupId>
+			<artifactId>lucene-grouping</artifactId>
+			<version>6.4.0</version>
+			<scope>runtime</scope>
+		</dependency>
+		
+		
 	</dependencies>
 
 </project>

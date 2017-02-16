@@ -6,6 +6,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
+import org.apache.wicket.Page;
 import org.apache.wicket.authroles.authentication.AuthenticatedWebSession;
 import org.apache.wicket.authroles.authorization.strategies.role.Roles;
 import org.apache.wicket.request.Request;
@@ -99,6 +100,8 @@ public class PortalSession extends AuthenticatedWebSession{
 	}
 	
 	public boolean access(Set<Role> role){
+		if(isAdmin())
+			return true;
 		if(roles!=null && role!=null && role.size()>0){
 			for(Role r:role){
 				if (roles.hasRole(r.getName()))

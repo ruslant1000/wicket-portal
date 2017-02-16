@@ -64,7 +64,6 @@ public class AbstractThemePage extends WebPage{
 		}
 		if(url.startsWith("pg/"))
 			url=url.substring(3);
-		System.out.println(url);
 		try {
 			info = pageRegister.getPage(url);
 		} catch (PortalException e) {
@@ -160,6 +159,17 @@ public class AbstractThemePage extends WebPage{
 		
 	}
 
+	
+	
+
+	@Override
+	protected void onInitialize() {
+		super.onInitialize();
+	}
+
+
+
+
 
 	@Override
 	public void renderHead(IHeaderResponse response) {
@@ -176,6 +186,8 @@ public class AbstractThemePage extends WebPage{
 		clearOriginalDestination();
 	}
 
+	
+	
 
 
 

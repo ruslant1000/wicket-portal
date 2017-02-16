@@ -31,12 +31,21 @@ public class UsersControlPanel extends Panel{
 				user = userRegister.addNewUser(user);
 				NotificationsEngine.notifyUserRegistered(user);
 			}
+
+			@Override
+			public void build() throws Exception {
+				super.build();
+				addFieldString("Login", new PropertyModel<String>(user, "login"), true);
+				addFieldString("Email", new PropertyModel<String>(user, "email"), true);
+				addFieldString("Password", new PropertyModel<String>(user, "password"), true);
+			}
+			
+			
 			
 		};
 		add(form);
-		form.addFieldString("Login", new PropertyModel<String>(user, "login"), true);
-		form.addFieldString("Email", new PropertyModel<String>(user, "email"), true);
-		form.addFieldString("Password", new PropertyModel<String>(user, "password"), true);
+		
 	}
 
+	
 }

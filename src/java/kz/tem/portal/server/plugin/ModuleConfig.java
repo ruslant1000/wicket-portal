@@ -106,6 +106,7 @@ public class ModuleConfig implements Serializable{
 				if(param.getNodeType()!=Node.ELEMENT_NODE)
 					continue;
 				Element e = (Element)param;
+				
 				String name = e.getElementsByTagName("name").item(0).getTextContent();
 				String type = e.getElementsByTagName("type").item(0).getTextContent();
 				String value = e.getElementsByTagName("value").item(0).getTextContent();

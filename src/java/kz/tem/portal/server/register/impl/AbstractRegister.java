@@ -6,15 +6,18 @@ import java.util.List;
 
 import kz.tem.portal.PortalException;
 import kz.tem.portal.server.bean.ITable;
+import kz.tem.portal.server.model.RevisionEntity;
 
 import org.apache.log4j.Logger;
 import org.hibernate.Criteria;
 import org.hibernate.Session;
 import org.hibernate.criterion.Criterion;
-import org.hibernate.criterion.DetachedCriteria;
 import org.hibernate.criterion.Order;
 import org.hibernate.criterion.Projections;
-import org.hibernate.criterion.Subqueries;
+import org.hibernate.envers.AuditReader;
+import org.hibernate.envers.AuditReaderFactory;
+import org.hibernate.envers.query.AuditEntity;
+import org.hibernate.envers.query.AuditQuery;
 import org.springframework.orm.hibernate5.HibernateTemplate;
 
 @SuppressWarnings("serial")
@@ -113,5 +116,37 @@ public abstract class AbstractRegister implements Serializable{
 
 	}	
 	
-	
+	public <T>ITable getTableAudit(Class entity, Long entityId, InSessionAuditAction<T> action)throws PortalException{
+		final List<T> slist = new LinkedList<T>();
+		
+		
+		AuditReader reader = AuditReaderFactory.get(ht.getSessionFactory().getCurrentSession());
+		AuditQuery query = reader.createQuery().forRevisionsOfEntity(entity, false, false);
+		query.add(AuditEntity.id().eq(entityId));
+		
+		final List<Object[]> list = query.getResultList();
+		for(Object[] s:list){
+			T sb =(T) s[0]; 
+			slist.add(sb);
+			RevisionEntity re = (RevisionEntity) s[1];
+			try {
+				action.action(sb, re);
+			} catch (Exception e) {
+				e.printStackTrace();
+				throw new PortalException("Could not get audited table",e);
+			}
+		}
+		return new ITable<T>() {
+			
+			@Override
+			public Long total() {
+				return (long) slist.size();
+			}
+			
+			@Override
+			public List<T> records() {
+				return slist;
+			}
+		};
+	}
 }

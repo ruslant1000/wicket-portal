@@ -19,7 +19,7 @@ public class IdEntity implements Serializable{
 	private Long id;
 	
 	@Id
-	@GeneratedValue(strategy=GenerationType.TABLE)
+	@GeneratedValue(strategy=GenerationType.IDENTITY)
 	@Column(name="id")
 	public Long getId() {
 		return id;

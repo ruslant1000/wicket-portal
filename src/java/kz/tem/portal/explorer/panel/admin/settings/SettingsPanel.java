@@ -7,6 +7,7 @@ import org.apache.wicket.markup.html.panel.Panel;
 import org.apache.wicket.model.PropertyModel;
 import org.apache.wicket.spring.injection.annot.SpringBean;
 
+import kz.tem.portal.PortalException;
 import kz.tem.portal.api.ExplorerEngine;
 import kz.tem.portal.explorer.panel.common.form.DefaultInputForm;
 import kz.tem.portal.server.register.ISettingsRegister;
@@ -19,7 +20,7 @@ import kz.tem.portal.server.register.ISettingsRegister;
 public class SettingsPanel extends Panel{
 	
 	@SpringBean
-	private ISettingsRegister settingsRegister;
+	private static ISettingsRegister settingsRegister;
 	
 	private String mainPage = null;
 	private String smtpHost = null;
@@ -51,16 +52,37 @@ public class SettingsPanel extends Panel{
 					System.out.println(key+" = "+ExplorerEngine.getInstance().getSettings().get(key));
 				}		
 			}
+
+			@Override
+			public void build() throws Exception {
+				super.build();
+				addFieldString(ExplorerEngine.SETTINGS_MAIN_PAGE, new PropertyModel<String>(SettingsPanel.this, "mainPage"), false);
+				addFieldString(ExplorerEngine.SETTINGS_SMTP_HOST, new PropertyModel<String>(SettingsPanel.this, "smtpHost"), false);
+				addFieldString(ExplorerEngine.SETTINGS_SMTP_PORT, new PropertyModel<String>(SettingsPanel.this, "smtpPort"), false);
+				addFieldString(ExplorerEngine.SETTINGS_SMTP_USER, new PropertyModel<String>(SettingsPanel.this, "smtpUser"), false);
+				addFieldString(ExplorerEngine.SETTINGS_SMTP_PASSWORD, new PropertyModel<String>(SettingsPanel.this, "smtpPassword"), false);
+				
+			}
+			
 			
 		};
-		form.addFieldString(ExplorerEngine.SETTINGS_MAIN_PAGE, new PropertyModel<String>(SettingsPanel.this, "mainPage"), false);
-		form.addFieldString(ExplorerEngine.SETTINGS_SMTP_HOST, new PropertyModel<String>(SettingsPanel.this, "smtpHost"), false);
-		form.addFieldString(ExplorerEngine.SETTINGS_SMTP_PORT, new PropertyModel<String>(SettingsPanel.this, "smtpPort"), false);
-		form.addFieldString(ExplorerEngine.SETTINGS_SMTP_USER, new PropertyModel<String>(SettingsPanel.this, "smtpUser"), false);
-		form.addFieldString(ExplorerEngine.SETTINGS_SMTP_PASSWORD, new PropertyModel<String>(SettingsPanel.this, "smtpPassword"), false);
 		
 		add(form);
 		
 	}
 
+	public static void setDefaultSettings(ISettingsRegister settingsRegister){
+		Map<String, String> settings = new HashMap<String, String>();
+		settings.put(ExplorerEngine.SETTINGS_MAIN_PAGE, "main");
+		settings.put(ExplorerEngine.SETTINGS_SMTP_HOST, "");
+		settings.put(ExplorerEngine.SETTINGS_SMTP_PORT, "");
+		settings.put(ExplorerEngine.SETTINGS_SMTP_USER, "");
+		settings.put(ExplorerEngine.SETTINGS_SMTP_PASSWORD, "");
+		try {
+			settingsRegister.saveAllSettings(settings);
+		} catch (PortalException e) {
+			e.printStackTrace();
+		}
+		ExplorerEngine.getInstance().loadSettings();
+	}
 }

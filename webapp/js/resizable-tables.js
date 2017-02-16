@@ -157,7 +157,7 @@ function ColumnResize(table) {
 		//if (e.button != 0) return;
 
 		// remember dragging object
-		dragColumnNo = (e.target || e.srcElement).parentNode.parentNode.cellIndex;
+		dragColumnNo = (e.target || e.srcElement).parentNode.cellIndex;
 		dragX = e.clientX || e.pageX;
 
 		// set up current columns widths in their particular attributes
@@ -190,23 +190,47 @@ function ColumnResize(table) {
 
 	// prepare table header to be draggable
 	// it runs during class creation
+	
+	
 	for (var i=0; i<dragColumns.length; i++) {
 		if(dragColumns[i].getAttribute('resizable')!='off'){
-			dragColumns[i].innerHTML = "<div style='position:relative;height:100%;width:100%'>"+
-				"<div style='"+
-				"position:absolute;height:100%;width:5px;margin-right:-5px;"+
-				"left:100%;top:0px;cursor:w-resize;z-index:10;'>"+
-				"</div>"+
-				dragColumns[i].innerHTML+
-				"</div>";
+			var aaas  = dragColumns[i].getElementsByClassName('col-resizer')[0];
+//			alert(aaas);
+			dragColumns[i].getElementsByClassName('col-resizer')[0].onmousedown = this.startColumnDrag;
+//			dragColumns[i].innerHTML =
+//				dragColumns[i].innerHTML+
+//				"<div style='"+
+//				"position:absolute;height:100%;width:5px;margin-right:-5px;"+
+//				"left:100%;top:0px;cursor:w-resize;z-index:10;'>"+
+//				"</div>";
+				
 				// BUGBUG: calculate real border width instead of 5px!!!
-				dragColumns[i].firstChild.firstChild.onmousedown = this.startColumnDrag;
+//				dragColumns[i].children[1].onmousedown = this.startColumnDrag;
 				if(tw!=null)
 					try{
 					dragColumns[i].width=tws[i]+"px";
 					}catch(e){}
 		}
 	}
+	
+	
+//	for (var i=0; i<dragColumns.length; i++) {
+//		if(dragColumns[i].getAttribute('resizable')!='off'){
+//			dragColumns[i].innerHTML = "<div style='position:relative;height:100%;width:100%'>"+
+//				"<div style='"+
+//				"position:absolute;height:100%;width:5px;margin-right:-5px;"+
+//				"left:100%;top:0px;cursor:w-resize;z-index:10;'>"+
+//				"</div>"+
+//				dragColumns[i].innerHTML+
+//				"</div>";
+//				// BUGBUG: calculate real border width instead of 5px!!!
+//				dragColumns[i].firstChild.firstChild.onmousedown = this.startColumnDrag;
+//				if(tw!=null)
+//					try{
+//					dragColumns[i].width=tws[i]+"px";
+//					}catch(e){}
+//		}
+//	}
 }
 
 

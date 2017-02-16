@@ -36,16 +36,18 @@ public class UserRoleControlPanel extends Panel{
 				user.getRole().add(role);
 				userRegister.updateUser(user);
 			}
+
+			@Override
+			public void build() throws Exception {
+				super.build();
+				addCombobox("User", new PropertyModel<User>(UserRoleControlPanel.this, "user"), userRegister.table(0, 0).records(), true);
+				addCombobox("Role", new PropertyModel<Role>(UserRoleControlPanel.this, "role"), roleRegister.table(0, 0).records(), true);
+			}
+			
 			
 		};
 		add(form);
-		try {
-			form.addCombobox("User", new PropertyModel<User>(UserRoleControlPanel.this, "user"), userRegister.table(0, 0).records(), true);
-			form.addCombobox("Role", new PropertyModel<Role>(UserRoleControlPanel.this, "role"), roleRegister.table(0, 0).records(), true);
-		} catch (PortalException e) {
-			e.printStackTrace();
-			throw new RuntimeException(e);
-		}
+
 	}
 
 }

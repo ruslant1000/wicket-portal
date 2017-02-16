@@ -13,8 +13,7 @@ import java.util.Set;
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import org.apache.log4j.Logger;
 import org.springframework.beans.factory.xml.XmlBeanDefinitionReader;
 import org.springframework.context.support.GenericApplicationContext;
 import org.springframework.core.io.DefaultResourceLoader;
@@ -36,11 +35,13 @@ import kz.tem.portal.utils.FileUtils;
  */
 public class ModuleEngine {
 
-	private static Logger log = LoggerFactory.getLogger(ModuleEngine.class);
+	private static Logger log = Logger.getLogger(ModuleEngine.class);
 
 	public static ModuleEngine instance = null;
 
 	private Map<String, JarClassLoader> loaders = new HashMap<String, JarClassLoader>();
+	
+	private Map<String, GenericApplicationContext> springs = new HashMap<String, GenericApplicationContext>();
 
 	private Map<String, ModuleMeta> moduleMap = new HashMap<String, ModuleMeta>();
 
@@ -81,7 +82,8 @@ public class ModuleEngine {
 				new Class[] { String.class, ModuleConfig.class }).newInstance(
 				new Object[] { id, config });
 		
-		module.setSpringContext(springContext);
+		if(springs.containsKey(meta.getArtifactId()))
+			module.setSpringContext(springs.get(meta.getArtifactId()));
 		return module;
 	}
 
@@ -98,14 +100,17 @@ public class ModuleEngine {
 		new ModuleFinder().findNewModules(modulesPath);
 
 		File modulesDir = new File(modulesPath);
-		if (!modulesDir.exists())
+		if (!modulesDir.exists()){
+			log.error("Не удалось загрузить модуль: " + modulesPath);
 			throw new Exception("Не удалось загрузить модуль: " + modulesPath);
+		}
 		for (File module : modulesDir.listFiles()) {
 			if (module.isDirectory()) {
 				try {
 					loadArtifact(module.getAbsolutePath());
 				} catch (Exception ex) {
 					ex.printStackTrace();
+					log.error("Ошибка при загрузке модуля: "+module.getAbsolutePath(),ex);
 				}
 			}
 		}
@@ -120,7 +125,7 @@ public class ModuleEngine {
 	 * @throws Exception
 	 */
 	public void loadArtifact(String modulePath) throws Exception {
-		log.info("Load modules artifact " + modulePath + "...");
+		log.info("Load module artifact " + modulePath + "...");
 
 		File moduleDir = new File(modulePath);
 		if (!moduleDir.exists())
@@ -135,7 +140,7 @@ public class ModuleEngine {
 		try {
 			dbf = DocumentBuilderFactory.newInstance();
 			db = dbf.newDocumentBuilder();
-			xml = db.parse(new FileInputStream(moduleXml));
+			xml = db.parse(new FileInputStream(moduleXml)); 
 
 			xml.getDocumentElement().normalize();
 			Element modules = (Element) xml.getElementsByTagName("modules")
@@ -143,6 +148,12 @@ public class ModuleEngine {
 			String id = modules.getElementsByTagName("id").item(0)
 					.getTextContent();
 
+			if(loaders.containsKey(id)){
+				log.info("Already was loaded before");
+				return;
+			}
+				
+				
 			NodeList nlist = modules.getElementsByTagName("module");
 			if (nlist != null)
 				for (int i = 0; i < nlist.getLength(); i++) {
@@ -165,7 +176,7 @@ public class ModuleEngine {
 					meta.setModuleDirectoryPath(modulePath);
 
 					moduleMap.put(meta.getModuleName(), meta);
-					log.info("\tloaded module " + meta.getModuleName());
+					log.info("Loaded module " + meta.getModuleName());
 				}
 
 			// Element module =
@@ -198,7 +209,7 @@ public class ModuleEngine {
 			if (modules.getElementsByTagName("spring").getLength() > 0) {
 				String springName = modules.getElementsByTagName("spring")
 						.item(0).getTextContent();
-				startSpring(jcl, springName);
+				startSpring(id, jcl, springName);
 			}
 
 			if (loaders.containsKey(id)) {
@@ -233,14 +244,13 @@ public class ModuleEngine {
 		return null;
 	}
 
-	private GenericApplicationContext springContext;
 
-	public void startSpring(JarClassLoader jcl, String springName) {
+	public void startSpring(String artifactId, JarClassLoader jcl, String springName) {
 		
 		log.info("Starting spring " + springName + "...");
 		try {
 			Thread.currentThread().setContextClassLoader(jcl);
-			springContext = new GenericApplicationContext();
+			GenericApplicationContext springContext = new GenericApplicationContext();
 			XmlBeanDefinitionReader reader = new XmlBeanDefinitionReader(
 					springContext);
 			// get the classloader
@@ -254,6 +264,7 @@ public class ModuleEngine {
 			reader.loadBeanDefinitions(new InputStreamResource(ins));
 			springContext.refresh();
 			springContext.start();
+			springs.put(artifactId, springContext);
 			log.info("Started spring " + springName + ".");
 		} catch (Exception ex) {
 			ex.printStackTrace();
@@ -261,13 +272,16 @@ public class ModuleEngine {
 		}
 	}
 
-	public void stopSpring() {
-		if (springContext != null) {
-			log.info("Stopping spring...");
-			springContext.stop();
-			springContext.destroy();
-			log.info("Srping stopped");
+	public void stopSpring(String artifactId) {
+		if(!springs.containsKey(artifactId)){
+			log.error("No spring context found with artifactId "+artifactId);
+			return;
 		}
+		log.info("Stopping spring...");
+		springs.get(artifactId).stop();
+		springs.get(artifactId).destroy();
+		springs.remove(artifactId);
+		log.info("Srping stopped");
 
 	}
 
@@ -277,6 +291,8 @@ public class ModuleEngine {
 	 * @param artifactId
 	 */
 	public void undeploy(String artifactId) {
+		for(String ld:loaders.keySet())
+			log.info("Exists classloader: "+ld);
 		log.info("Undeploy module: " + artifactId);
 		String mp = null;
 
@@ -285,9 +301,10 @@ public class ModuleEngine {
 				moduleContextListeners.get(artifactId).destroy();
 			} catch (Exception e) {
 				e.printStackTrace();
+				log.error("Error in undeploy module: "+artifactId,e);
 			}
 		}
-		stopSpring();
+		stopSpring(artifactId);
 		Set<String> rems = new HashSet<String>();
 
 		for (String moduleName : moduleMap.keySet()) {
@@ -302,6 +319,9 @@ public class ModuleEngine {
 		for (String rem : rems)
 			moduleMap.remove(rem);
 
+		
+		
+		
 		if (loaders.containsKey(artifactId)) {
 			loaders.get(artifactId).destroy();
 			loaders.remove(artifactId);
@@ -318,6 +338,7 @@ public class ModuleEngine {
 
 		} catch (Exception e) {
 			e.printStackTrace();
+			log.error("Error in undeploy: "+artifactId,e);
 		}
 	}
 
@@ -329,6 +350,7 @@ public class ModuleEngine {
 			loadModules(modulesPath);
 		} catch (Exception e) {
 			e.printStackTrace();
+			log.error("Error in loading new modules",e);
 		}
 	}
 

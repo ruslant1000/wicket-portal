@@ -31,10 +31,16 @@ public class RolesControlPanel extends Panel{
 				role.setName(roleName);
 				roleRegister.addNewRole(role);
 			}
+
+			@Override
+			public void build() throws Exception {
+				super.build();
+				addFieldString("Role name", new PropertyModel<String>(RolesControlPanel.this, "roleName"), true);
+			}
 			
 		};
 		add(form);
-		form.addFieldString("Role name", new PropertyModel<String>(RolesControlPanel.this, "roleName"), true);
+		
 	}
 
 }

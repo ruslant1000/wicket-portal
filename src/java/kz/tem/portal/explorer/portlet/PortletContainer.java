@@ -5,11 +5,13 @@ import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
 
 import org.apache.wicket.Component;
+import org.apache.wicket.MarkupContainer;
 import org.apache.wicket.ajax.AjaxRequestTarget;
 import org.apache.wicket.ajax.markup.html.AjaxLink;
 import org.apache.wicket.markup.html.WebMarkupContainer;
 import org.apache.wicket.markup.html.basic.Label;
 import org.apache.wicket.markup.html.panel.Panel;
+import org.apache.wicket.request.cycle.RequestCycle;
 
 import kz.tem.portal.explorer.application.PortalSession;
 import kz.tem.portal.explorer.page.AbstractThemePage;
@@ -39,7 +41,7 @@ public class PortletContainer extends Panel {
 		this.moduleName=moduleName;
 		this.config=config;
 		this.portlet=portlet;
-		
+		setOutputMarkupId(true);
 
 	}
 	
@@ -52,9 +54,34 @@ public class PortletContainer extends Panel {
 	}
 
 
+	private void createConfig(){
+		if(PortletContainer.this.get("config")!=null){
+			PortletContainer.this.remove("config");
+		}
+		if(PortalSession.get().isAdmin()){
+			
+			add(new AjaxLink<Void>("config") {
+				@Override
+				public void onClick(AjaxRequestTarget target) {
+					((AbstractThemePage) getWebPage()).showModal(
+							"modal window", target, new IComponentCreator() {
+
+								@Override
+								public Component create(String id)
+										throws Exception {
+									return new PortletSettingsPanel(id, module,
+											portlet);
+								}
+							});
+				}
+			});
+		}else{
+			add(new WebMarkupContainer("config").setVisible(false));
+		}
+	}
 
 	private void create(){
-try {
+		try {
 			
 			if(!ModuleEngine.getInstance().getModuleMap().containsKey(moduleName))
 				throw new Exception("Модуль не найден: "+moduleName);
@@ -65,27 +92,8 @@ try {
 					meta, config);
 			
 			
-			if(PortalSession.get().isSignedIn()){
 			
-				add(new AjaxLink<Void>("config") {
-					@Override
-					public void onClick(AjaxRequestTarget target) {
-						((AbstractThemePage) getWebPage()).showModal(
-								"modal window", target, new IComponentCreator() {
-	
-									@Override
-									public Component create(String id)
-											throws Exception {
-										return new PortletSettingsPanel(id, module,
-												portlet);
-									}
-								});
-					}
-				});
-			}else{
-				add(new WebMarkupContainer("config").setVisible(false));
-			}
-			
+			createConfig();
 			
 			try { 
 				
@@ -114,8 +122,27 @@ try {
 		if(PortletContainer.this.get("module")!=null){
 			PortletContainer.this.remove("module");
 		}
-		add(new Label("module", "модуль недоступен. " + ex.getMessage()));
+		add(new Label("module", "модуль недоступен. " + (ex==null?"":ex.getMessage())));
 	}
+
+	public static void showError(MarkupContainer current, Throwable ex){
+		MarkupContainer t = current.getParent();
+		if(t == null)
+			return;
+		if(t instanceof PortletContainer){
+			PortletContainer pc = (PortletContainer) t;
+			pc.moduleError(ex);
+			AjaxRequestTarget art = RequestCycle.get().find(AjaxRequestTarget.class);
+			if(art!=null){
+				art.add(pc);
+			}
+		}else
+			showError(t,ex);
+	}
+
+
+	
+	
 //	private void writeObject(ObjectOutputStream o) throws IOException {
 //		System.out.println("write");
 //		o.writeObject(moduleName);

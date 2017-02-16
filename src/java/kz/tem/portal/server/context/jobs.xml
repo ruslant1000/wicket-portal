@@ -19,7 +19,7 @@
 	 
 	</bean>
 	
-	
+	 
 	<bean id="cronTrigger"
 		class="org.springframework.scheduling.quartz.CronTriggerFactoryBean">
  

@@ -24,6 +24,39 @@
   overflow: hidden;
   text-overflow: ellipsis;
   font-size: 14px;
+  position: relative;
+}
+
+.abstract-table table th .col-resizer{
+	position:absolute;
+	height:100%;
+	width:5px;
+	
+	right: 0px;
+	top:0px;
+	cursor:w-resize;
+	z-index:10;
+}
+.abstract-table table th .col-sort-none .icon{
+		display: inline-block;
+  width: 12px;
+	
+}
+.abstract-table table th .col-sort-asc .icon{
+	display: inline-block;
+  width: 12px;
+  height: 7px;
+  background-image: url("/images/table/sort-asc-desc.png");
+  background-position: -13px -3px;
+  
+	
+}
+.abstract-table table th .col-sort-desc .icon{
+	display: inline-block;
+  width: 12px;
+  height: 7px;
+  background-image: url("/images/table/sort-asc-desc.png");
+  background-position: -0px -3px;
 }
 
 .abstract-table table td{

@@ -3,11 +3,19 @@
 <wicket:panel>
 
 <div class="abstract-table" align="left">
+	<span wicket:id="info"/>
 	<div wicket:id="before"/>
 	<div class="scroller">
 		<table wicket:id="table" class="resizable">
 			<tr>
-				<th wicket:id="th"/>
+				<th wicket:id="th">
+					<a class="col-sort-none" wicket:id="sort">
+						<span wicket:id="ttl"/>
+						<span class="icon"/>
+					</a>
+					<span wicket:id="col-name"/>
+					<div class="col-resizer"/>
+				</th>
 			</tr>
 			<tr wicket:id="row">
 				

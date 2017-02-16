@@ -7,6 +7,7 @@ import org.apache.wicket.AttributeModifier;
 import org.apache.wicket.Component;
 import org.apache.wicket.MarkupContainer;
 import org.apache.wicket.ajax.AjaxRequestTarget;
+import org.apache.wicket.ajax.markup.html.AjaxLink;
 import org.apache.wicket.behavior.AttributeAppender;
 import org.apache.wicket.markup.head.IHeaderResponse;
 import org.apache.wicket.markup.head.JavaScriptHeaderItem;
@@ -20,6 +21,7 @@ import org.apache.wicket.model.Model;
 import kz.tem.portal.explorer.panel.common.component.AjaxLabelLink;
 import kz.tem.portal.explorer.panel.common.form.field.FAjaxCheckboxField;
 import kz.tem.portal.server.bean.ITable;
+import kz.tem.portal.utils.ExceptionUtils;
 /**
  * 
  * @author Ruslan Temirbulatov
@@ -29,6 +31,7 @@ import kz.tem.portal.server.bean.ITable;
 @SuppressWarnings("serial")
 public abstract class AbstractTable<T> extends Panel{
 
+	private String colsHash = "";
 	
 	private AColumn[] cols = null;
 	private ITable<T> records = null;
@@ -45,12 +48,17 @@ public abstract class AbstractTable<T> extends Panel{
 	private List<FirstColumnCheck<T>> rowsCheckboxes = new LinkedList<FirstColumnCheck<T>>();
 	
 	
+	private String sortColumn = null;
+	private boolean sortAsc = true;
+	
 	public AbstractTable(String id, boolean withCheckboxColumn) {
 		super(id);
 		setOutputMarkupId(true);
-	
 		this.withCheckboxColumn=withCheckboxColumn;
-		
+	}
+	
+	public boolean isSortable(){
+		return false;
 	}
 	
 	
@@ -78,17 +86,22 @@ public abstract class AbstractTable<T> extends Panel{
 	public String getUniqueMarkupId(MarkupContainer container){
 		if(container==null)
 			return "";
-		
-		return container.getId()+container.getClass().getCanonicalName();
+		return container.getId()+container.getClass().getCanonicalName()+colsHash;
 	}
 	
 	public void build(){
 		try {
+			String mid = null;
 			if(AbstractTable.this.get("table")!=null){
+				mid = AbstractTable.this.get("table").getMarkupId();
 				AbstractTable.this.remove("table");
-			}
+			}else
+				mid = "table"+getUniqueMarkupId(this).hashCode()+"";
 			if(AbstractTable.this.get("digits")!=null){
 				AbstractTable.this.remove("digits");
+			}
+			if(AbstractTable.this.get("info")!=null){
+				AbstractTable.this.remove("info");
 			}
 			if(AbstractTable.this.get("sizes")!=null){
 				AbstractTable.this.remove("sizes");
@@ -96,21 +109,25 @@ public abstract class AbstractTable<T> extends Panel{
 			if(AbstractTable.this.get("total")!=null){
 				AbstractTable.this.remove("total");
 			}
+			add(new WebMarkupContainer("info"));
 			table = new WebMarkupContainer("table");
 			table.setOutputMarkupId(true);
 			add(table);
-			table.setMarkupId(getUniqueMarkupId(this));
+			
 			
 			
 			cols = columns();
-			records = data(first, count);	
+			records = getData(first, count, sortColumn, sortAsc);	
 			total=records.total().intValue();
 			
 			buildColumns();
 			buildData();
 			buildPaginator();
+			
+			table.setMarkupId(mid);
 		} catch (Exception e) {
 			e.printStackTrace();
+		
 			throw new RuntimeException("Error in AbstractTable build method",e);
 		}
 	}
@@ -120,7 +137,16 @@ public abstract class AbstractTable<T> extends Panel{
 		table.add(view);
 		
 		if(withCheckboxColumn){
-			FAjaxCheckboxField chk = new FAjaxCheckboxField(view.newChildId(), new Model<Boolean>()){
+			colsHash = "chk";
+			
+			WebMarkupContainer wmc = new WebMarkupContainer(view.newChildId());
+			view.add(wmc);
+			WebMarkupContainer srtChk = new WebMarkupContainer("sort");
+			srtChk.add(new WebMarkupContainer("ttl"));
+			srtChk.setVisible(false);
+			wmc.add(srtChk);
+			
+			FAjaxCheckboxField chk = new FAjaxCheckboxField("col-name", new Model<Boolean>()){
 
 				@Override
 				public void onChangeValue(AjaxRequestTarget target)
@@ -133,15 +159,67 @@ public abstract class AbstractTable<T> extends Panel{
 				}
 				
 			};
-			view.add(chk);
-			chk.add(new AttributeModifier("style", "width:30px;"));
-			chk.add(new AttributeModifier("resizable", "off"));
+			wmc.add(chk);
+			
+			wmc.add(new AttributeModifier("style", "width:30px;"));
+			wmc.add(new AttributeModifier("resizable", "off"));
 		}
 		
-		for(AColumn<T> col:cols){
-			if(col!=null)
-				view.add(new Label(view.newChildId(),col.getTitle()));
+		for(final AColumn<T> col:cols){
+			if(col!=null){
+				colsHash=colsHash+"_"+col.getTitle();
+				
+				WebMarkupContainer wmc = new WebMarkupContainer(view.newChildId());
+				view.add(wmc);
+				if(col.getWidth()>0)
+					wmc.add(new AttributeModifier("width", col.getWidth()+"px"));
+				
+				Label l =  new Label("col-name",col.getTitle());
+				wmc.add(l);
+				
+				
+				if(isSortable() && col.getName()!=null && col.getName().trim().length()>0){
+					AjaxLink<Void> sort = new AjaxLink<Void>("sort") {
+						
+						@Override
+						public void onClick(AjaxRequestTarget target) {
+							if(sortColumn!=null && sortColumn.equals(col.getName()))
+								sortAsc = !sortAsc;
+							else 
+								sortAsc = true;
+							
+							sortColumn = col.getName();
+							
+							try{
+								build();
+								target.add(AbstractTable.this);
+							}catch(Exception ex){
+								ex.printStackTrace();
+								target.appendJavaScript("alert('"+ExceptionUtils.fullError(ex)+"');");	
+							}
+							
+						}
+					};
+					wmc.add(sort);
+					sort.add(new Label("ttl",col.getTitle()));
+					l.setVisible(false);
+					if(sortColumn!=null && sortColumn.trim().length()>0){
+						if(sortColumn.equals(col.getName())){
+							sort.add(new AttributeModifier("class", "col-sort-"+(sortAsc?"asc":"desc")));
+						}else{
+							sort.add(new AttributeModifier("class", "col-sort-none"));
+						}
+					}
+					
+					
+					
+				}else{
+					wmc.add(new WebMarkupContainer("sort").setVisible(false));
+				}
+				
+			}
 		}
+		colsHash=""+colsHash.hashCode();
 	}
 	
 	
@@ -174,8 +252,7 @@ public abstract class AbstractTable<T> extends Panel{
 				String cid = td.newChildId();
 				Component cell = col.cell(cid, t); 
 				td.add(cell);
-				if(col.getWidth()>0)
-					cell.add(new AttributeModifier("width", col.getWidth()+"px"));
+				
 			}
 		}
 	}
@@ -337,6 +414,10 @@ public abstract class AbstractTable<T> extends Panel{
 		return list;
 	}
 	
+	public ITable<T> getData(int first,int count, String sortColumn, boolean sortAsc)throws Exception{
+		return data(first, count);
+	}
+	
 	public abstract ITable<T> data(int first,int count)throws Exception;
 	
 	public abstract AColumn[] columns()throws Exception;
@@ -373,7 +454,6 @@ public abstract class AbstractTable<T> extends Panel{
 		
 		super.renderHead(response);
 		response.render(OnDomReadyHeaderItem.forScript("ResizableColumns('"+table.getMarkupId()+"');"));
-//		response.render(OnDomReadyHeaderItem.forScript("alert('aaa');"));
 	}
 	
 	

@@ -1,19 +1,14 @@
 package kz.tem.portal.explorer.application;
 
 import java.io.ByteArrayInputStream;
+import java.io.File;
 import java.io.IOException;
-import java.io.InputStream;
-import java.io.InvalidObjectException;
 import java.io.ObjectInputStream;
-import java.io.ObjectInputValidation;
-import java.io.ObjectOutputStream;
-import java.io.ObjectStreamClass;
-import java.io.OutputStream;
+import java.io.Serializable;
 import java.net.URL;
 import java.util.Iterator;
 import java.util.Map;
 
-import kz.msystem.commons.socket.processor.java.ftp.FileRecord;
 import kz.tem.portal.PortalException;
 import kz.tem.portal.api.PortalEngine;
 import kz.tem.portal.api.RegisterEngine;
@@ -33,10 +28,13 @@ import kz.tem.portal.explorer.page.admin.pages.PagesConfig;
 import kz.tem.portal.explorer.page.admin.portlets.PortletsConfig;
 import kz.tem.portal.explorer.page.admin.settings.SettingsPage;
 import kz.tem.portal.explorer.page.admin.users.UsersPage;
+import kz.tem.portal.explorer.page.errors.ErrorPage;
 import kz.tem.portal.explorer.page.login.RegistrationPage;
+import kz.tem.portal.explorer.panel.admin.settings.SettingsPanel;
 import kz.tem.portal.explorer.panel.common.ftp.DocFileResource;
 import kz.tem.portal.explorer.services.FileUploadService;
 import kz.tem.portal.explorer.services.TestService;
+import kz.tem.portal.server.model.Portlet;
 import kz.tem.portal.server.model.enums.EnumPageType;
 import kz.tem.portal.server.plugin.engine.JarClassLoader;
 import kz.tem.portal.server.plugin.engine.ModuleEngine;
@@ -50,24 +48,34 @@ import org.apache.wicket.application.AbstractClassResolver;
 import org.apache.wicket.application.IClassResolver;
 import org.apache.wicket.authroles.authentication.AbstractAuthenticatedWebSession;
 import org.apache.wicket.authroles.authentication.AuthenticatedWebApplication;
+import org.apache.wicket.core.request.handler.IPageRequestHandler;
+import org.apache.wicket.core.request.handler.PageProvider;
+import org.apache.wicket.core.request.handler.RenderPageRequestHandler;
 import org.apache.wicket.core.util.lang.PropertyResolver;
 import org.apache.wicket.core.util.lang.PropertyResolver.IGetAndSet;
 import org.apache.wicket.markup.html.WebPage;
-import org.apache.wicket.pageStore.AbstractPageStore;
+import org.apache.wicket.page.IManageablePage;
+import org.apache.wicket.page.IPageManager;
+import org.apache.wicket.page.IPageManagerContext;
+import org.apache.wicket.page.PageStoreManager;
 import org.apache.wicket.pageStore.DefaultPageStore;
+import org.apache.wicket.pageStore.DiskDataStore;
 import org.apache.wicket.pageStore.IDataStore;
+import org.apache.wicket.pageStore.IPageStore;
 import org.apache.wicket.pageStore.memory.HttpSessionDataStore;
 import org.apache.wicket.pageStore.memory.PageNumberEvictionStrategy;
 import org.apache.wicket.protocol.http.WebApplication;
+import org.apache.wicket.request.IRequestHandler;
+import org.apache.wicket.request.cycle.AbstractRequestCycleListener;
 import org.apache.wicket.request.cycle.RequestCycle;
 import org.apache.wicket.request.resource.IResource;
 import org.apache.wicket.request.resource.ResourceReference;
 import org.apache.wicket.serialize.ISerializer;
 import org.apache.wicket.serialize.java.JavaSerializer;
+import org.apache.wicket.settings.ExceptionSettings;
 import org.apache.wicket.spring.injection.annot.SpringComponentInjector;
 import org.apache.wicket.util.io.IOUtils;
 import org.apache.wicket.util.lang.Bytes;
-import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.ApplicationContext;
 
@@ -80,6 +88,10 @@ public class PortalApplication extends AuthenticatedWebApplication {
 
 	@Autowired
 	private ApplicationContext context;
+	
+	public static DiskDataStore dataStore = null;
+	public static byte[] lastpage = null;
+	public static int lastPageId = -1;
 
 	@Override
 	protected void init() {
@@ -121,24 +133,30 @@ public class PortalApplication extends AuthenticatedWebApplication {
 		// getPageSettings().setRecreateBookmarkablePagesAfterExpiry(true);
 
 		// mountPage("login", AuthenticatePage.class);
-		mountSystemPage("login", "Аутентификация", AuthenticatePage.class);
+		
+		mountSystemPage("main", "Главная",EnumPageType.ADDED, AuthenticatePage.class);
+		
+		mountSystemPage("login", "Аутентификация",EnumPageType.SYSTEM, AuthenticatePage.class);
 		// mountPage("login", LoginPage.class);
-		mountSystemPage("registration", "Регистрация", RegistrationPage.class);
+		mountSystemPage("registration", "Регистрация", EnumPageType.SYSTEM,RegistrationPage.class);
 
 		mountSystemPage(
 				RegistrationConfirmationSuccessPage.PAGE_RESPONCE_SUCCESS_URL,
-				"Успешное подтверждение регистрации",
+				"Успешное подтверждение регистрации",EnumPageType.SYSTEM,
 				RegistrationConfirmationSuccessPage.class);
 		mountSystemPage(
 				RegistrationConfirmationErrorPage.PAGE_RESPONCE_ERROR_URL,
-				"Ошибка подтверждения регистрации",
+				"Ошибка подтверждения регистрации",EnumPageType.SYSTEM,
 				RegistrationConfirmationErrorPage.class);
 		mountSystemPage(RememberPasswordPage.REMEMBER_PASSWORD_PAGE_URL,
-				"Восстановление пароля", RememberPasswordPage.class);
+				"Восстановление пароля", EnumPageType.SYSTEM,RememberPasswordPage.class);
 		mountSystemPage(NewPasswordSuccessPage.NEW_PASSWORD_SUCCESS_PAGE_URL,
-				"Восстановление пароля", NewPasswordSuccessPage.class);
+				"Восстановление пароля", EnumPageType.SYSTEM,NewPasswordSuccessPage.class);
 		mountSystemPage(NewPasswordErrorPage.NEW_PASSWORD_ERROR_PAGE_URL,
-				"Ошибка при восстановлении пароля", NewPasswordErrorPage.class);
+				"Ошибка при восстановлении пароля", EnumPageType.SYSTEM,NewPasswordErrorPage.class);
+		mountSystemPage(ErrorPage.PAGE_ERROR_URL,"Системная ошибка",EnumPageType.SYSTEM,ErrorPage.class);
+				
+		
 
 		mountPage(RegistrationConfirmationPage.PAGE_REQUEST_URL,
 				RegistrationConfirmationPage.class);
@@ -171,7 +189,46 @@ public class PortalApplication extends AuthenticatedWebApplication {
 						.getName());
 
 		getApplicationSettings().setClassResolver(new PortalClassResolver());
+		
+		
+		
+		
+		
+		getExceptionSettings().setUnexpectedExceptionDisplay(ExceptionSettings.SHOW_NO_EXCEPTION_PAGE);
+//		getApplicationSettings().setInternalErrorPage(ErrorPage.class);
+		
+		
+		
+		getRequestCycleListeners().add(new AbstractRequestCycleListener() {
 
+			@Override
+			public IRequestHandler onException(RequestCycle cycle, Exception ex) {
+				System.out.println("!!!!!!!!!!!!! EXCEPTION ----------");
+//				Exception myE = Exceptions.findCause(ex, Exception.class);
+				
+
+//				cycle.setResponsePage(PortalSession.get().lastPage);
+//		        if (ex != null) {
+//		            IPageRequestHandler handler = cycle.find(IPageRequestHandler.class);
+//		            if (handler != null) {
+//		                if (handler.isPageInstanceCreated()) {
+//		                    WebPage page = (WebPage)(handler.getPage());
+//
+//		                    page.error("errrrorrrrr");
+////		                    page.error(page.getString(myE.getCode()));
+//
+//		                    return new RenderPageRequestHandler(new PageProvider(page));
+//		                }
+//		        }
+//		        }
+		        return null;
+			}
+			
+		});
+		
+//		getStoreSettings().setMaxSizePerSession(Bytes.kilobytes(1024));
+//		setPageManagerProvider(new PageManagerProvider());
+				
 		// setPageManagerProvider(new DefaultPageManagerProvider(this){
 		//
 		// @Override
@@ -265,6 +322,8 @@ public class PortalApplication extends AuthenticatedWebApplication {
 		// getResourceSettings().setResourceStreamLocator(new
 		// CustomResourceStreamLocator());
 
+		
+		SettingsPanel.setDefaultSettings(RegisterEngine.getInstance().getSettingsRegister());
 	}
 
 	@Override
@@ -388,7 +447,7 @@ public class PortalApplication extends AuthenticatedWebApplication {
 		return PortalSession.class;
 	}
 
-	public void mountSystemPage(String path, String title, Class pageClass) {
+	public void mountSystemPage(String path, String title, EnumPageType ept, Class pageClass) {
 		mountPage(path, pageClass);
 		try {
 			RegisterEngine.getInstance().getPageRegister().getPage(path);
@@ -396,15 +455,27 @@ public class PortalApplication extends AuthenticatedWebApplication {
 			if (ex.getKey() != null
 					&& ex.getKey().equals(PortalException.NOT_FOUND)) {
 				kz.tem.portal.server.model.Page page = new kz.tem.portal.server.model.Page();
-				page.setPageType(EnumPageType.SYSTEM);
+				page.setPageType(ept);
 				page.setPublicPage(true);
+				page.setMenu(ept.equals(EnumPageType.ADDED));
 				page.setUrl(path);
 				page.setTitle(title);
 				page.setLayout("DefaultLayout.html");
 				page.setTheme("DefaultTheme.html");
 				try {
-					RegisterEngine.getInstance().getPageRegister()
+					page = RegisterEngine.getInstance().getPageRegister()
 							.addNewPage(page);
+					
+					if(path.equals("login")){
+						Portlet p = new Portlet();
+						p.setPosition("portlet1");
+						p.setModuleName("user-login");
+						p.setPage(page);
+						page.getPortlets().add(p);
+					}
+					RegisterEngine.getInstance().getPageRegister().savePage(page);
+					
+					
 				} catch (PortalException e) {
 					e.printStackTrace();
 					throw new RuntimeException(e);
@@ -415,6 +486,8 @@ public class PortalApplication extends AuthenticatedWebApplication {
 		}
 
 	}
+	
+	 
 
 }
 

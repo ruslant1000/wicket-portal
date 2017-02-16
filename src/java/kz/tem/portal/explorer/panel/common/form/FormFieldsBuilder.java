@@ -1,21 +1,19 @@
 package kz.tem.portal.explorer.panel.common.form;
 
 import java.io.Serializable;
-import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 import java.util.TreeMap;
-import java.util.function.BiConsumer;
-
-import org.apache.wicket.Component;
-import org.apache.wicket.model.IModel;
 
 import kz.tem.portal.explorer.panel.common.form.field.FAreaStringField;
 import kz.tem.portal.explorer.panel.common.form.field.FComboboxField;
 import kz.tem.portal.explorer.panel.common.form.field.FDatePickerField;
 import kz.tem.portal.explorer.panel.common.form.field.FPasswordField;
 import kz.tem.portal.explorer.panel.common.form.field.FTextStringField;
+
+import org.apache.wicket.Component;
+import org.apache.wicket.model.IModel;
 /**
  * 
  * @author Ruslan Temirbulatov

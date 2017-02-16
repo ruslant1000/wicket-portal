@@ -30,7 +30,7 @@ public abstract class AColumn<T> implements Serializable{
 	 */
 	private AColumnEditType editType = AColumnEditType.UNCKNOWN;
 	private boolean required;
-	private int width = 0;
+	private int width = 100;
 	
 	public AColumn(String title, String name, AColumnEditType editType, boolean required, int width) {
 		super();

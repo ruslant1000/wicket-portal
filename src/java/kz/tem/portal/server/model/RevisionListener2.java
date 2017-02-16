@@ -1,12 +1,8 @@
 package kz.tem.portal.server.model;
 
-import javax.servlet.http.HttpSession;
-
 import kz.tem.portal.explorer.application.PortalSession;
 
-import org.apache.wicket.session.HttpSessionStore;
 import org.hibernate.envers.RevisionListener;
-import org.springframework.web.context.request.RequestContextHolder;
 
 public class RevisionListener2 implements RevisionListener{
 
